@@ -15,7 +15,6 @@ require_once __DIR__ . "/../page-templates/navigation-menu.php"; ?>
         <h2>Register</h2>
 
         <?php
-            session_start(); // Start session to access messages
             if (isset($_SESSION['error_message'])) {
                 echo '<div class="error-message">' . $_SESSION['error_message'] . '</div>';
                 unset($_SESSION['error_message']); // Clear the message after displaying

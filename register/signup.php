@@ -1,10 +1,10 @@
 <?php
-// signup.php
+session_start(); // Start session to use session variables for messages
 
 // Include the global salt file
 require_once __DIR__ . "/../config.php";
 
-// Function to sanitize user inputs
+// Function to sanitize inputs
 function sanitize_input($data) {
     $data = trim($data);
     $data = stripslashes($data);
@@ -12,87 +12,63 @@ function sanitize_input($data) {
     return $data;
 }
 
-// Check if form is submitted
+// Process form submission only if it's a POST request
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Sanitize and retrieve user inputs
+    // Sanitize and retrieve inputs from the form
     $username = sanitize_input($_POST["username"]);
     $email = sanitize_input($_POST["email"]);
-    $password = $_POST["password"]; // Password needs to be hashed, so sanitize later if needed for display
-    $confirm_password = $_POST["confirm_password"]; // Confirm password for comparison
-
+    $password = $_POST["password"];
+    $confirm_password = $_POST["confirm_password"];
 
     // --- Input Validation ---
-
-    // Check if username or email are empty
     if (empty($username) || empty($email) || empty($password) || empty($confirm_password)) {
         $_SESSION['error_message'] = "All fields are required.";
-        header("Location: ../register"); // Redirect back to the registration form
-        exit();
-    }
-
-    // Validate email format
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $_SESSION['error_message'] = "Invalid email format.";
-        header("Location: ../register");
-        exit();
-    }
-
-    // Check if passwords match
-    if ($password != $confirm_password) {
+    } elseif ($password != $confirm_password) {
         $_SESSION['error_message'] = "Passwords do not match.";
-        header("Location: ../register");
-        exit();
-    }
+    } else {
+        // --- Database Operations ---
+        $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME_ACCOUNTS);
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
 
-    // --- Database Operations ---
+        // Check if username or email already exists in the database
+        $stmt = $conn->prepare("SELECT UserId FROM users WHERE Username = ? OR Email = ?");
+        $stmt->bind_param("ss", $username, $email);
+        $stmt->execute();
+        $stmt->store_result();
 
-    // Create database connection
-    $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME_ACCOUNTS);
+        if ($stmt->num_rows > 0) {
+            $_SESSION['error_message'] = "Username or Email already taken.";
+        } else {
+            // Hash the password using password_hash for security
+            $password_hash = password_hash($password . GLOBAL_SALT, PASSWORD_DEFAULT);
 
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
+            // Insert the new user into the database
+            $stmt = $conn->prepare("INSERT INTO users (Username, Email, PasswordHash) VALUES (?, ?, ?)");
+            $stmt->bind_param("sss", $username, $email, $password_hash);
 
-    // Check if username or email already exists
-    $stmt = $conn->prepare("SELECT UserId FROM users WHERE Username = ? OR Email = ?");
-    $stmt->bind_param("ss", $username, $email);
-    $stmt->execute();
-    $stmt->store_result();
-
-    if ($stmt->num_rows > 0) {
-        $_SESSION['error_message'] = "Username or Email already taken.";
+            if ($stmt->execute()) {
+                // Registration successful
+                $_SESSION['success_message'] = "Registration successful!";
+            } else {
+                // Registration failed
+                $_SESSION['error_message'] = "Error during registration. Please try again.";
+                // For debugging purposes, you can log the error:
+                // error_log("Signup error: " . $stmt->error);
+            }
+        }
         $stmt->close();
         $conn->close();
-        header("Location: ../register");
-        exit();
-    }
-    $stmt->close();
-
-
-    // Hash the password using password_hash with a salt
-    $password_hash = password_hash($password . AUTH_SALT, PASSWORD_DEFAULT);
-
-    // Prepare SQL statement to insert user data
-    $stmt = $conn->prepare("INSERT INTO users (Username, Email, PasswordHash) VALUES (?, ?, ?)");
-    $stmt->bind_param("sss", $username, $email, $password_hash);
-
-
-    if ($stmt->execute()) {
-        $_SESSION['success_message'] = "Registration successful!";
-        header("Location: ../register"); // Redirect to registration page with success message, or redirect to login page
-    } else {
-        $_SESSION['error_message'] = "Error during registration. Please try again.";
-        // Log error for debugging: error_log("Signup error: " . $stmt->error);
-        header("Location: ../register");
     }
 
-    $stmt->close();
-    $conn->close();
-    exit();
-
+    // Redirect back to the registration form (register.php) to display messages
+    header("Location: ../register");
+    exit(); // Ensure that script execution stops after redirection
 } else {
-    // If the form is not submitted via POST, redirect to the registration form
+    // If the form is not submitted via POST, redirect to the register page
     header("Location: ../register");
     exit();
 }

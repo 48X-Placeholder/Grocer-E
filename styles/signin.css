@@ -150,3 +150,22 @@ html {
 .button:hover {
     background-color: #555; /* Hover effect for Register button */
 }
+
+
+.error-message {
+    color: #721c24; /* Dark red color for error messages */
+    background-color: #f8d7da; /* Light red background for error messages */
+    border: 1px solid #f5c6cb; /* Border for error messages */
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}
+
+.success-message {
+    color: #155724; /* Dark green color for success messages */
+    background-color: #d4edda; /* Light green background for success messages */
+    border: 1px solid #c3e6cb; /* Border for success messages */
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}
