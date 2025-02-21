@@ -43,7 +43,7 @@ function sortTable(columnIndex, dataType, headerElement) {
 
 // JavaScript function to load data from the PHP script
 function loadGroceryData() {
-    fetch('fetch_inventory.php')
+    fetch('../inventory/fetch_inventory.php')
         .then(response => response.json())
         .then(data => {
             const tableBody = document.getElementById('groceryTableBody');
@@ -95,7 +95,7 @@ function addItem() {
 
     const requestData = { upcCode, productName, brand, category, quantity, expirationDate };
 
-    fetch('add_inventory_item.php', {
+    fetch('../inventory/add_inventory_item.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -127,7 +127,7 @@ function deleteSelectedItems() {
         return;
     }
 
-    fetch('delete_inventory_item.php', {
+    fetch('../inventory/delete_inventory_item.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -191,7 +191,7 @@ function updateItem() {
 
     const requestData = { itemId, productName, brand, category, quantity, expirationDate };
 
-    fetch('update_inventory_item.php', {
+    fetch('../inventory/update_inventory_item.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

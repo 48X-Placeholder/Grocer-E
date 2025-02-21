@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-require_once 'config.php';
+require_once __DIR__ . "/../config.php";
 
 // Get data from request
 $data = json_decode(file_get_contents('php://input'), true);

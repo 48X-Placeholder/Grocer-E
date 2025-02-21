@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-require_once __DIR__ . 'config.php'; 
+require_once __DIR__ . "/../config.php";
 // ^^ Check that file correctly connects to database, will need to check AWS db
 
 // Get data from request

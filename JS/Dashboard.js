@@ -1,5 +1,5 @@
 function loadDashboardData() {
-    fetch('fetch_dashboard_data.php')
+    fetch('../dashboard/fetch_dashboard_data.php')
         .then(response => response.json())
         .then(data => {
             // Populate Shopping List Table

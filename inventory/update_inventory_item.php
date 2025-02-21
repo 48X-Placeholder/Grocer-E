@@ -4,7 +4,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 header("Content-Type: application/json");
 
-require_once __DIR__ . 'config.php'; // Ensure correct database connection
+require_once __DIR__ . "/../config.php";
 
 // Get data from request
 $data = json_decode(file_get_contents("php://input"), true);

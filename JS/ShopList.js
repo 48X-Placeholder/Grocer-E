@@ -1,6 +1,6 @@
 // Function to load shopping list data from PHP
 function loadShoppingList() {
-    fetch('fetch_shopping_list.php')
+    fetch('../shopping-list/fetch_shopping_list.php')
         .then(response => response.json())
         .then(data => {
             const tableBody = document.getElementById('shoppingTableBody');
@@ -77,7 +77,7 @@ function sortTable(columnIndex, dataType, headerElement) {
 
 // Function to toggle purchase status in db
 function togglePurchased(itemId, isChecked) {
-    fetch('update_purchased_status.php', {
+    fetch('../shopping-list/update_purchased_status.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -103,7 +103,7 @@ function deleteSelectedItems() {
         return;
     }
 
-    fetch('delete_shopping_item.php', {
+    fetch('../shopping-list/delete_shopping_item.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -134,7 +134,7 @@ function addShopItem() {
         return;
     }
 
-    fetch('add_shopping_item.php', {
+    fetch('../shopping-list/add_shopping_item.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -192,7 +192,7 @@ function updateShopItem() {
 
     const requestData = { itemId, productName, brand, category, quantity };
 
-    fetch('update_shopping_item.php', {
+    fetch('../shopping-list/update_shopping_item.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

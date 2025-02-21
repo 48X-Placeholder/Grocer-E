@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-require_once 'config.php'; // Ensure database connection
+require_once __DIR__ . "/../config.php";
 
 // Query to fetch all shopping list items for the user
 $userId = 1; // Temporary fix, replace with session-based authentication later

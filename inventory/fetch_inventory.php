@@ -2,8 +2,7 @@
 // fetch_inventory.php
 
 header('Content-Type: application/json');
-require_once __DIR__ . 'config.php';
-
+require_once __DIR__ . "/../config.php";
 // Query to fetch inventory data along with product details
 $sql = "SELECT 
             i.InventoryItemId, 
