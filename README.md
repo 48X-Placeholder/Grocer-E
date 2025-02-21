@@ -1,8 +1,12 @@
-# PHP-Site-Combined
-Compiled Site
+# Grocer-E
+A Complied Site, where development will take place for ease of use.
 
+**Development Stack:** [XAMPP](https://www.apachefriends.org/) or a [Local WP](https://localwp.com/) (Modified WordPress Install)
 
+**Setup:** Run ***db-setup.php*** or run the SQL Commands Below
 
+***Notes**: If using ***db-setup.php***, if you want to reinstall the database (reset) then append **?reset=1** in URL
+For Example: "grocer-e.local:10017/db-setup.php?reset=1"*
 
 ****here is sql code to build databases needed*****
 **Create the grocery database**
