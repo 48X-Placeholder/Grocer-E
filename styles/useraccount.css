@@ -1,0 +1,89 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #222;
+    color: white;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #333;
+    padding: 10px 20px;
+}
+
+.logo {
+    text-decoration: none; /* It gets rid of the underlined text. Don't know why it has to be here and not .Business-Name */
+}
+
+.logo img {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%; /* border-radius makes the corners rounded, 50% makes logo round. Looks better as a logo when round */
+    margin-right: 8px; /* Makes the text slightly to the right of the logo, looks better */
+}
+
+.Business-Name {
+    font-size: 30px;
+    color: white;
+    text-align: center;
+}
+
+nav a {
+    margin-left: 15px;
+    color: white;
+    text-decoration: none;
+}
+
+.container {
+    display: flex;
+    height: calc(100vh - 50px);
+}
+
+aside {
+    width: 200px;
+    background-color: #444;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+aside button {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #555;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+aside button:hover {
+    background-color: #666;
+}
+
+main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.content-box {
+    background-color: #555;
+    padding: 20px;
+    text-align: center;
+    width: 60%;
+}
+
+.edit-btn {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #777;
+    color: white;
+    border: none;
+    cursor: pointer;
+}

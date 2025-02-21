@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="styles/dashboard.css">
+</head>
+<body>
+
+    <nav class="Navigation-Menu">
+	
+        <a href="index.html" class="logo">
+            <img src="images/Logo.png" alt="Logo">
+            <span class="Business-Name">Grocer-E</span>
+        </a>
+
+        <div class="Navigation-Menu-Links">
+            <a href="index.html">Home</a>
+			<!-- TEMPORARY, delete after user login is implemented --> <a href="dashboard.html">Dashboard</a>
+            <a href="about_us.html">About Us</a>
+            <a href="inventory.html">Inventory List</a>
+            <a href="shoplist.html">Shopping List</a>
+            <a href="login.html">Login/Register</a>
+        </div>
+    </nav>
+
+    <section class="list-section">
+	
+        <!-- Tables Container -->
+        <div class="tables-container">
+            <!-- Shopping List Table -->
+            <div class="table-container">
+                <h2>Shopping List</h2>
+                <table class="grocery-list-table">
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable(0, 'string', this)" data-order="asc">Product Name</th>
+                            <th onclick="sortTable(1, 'string', this)" data-order="asc">Brand</th>
+                            <th onclick="sortTable(2, 'string', this)" data-order="asc">Category</th>
+                            <th onclick="sortTable(3, 'number', this)" data-order="asc">Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Milk</td>
+                            <td>Brand A</td>
+                            <td>Dairy</td>
+                            <td>10</td>
+                        </tr>
+                        <tr>
+                            <td>Apples</td>
+                            <td>Brand B</td>
+                            <td>Fruits</td>
+                            <td>10</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Inventory List Table -->
+            <div class="table-container">
+                <h2>Inventory List</h2>
+                <table class="grocery-list-table">
+                    <thead>
+                        <tr>
+							<th onclick="sortTable(0, 'string', this)" data-order="asc">Product Name</th>
+							<th onclick="sortTable(1, 'string', this)" data-order="asc">Brand</th>
+							<th onclick="sortTable(2, 'string', this)" data-order="asc">Category</th>
+							<th onclick="sortTable(3, 'number', this)" data-order="asc">Quantity</th>
+							<th onclick="sortTable(4, 'date', this)" data-order="asc">Expiration Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tomato Soup</td>
+                            <td>Brand K</td>
+                            <td>Canned Goods</td>
+                            <td>10</td>
+                            <td>2025-10-01</td>
+                        </tr>
+                        <tr>
+                            <td>Bananas</td>
+                            <td>Brand L</td>
+                            <td>Fruit</td>
+                            <td>10</td>
+                            <td>2025-01-19</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+			<div class="list-actions">
+				<a class="shoplist-btn" href="shoplist.html">
+					Shopping List
+				</a>
+				<a class="inventory-btn" href="inventory.html">
+					Inventory
+				</a>
+
+        </div>
+
+    <script src="JS/List.js"></script>
+</body>
+</html>
