@@ -1,0 +1,36 @@
+/* account.css */
+
+.account-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 30px;
+}
+
+.user-details {
+    background-color: #444;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.user-details p {
+    margin: 10px 0;
+}
+
+.settings-section {
+    background-color: #444;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.settings-section h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: white;
+    text-align: center;
+}
+
+.settings-section form {
+    margin-top: 20px;
+}
