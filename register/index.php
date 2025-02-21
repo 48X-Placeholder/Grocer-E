@@ -12,27 +12,34 @@ require_once __DIR__ . "/../page-templates/navigation-menu.php"; ?>
 	<?php site_navigation_menu(); ?>
 	
 	<div class="auth-box">
-		<h2>Register</h2>
-		<form>
-			<div class="user-box">
-				<input type="text" name="" required="">
-				<label>Username</label>
-			</div>
-			<div class="user-box">
-				<input type="text" name="" required="">
-				<label>Email</label>
-			</div>
-			<div class="user-box">
-				<input type="password" name="" required="">
-				<label>Password</label>
-			</div>
-			<div class="user-box">
-				<input type="password" name="" required="">
-				<label>Confirm Password</label>
-			</div>
-            <a href="#" class="button">Register</a>
-		</form>
-	</div>
+        <h2>Register</h2>
+
+        <?php
+            session_start(); // Start session to access messages
+            if (isset($_SESSION['error_message'])) {
+                echo '<div class="error-message">' . $_SESSION['error_message'] . '</div>';
+                unset($_SESSION['error_message']); // Clear the message after displaying
+            }
+            if (isset($_SESSION['success_message'])) {
+                echo '<div class="success-message">' . $_SESSION['success_message'] . '</div>';
+                unset($_SESSION['success_message']); // Clear the message after displaying
+            }
+        ?>
+
+        <form action="signup.php" method="POST">             <div class="user-box">
+                <input type="text" name="username" required="">                 <label>Username</label>
+            </div>
+            <div class="user-box">
+                <input type="email" name="email" required="">                 <label>Email</label>
+            </div>
+            <div class="user-box">
+                <input type="password" name="password" required="">                 <label>Password</label>
+            </div>
+            <div class="user-box">
+                <input type="password" name="confirm_password" required="">                 <label>Confirm Password</label>
+            </div>
+            <button type="submit" class="button">Register</button>         </form>
+    </div>
 	
 </body>
 </html>

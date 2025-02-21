@@ -4,6 +4,9 @@
 /** The name of the database for Core Site */
 define("DB_NAME", "grocery_db");
 
+/** The name of the database for Core Site Accounts */
+define("DB_NAME_ACCOUNTS", "user_db");
+
 /** Database username */
 define("DB_USER", "root");
 
