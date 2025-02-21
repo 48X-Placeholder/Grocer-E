@@ -2,7 +2,6 @@
 require_once __DIR__ . "/../page-templates/navigation-menu.php";
 
 require_once __DIR__ . "/../config.php";
-session_start(); // Start session for messages
 
 // Function to sanitize inputs
 function sanitize_input($data) {
@@ -43,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['user_id'] = $user['UserId']; // Store user ID in session (for persistent login)
                 $_SESSION['username'] = $user['Username']; // Store username in session (optional, for display)
                 $_SESSION['success_message'] = "Login successful!"; // Optional success message
-                header("Location: dashboard"); // Redirect to dashboard
+                header("Location: ../dashboard"); // Redirect to dashboard
                 exit(); // Ensure no further code is executed after redirect
             } else {
                 $_SESSION['error_message'] = "Invalid password.";
