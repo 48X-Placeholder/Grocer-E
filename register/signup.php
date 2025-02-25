@@ -44,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['error_message'] = "Username or Email already taken.";
         } else {
             // Hash the password using password_hash for security
-            $password_hash = password_hash($password . GLOBAL_SALT, PASSWORD_DEFAULT);
+            $password_hash = password_hash($password . AUTH_SALT, PASSWORD_DEFAULT);
 
             // Insert the new user into the database
             $stmt = $conn->prepare("INSERT INTO users (Username, Email, PasswordHash) VALUES (?, ?, ?)");
