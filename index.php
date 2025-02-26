@@ -10,17 +10,31 @@ require_once dirname(__FILE__) . "/page-templates/navigation-menu.php"; ?>
 <body>
 	<!-- Site Navigation -->
 	<?php site_navigation_menu(); ?>
-	<section class="intro-section">
-		<img src="../images/Generic1.jpg" alt="Generic Grocery Image" class="intro-image">
-		<div class="intro-text-box">
-			<p class="intro-text">
-				The grocery tracking site is a streamlined tool designed to help users effortlessly manage
-				their shopping lists and keep track of pantry items. With features to log purchases, monitor expiration dates,
-				and categorize items by store or aisle, it simplifies meal planning and reduces food waste. Users can quickly
-				search or scan items, receive reminders for low-stock essentials, and view past purchases to optimize future
-				shopping. The interface is intuitive, with a dashboard that provides a quick overview of all pantry and fridge items at a glance.
-			</p>
-		</div>
-	</section>
+    <section>
+        <div class="text-section">
+            <p>Grocer-E is designed to make grocery management easy and efficient. Whether you're keeping track of pantry stock or planning meals, our platform helps streamline your shopping experience.</p>
+        </div>
+        <div class="image-container">
+        <img src="../assets/images/indexphoto2.jpg" alt="Child helping with groceries" class="full-width-image">
+        </div>
+
+        <div class="text-section">
+            <p>With Grocer-E, you can log purchases, categorize items, and receive low-stock alerts. Say goodbye to forgotten groceries and last-minute store runs.</p>
+        </div>
+        <div class="image-container">
+        <img src="../assets/images/indexphoto1.jpg" alt="Woman organizing pantry" class="full-width-image">
+        </div>
+
+        <div class="text-section">
+            <p>Keep track of your fresh produce and avoid food waste. Our system ensures that your kitchen stays organized, and your meals are always planned ahead.</p>
+        </div>
+        <div class="image-container">
+        <img src="../assets/images/indexphoto3.jpg" alt="Person placing vegetables in fridge" class="full-width-image">
+        </div>
+    </section>
+	
+	<footer class="footer">
+        <a href="../about">About Us</a>
+    </footer>
 </body>
 </html>

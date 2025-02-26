@@ -38,7 +38,7 @@ $conn->close();
 </head>
 <body>
     <!-- Site Navigation -->
-	<?php site_navigation_menu(); ?>
+	<?php site_navigation_menu(true); ?>
 
      <div class="dashboard-container">
             <!-- Sidebar Navigation -->

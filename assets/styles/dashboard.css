@@ -1,61 +1,117 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: Tahoma, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #111; /* Dark grey background */
+    background-color: #333; /* Dark grey background */
     color: white; /* White text color */
 }
 
 .Navigation-Menu {
     display: flex;
     align-items: center;
-    justify-content: space-between; /*Spaces out the menu navigation items */
-    background-color: #333333;
-    padding: 5px; /* Slight padding centers the logo and menu links nicely */
+    justify-content: space-between;
+    background-color: #222;
+    padding: 10px 20px;
 }
 
 .logo {
-    text-decoration: none; /* It gets rid of the underlined text. Don't know why it has to be here and not .Business-Name */
+    text-decoration: none;
 }
 
 .logo img {
-	height: 40px;
-    width: 40px;
-    border-radius: 50%; /* border-radius makes the corners rounded, 50% makes logo round. Looks better as a logo when round */
-	margin-right: 8px; /* Makes the text slightly to the right of the logo, looks better */
-}
-
-.Business-Name {
-    font-size: 30px;
-	color: white;
-	text-align: center;
+    height: 40px;
+    width: auto;
 }
 
 .Navigation-Menu-Links {
     display: flex;
-    gap: 20px;
+    gap: 15px;
 }
 
 .Navigation-Menu-Links a {
-	font-size: 25px;
+    font-size: 18px;
     color: white;
-    text-decoration: none; /* It gets rid of the underlined text. */
-    padding: 10px 10px; /* Padding makes the hover effect bigger*/
-    border-radius: 10px; /* Makes the logo round*/
-    transition: background-color 0.2s linear;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s linear;
 }
 
 .Navigation-Menu-Links a:hover {
-    background-color: #555; /* Slightly lighter background on hover */
+    background-color: #444;
 }
 
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+}
+.dashboard-sidebar {
+    width: 250px;
+    background-color: #222;
+    padding: 20px;
+    height: 100vh;
+}
+
+.dashboard-sidebar nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.dashboard-sidebar nav ul li {
+    margin: 20px 0;
+}
+
+.dashboard-sidebar nav ul li a {
+    text-decoration: none;
+    font-size: 18px;
+    color: white;
+    display: block;
+    padding: 12px;
+    background-color: #333;
+    border-radius: 5px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.dashboard-sidebar nav ul li a:hover {
+    background-color: #444;
+}
+
+/* Main Content Area */
+.dashboard-content {
+    flex-grow: 1;
+    padding: 10px;
+    text-align: center;
+}
+
+/* Adjust for smaller screens */
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+    .dashboard-sidebar {
+        width: 100%;
+        height: auto;
+        padding: 10px;
+    }
+    .dashboard-sidebar nav ul {
+        display: flex;
+        justify-content: space-around;
+    }
+    .dashboard-sidebar nav ul li {
+        margin: 0;
+    }
+    .dashboard-content {
+        padding: 20px;
+    }
+}
 .list-section {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 20px;
-    margin: auto; /* Centers the section within the body */
+    margin: auto;
 }
 
 .tables-container {
@@ -74,12 +130,11 @@ body {
     position: relative;
 }
 
-/* Styling and centering the table */
 .grocery-list-table {
-    width: 100%; /* Adjusts width; change as needed */
+    width: 100%;
     border-collapse: collapse;
-    margin: 20px auto; /* Centers the table */
-    background-color: #444444; /* Background for contrast */
+    margin: 20px auto;
+    background-color: #444444;
     border: 1px solid #555555;
 }
 
@@ -87,38 +142,23 @@ body {
 .grocery-list-table td {
     padding: 10px;
     text-align: center;
-    border: 1px solid #555555; /* Border around cells */
-}
-
-.table-container {
-    max-height: 450px; /* Keeps vertical scrolling */
-    overflow-y: auto; /* Adds vertical scroll bar */
-    border: 1px solid #888; /* Optional: border for better visibility */
-    margin: 20px auto; /* Center the table container */
-    width: 100%; /* Increase the width of the table container */
+    border: 1px solid #555555;
 }
 
 .grocery-list-table th {
-    background-color: #333; /* Dark background for header */
+    background-color: #333;
     color: white;
 }
 
-.tables-container {
-    display: flex;
-    justify-content: space-between;
-    gap: 100px;
-    padding: 20px;
-	min-width: 65%; /* Adjust this to make tables wider on page */
-}	
-
 .list-actions {
     display: flex;
-    justify-content: center; /* Centers the buttons */
-    margin-top: 20px; /* Space above the buttons */
+    justify-content: center;
+    gap: 450px;
+    width: 100%;
+    margin-top: 20px;
 }
 
-.shoplist-btn,
-.inventory-btn {
+.list-actions a {
     padding: 12px 20px;
     background-color: #888888;
     color: white;
@@ -126,13 +166,15 @@ body {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-    margin: 0 350px; /* Adds spacing between the buttons, can't find a way to center them below the shopping and inventory list all the time */
-	text-decoration: none;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    text-align: center;
+    width: 100px;
+    display: inline-block;
 }
 
-.shoplist-btn:hover,
-.inventory-btn:hover {
+.list-actions a:hover {
     background-color: #777777;
     transform: scale(1.1);
+    box-shadow: 0px 5px 10px rgba(255, 255, 255, 0.2);
 }

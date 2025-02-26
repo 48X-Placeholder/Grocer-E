@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . "/../functions/load.php";
 
-function site_navigation_menu()
+function site_navigation_menu($dashboard = false)
 {
     $loggedIn = cached_userid_info(); // Check if user_id is set, indicating login
 
@@ -9,9 +9,8 @@ function site_navigation_menu()
 <nav class="Navigation-Menu">
     <a href="../" class="logo">
         <img src="../assets/images/grocer-e_text.png" alt="Grocer-E Logo">
-        <span class="Business-Name">Grocer-E</span>
     </a>';
-    if ($loggedIn) {
+    if ($loggedIn && $dashboard) {
         echo "<h1>Hi " . htmlspecialchars(cached_username_info()) . "!</h1>";
     }
     echo '<div class="Navigation-Menu-Links">

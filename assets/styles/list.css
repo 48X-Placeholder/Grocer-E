@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: Tahoma, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #111; /* Dark grey background */
@@ -10,8 +10,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between; /*Spaces out the menu navigation items */
-    background-color: #333333;
-    padding: 5px; /* Slight padding centers the logo and menu links nicely */
+    background-color: #222;
+    padding: 10px 20px; /* Slight padding centers the logo and menu links nicely */
 }
 
 .logo {
@@ -20,33 +20,25 @@ body {
 
 .logo img {
 	height: 40px;
-    width: 40px;
-    border-radius: 50%; /* border-radius makes the corners rounded, 50% makes logo round. Looks better as a logo when round */
-	margin-right: 8px; /* Makes the text slightly to the right of the logo, looks better */
-}
-
-.Business-Name {
-    font-size: 30px;
-	color: white;
-	text-align: center;
+    width: auto;
 }
 
 .Navigation-Menu-Links {
     display: flex;
-    gap: 20px;
+    gap: 15px;
 }
 
 .Navigation-Menu-Links a {
-	font-size: 25px;
+	font-size: 18px;
     color: white;
     text-decoration: none; /* It gets rid of the underlined text. */
-    padding: 10px 10px; /* Padding makes the hover effect bigger*/
-    border-radius: 10px; /* Makes the logo round*/
-    transition: background-color 0.2s linear;
+    padding: 10px; /* Padding makes the hover effect bigger*/
+    border-radius: 5px; /* Makes the logo round*/
+    transition: background-color 0.3s linear;
 }
 
 .Navigation-Menu-Links a:hover {
-    background-color: #555; /* Slightly lighter background on hover */
+    background-color: #444; /* Slightly lighter background on hover */
 }
 
 .list-section {
@@ -88,7 +80,7 @@ body {
 
 /* Styling and centering the table */
 .grocery-list-table {
-    width: 100%; /* Adjusts width; change as needed */
+    width: 80%; /* Adjusts width; change as needed */
     border-collapse: collapse;
     margin: 20px auto; /* Centers the table */
     background-color: #444444; /* Background for contrast */
@@ -102,6 +94,9 @@ body {
     border: 1px solid #555555; /* Border around cells */
 }
 
+.grocery-list-table th {
+    background-color: #666666; /* Slightly darker header */
+}
 
 /* Centering the add/delete buttons */
 .list-actions {
@@ -138,6 +133,11 @@ body {
     width: 90%; /* Increase the width of the table container */
 }
 
+.grocery-list-table {
+    width: 100%; /* Ensure table spans the width of the container */
+    border-collapse: collapse;
+}
+
 .grocery-list-table th, .grocery-list-table td {
     padding: 10px 10px; /* Add more padding for better readability */
     text-align: center;
@@ -147,6 +147,18 @@ body {
 .grocery-list-table th {
     background-color: #333; /* Dark background for header */
     color: white;
+}
+
+th.asc::after {
+    content: " ↑";
+    font-size: 0.8em;
+    margin-left: 5px;
+}
+
+th.desc::after {
+    content: " ↓";
+    font-size: 0.8em;
+    margin-left: 5px;
 }
 
 .page-title {
