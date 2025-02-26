@@ -1,19 +1,14 @@
 <?php
 require_once __DIR__ . "/../page-templates/navigation-menu.php";
 
-// Unset all session variables
-session_unset();
-
-// Destroy the session
-session_destroy();
-
+CloseSessionReadOnly();
 ?>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Logout Confirmation</title>
-    <link rel="stylesheet" href="../styles/signin.css">
+    <link rel="stylesheet" href="../assets/styles/signin.css">
     <style>
         .confirmation-box {
             background-color: #f4f4f4;

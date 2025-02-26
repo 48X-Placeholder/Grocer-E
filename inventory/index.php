@@ -5,7 +5,7 @@ require_once __DIR__ . "/../page-templates/navigation-menu.php"; ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grocery List</title>
-    <link rel="stylesheet" href="../styles/list.css">
+    <link rel="stylesheet" href="../assets/styles/list.css">
 </head>
 <body>
     <!-- Site Navigation -->
@@ -95,6 +95,6 @@ require_once __DIR__ . "/../page-templates/navigation-menu.php"; ?>
 -->
 
     <!-- pull necessary JS code from List.js file -->
-    <script src="../JS/Inventory.js"></script>
+    <script src="../assets/js/Inventory.js"></script>
 </body>
 </html>

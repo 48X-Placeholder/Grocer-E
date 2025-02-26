@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: Tahoma, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #333; /* Dark grey background */
@@ -38,16 +38,15 @@ body {
 }
 
 .logo img {
-	height: 40px;
-    width: 40px;
-    border-radius: 50%; /* border-radius makes the corners rounded, 50% makes logo round. Looks better as a logo when round */
-	margin-right: 8px; /* Makes the text slightly to the right of the logo, looks better */
+    height: 50px;
+    width: auto;
+    display: block;
 }
 
 .Business-Name {
     font-size: 30px;
-	color: white;
-	text-align: center;
+    color: white;
+    text-align: center;
 }
 
 .Navigation-Menu-Links {
@@ -56,7 +55,7 @@ body {
 }
 
 .Navigation-Menu-Links a {
-	font-size: 25px;
+    font-size: 25px;
     color: white;
     text-decoration: none; /* It gets rid of the underlined text. */
     padding: 10px 10px; /* Padding makes the hover effect bigger*/
@@ -71,76 +70,7 @@ body {
 /* https://codepen.io/soufiane-khalfaoui-hassani/pen/LYpPWda for login box */
 
 html {
-  height: 100%;
-}
-
-.auth-box {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 400px;
-  padding: 40px;
-  transform: translate(-50%, -50%);
-  background: rgba(0,0,0,.5);
-  box-sizing: border-box;
-  box-shadow: 0 15px 25px rgba(0,0,0,.6);
-  border-radius: 10px;
-}
-
-.auth-box h2 {
-  margin: 0 0 30px;
-  padding: 0;
-  color: #fff;
-  text-align: center;
-}
-
-.auth-box .user-box {
-  position: relative;
-}
-
-.auth-box .user-box input {
-  width: 100%;
-  padding: 10px 0;
-  font-size: 16px;
-  color: #fff;
-  margin-bottom: 30px;
-  border: none;
-  border-bottom: 1px solid #fff;
-  outline: none;
-  background: transparent;
-}
-.auth-box .user-box label {
-  position: absolute;
-  top:0;
-  left: 0;
-  padding: 10px 0;
-  font-size: 16px;
-  color: #fff;
-  pointer-events: none;
-  transition: .5s;
-}
-
-.auth-box .user-box input:focus ~ label,
-.auth-box .user-box input:valid ~ label {
-  top: -20px;
-  left: 0;
-  color: #03e9f4;
-  font-size: 12px;
-}
-
-.auth-box form a {
-    position: relative;
-    display: block; /* Change from inline-block to block */
-    width: fit-content; /* Keeps the width as per content size */
-    margin: 40px auto 0; /* Centers horizontally */
-    padding: 10px 20px;
-    color: #03e9f4;
-    font-size: 16px;
-    text-decoration: none;
-    text-transform: uppercase;
-    overflow: hidden;
-    transition: .5s;
-    letter-spacing: 4px;
+    height: 100%;
 }
 
 .button {
@@ -150,6 +80,94 @@ html {
 .button:hover {
     background-color: #555; /* Hover effect for Register button */
 }
+
+.auth-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+    gap: 50px; /* Space between form and image */
+}
+
+/* Left Side - Login Form */
+.auth-box {
+    flex: 1;
+    max-width: 350px;
+    min-height: 500px;
+    padding: 60px 40px;
+    background: rgba(0,0,0,.5);
+    box-shadow: 0 15px 25px rgba(0,0,0,.6);
+    border-radius: 10px;
+}
+
+.auth-box h2 {
+    font-size: 48px; /* Bigger and more prominent */
+    margin-bottom: 40px;
+    color: #fff;
+}
+.auth-box form .button {
+    display: block;
+    width: 80%; /* Ensures all buttons take the full width of the form */
+    margin: 10px auto; /* Centers the buttons with consistent spacing */
+    padding: 8px; /* Same padding for all buttons */
+    font-size: 18px;
+    background-color: #444;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+
+.auth-box form .button:hover {
+    background-color: #555;
+}
+
+/* Adjust input fields for better alignment */
+.auth-box .user-box input {
+    width: 100%;
+    padding: 14px;
+    font-size: 18px;
+    color: #fff;
+    border: none;
+    border-bottom: 2px solid #fff;
+    outline: none;
+    background: transparent;
+}
+
+.auth-box .user-box {
+    margin-bottom: 25px; /* Adds spacing between input fields */
+}
+
+/* Right Side - Image */
+.auth-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.auth-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    width: 800px;
+}
+
+/* Adjust for smaller screens */
+@media (max-width: 768px) {
+    .auth-container {
+        flex-direction: column;
+        text-align: center;
+    }
+    .auth-box, .auth-image {
+        max-width: 100%;
+    }
+}
+
 
 
 .error-message {

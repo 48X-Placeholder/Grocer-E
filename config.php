@@ -33,13 +33,4 @@ define("DB_CHARSET", "utf8");
 
 /** Generate a random salt value **/
 define("AUTH_SALT", 'fc$iT_g~[incwYQLe9nsJ+o 5YpJsX9f@PNwZiJfWeEGH+%2 #ai#U|Y%w-fVA(<');
-
-/* */
-// Create connection
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-
-// Check connection
-if ($conn->connect_error) {
- die("Connection failed: " . $conn->connect_error);
-}
 ?>

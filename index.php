@@ -5,7 +5,7 @@ require_once dirname(__FILE__) . "/page-templates/navigation-menu.php"; ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grocery Tracker</title>
-    <link rel="stylesheet" href="../styles/index.css">
+    <link rel="stylesheet" href="../assets/styles/index.css">
 </head>
 <body>
 	<!-- Site Navigation -->
