@@ -2,22 +2,34 @@
 
 // ** Database settings - You can get this info from your web host ** //
 /** The name of the database for Core Site */
-define("DB_NAME", "grocery_db");
+if (!defined('DB_NAME')) {
+ define('DB_NAME', 'grocery_db');
+}
 
 /** The name of the database for Core Site Accounts */
-define("DB_NAME_ACCOUNTS", "user_db");
+if (!defined('DB_NAME_ACCOUNTS')) {
+ define('DB_NAME_ACCOUNTS', 'user_db');
+}
 
 /** Database username */
-define("DB_USER", "root");
+if (!defined('DB_USER')) {
+ define('DB_USER', 'root');
+}
 
 /** Database password */
-define("DB_PASSWORD", "root");
+if (!defined('DB_PASSWORD')) {
+ define('DB_PASSWORD', 'root');
+}
 
 /** Database hostname */
-define("DB_HOST", "localhost");
+if (!defined('DB_HOST')) {
+ define('DB_HOST', 'localhost');
+}
 
 /** Database charset to use in creating database tables. */
-define("DB_CHARSET", "utf8");
+if (!defined('DB_CHARSET')) {
+ define('DB_CHARSET', 'utf8');
+}
 
 /**#@+
  * Authentication unique keys and salts.
@@ -32,5 +44,12 @@ define("DB_CHARSET", "utf8");
  */
 
 /** Generate a random salt value **/
-define("AUTH_SALT", 'fc$iT_g~[incwYQLe9nsJ+o 5YpJsX9f@PNwZiJfWeEGH+%2 #ai#U|Y%w-fVA(<');
+if (!defined('AUTH_SALT')) {
+ define('AUTH_SALT', 'fc$iT_g~[incwYQLe9nsJ+o 5YpJsX9f@PNwZiJfWeEGH+%2 #ai#U|Y%w-fVA(<');
+}
+
+if (!defined('SITE_URL')) {
+ define('SITE_URL', (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/');
+}
+
 ?>

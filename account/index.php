@@ -124,7 +124,22 @@ if (!is_user_logged_in()) {
 
     <?php site_navigation_menu(); ?>
 
-    <div class="account-container auth-box">
+    <div class="dashboard-container">
+    <!-- Sidebar Navigation -->
+                <aside class="dashboard-sidebar">
+                    <nav>
+                        <ul>
+                           <li><a href="#">Account Settings</a></li>
+                           <li><a href="#">Notifications/Alerts</a></li>
+                           <li><a href="#">Activity Logs</a></li>
+                           <li><a href="#">Login History</a></li>
+                        </ul>
+                    </nav>
+                </aside>
+
+        <main class="dashboard-content">
+            <!-- content-box -->
+        <div class=" account-container auth-box">
         <h2>Account Settings</h2>
         <div class="user-details">
             <p><strong>Username:</strong> <?php echo htmlspecialchars($username); ?></p>
@@ -178,6 +193,7 @@ if (!is_user_logged_in()) {
             </form>
         </div>
     </div>
-
+        </main>
+    </div>
 </body>
 </html>

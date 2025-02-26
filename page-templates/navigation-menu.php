@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . "/../functions/load.php";
+require_once __DIR__ . "/../config.php";
 
 function site_navigation_menu($dashboard = false)
 {
@@ -7,33 +8,33 @@ function site_navigation_menu($dashboard = false)
 
     echo '
 <nav class="Navigation-Menu">
-    <a href="../" class="logo">
-        <img src="../assets/images/grocer-e_text.png" alt="Grocer-E Logo">
+    <a href="'.SITE_URL.'" class="logo">
+        <img src="'.SITE_URL.'assets/images/grocer-e_text.png" alt="Grocer-E Logo">
     </a>';
     if ($loggedIn && $dashboard) {
         echo "<h1>Hi " . htmlspecialchars(cached_username_info()) . "!</h1>";
     }
     echo '<div class="Navigation-Menu-Links">
-        <a href="../">Home</a>';
+        <a href="'.SITE_URL.'">Home</a>';
 
     // Public links (always visible)
     echo '
-        <a href="../about">About Us</a>';
+        <a href="'.SITE_URL.'about">About Us</a>';
 
     // Conditional links based on login status
     if ($loggedIn) {
         // Logged in user links
         echo '
-        <a href="../dashboard">Dashboard</a>
-        <a href="../inventory">Inventory List</a>
-        <a href="../shopping-list">Shopping List</a>
-        <a href="../account">Account</a>
-        <a href="../logout">Signout</a>'; // Assuming you will create a logout.php
+        <a href="'.SITE_URL.'dashboard">Dashboard</a>
+        <a href="'.SITE_URL.'inventory">Inventory List</a>
+        <a href="'.SITE_URL.'shopping-list">Shopping List</a>
+        <a href="'.SITE_URL.'account">Account</a>
+        <a href="'.SITE_URL.'logout">Signout</a>'; // Assuming you will create a logout.php
     } else {
         // Not logged in user links
         echo '
-        <a href="../login">Login</a>
-        <a href="../register">Register</a>';
+        <a href="'.SITE_URL.'login">Login</a>
+        <a href="'.SITE_URL.'register">Register</a>';
     }
 
     echo '
@@ -47,10 +48,10 @@ function site_dashboard_sidebar_menu()
     <aside class="dashboard-sidebar">
                 <nav>
                     <ul>
-                        <li><a href="../shopping-list">Shopping List</a></li>
-                        <li><a href="../inventory">Inventory List</a></li>
-                        <li><a href="../scan">Scan Items</a></li>
-                        <li><a href="../account">Account</a></li>
+                        <li><a href="'.SITE_URL.'shopping-list">Shopping List</a></li>
+                        <li><a href="'.SITE_URL.'inventory">Inventory List</a></li>
+                        <li><a href="'.SITE_URL.'scan">Scan Items</a></li>
+                        <li><a href="'.SITE_URL.'account">Account</a></li>
                     </ul>
                 </nav>
             </aside>
