@@ -48,6 +48,7 @@ if (!defined('AUTH_SALT')) {
  define('AUTH_SALT', 'fc$iT_g~[incwYQLe9nsJ+o 5YpJsX9f@PNwZiJfWeEGH+%2 #ai#U|Y%w-fVA(<');
 }
 
+/** Site URL (Used for URLS) */
 if (!defined('SITE_URL')) {
  define('SITE_URL', (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/');
 }
