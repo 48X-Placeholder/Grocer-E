@@ -1,6 +1,13 @@
 <?php
 header('Content-Type: application/json');
 require_once __DIR__ . "/../config.php";
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+if ($conn->connect_error) {
+    echo json_encode(["error" => "Database connection failed"]);
+    exit;
+}
+
+
 
 // Fetch latest 5 shopping list items
 $sql_shopping = "SELECT lp.ProductName, lp.Brand, lp.Category, sl.QuantityNeeded 
