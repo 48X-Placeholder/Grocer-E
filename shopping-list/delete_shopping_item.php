@@ -1,14 +1,6 @@
 <?php
-session_start();
 header('Content-Type: application/json');
 require_once __DIR__ . "/../config.php";
-
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-if ($conn->connect_error) {
-    echo json_encode(["error" => "Database connection failed"]);
-    exit;
-}
-
 
 // Get data from POST request
 $data = json_decode(file_get_contents('php://input'), true);

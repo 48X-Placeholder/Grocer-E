@@ -2,13 +2,6 @@
 header('Content-Type: application/json');
 require_once __DIR__ . "/../config.php";
 
-// Create database connection
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-if ($conn->connect_error) {
-    echo json_encode(["success" => false, "message" => "Database connection failed"]);
-    exit;
-}
-
 // Get data from request
 $data = json_decode(file_get_contents('php://input'), true);
 
@@ -52,7 +45,7 @@ if (!$stmt_update_product->execute()) {
 
 $stmt_update_product->close();
 
-// Step 3: Update SHOPPING_LIST (QuantityNeeded)
+// Step 3: Update SHOPPING_LIST (Quantity)
 $sql_update_shop = "UPDATE SHOPPING_LIST SET QuantityNeeded = ? WHERE ListItemId = ?";
 $stmt_update_shop = $conn->prepare($sql_update_shop);
 $stmt_update_shop->bind_param("ii", $quantity, $itemId);

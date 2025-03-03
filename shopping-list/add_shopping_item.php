@@ -1,21 +1,6 @@
 <?php
-session_start();
 header('Content-Type: application/json');
 require_once __DIR__ . "/../config.php";
-
-// Check if user is authenticated
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['success' => false, 'message' => 'User not authenticated']);
-    exit;
-}
-$userId = $_SESSION['user_id'];
-
-// Create database connection
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-if ($conn->connect_error) {
-    echo json_encode(["error" => "Database connection failed"]);
-    exit;
-}
 
 // Get data from request
 $data = json_decode(file_get_contents('php://input'), true);
@@ -29,6 +14,7 @@ $productName = trim($data['productName']);
 $brand = trim($data['brand']);
 $category = trim($data['category']);
 $quantityNeeded = intval($data['quantityNeeded']);
+$userId = 1; // TEMP FIX: Replace with session authentication later
 
 // Check if product already exists in LOCAL_PRODUCTS
 $sql_check = "SELECT ProductId FROM LOCAL_PRODUCTS WHERE ProductName = ? AND Brand = ? AND Category = ?";

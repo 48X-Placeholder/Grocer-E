@@ -1,6 +1,4 @@
 <?php
-session_start(); // Start the session at the very beginning
-
 require __DIR__ . "/../config.php";
 
 header('Content-Type: application/json');
@@ -25,6 +23,7 @@ if ($response === false) {
 
 $product_data = json_decode($response, true);
 
+// Check if JSON decoding failed
 if ($product_data === null) {
     error_log("Error: Failed to decode JSON from Open Food Facts for barcode $barcode");
     echo json_encode(["error" => "Invalid response from Open Food Facts"]);
@@ -61,12 +60,8 @@ if (!isset($product_data['status']) || $product_data['status'] != 1) {
 
 $upc = $barcode;
 
-// Ensure the user is authenticated and retrieve the logged-in user's ID
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(["error" => "User not authenticated."]);
-    exit;
-}
-$user_id = $_SESSION['user_id'];
+// Get the logged-in user's ID
+$user_id = $_SESSION['user_id'] ?? 1; // Placeholder, use actual session user ID
 
 // Connect to the database
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
@@ -137,8 +132,6 @@ if ($shopping_list_check->num_rows == 0) {
 
 $conn->close();
 ?>
-
-
 
 
 
