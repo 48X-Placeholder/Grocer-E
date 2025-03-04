@@ -16,14 +16,18 @@ if ($conn->connect_error) {
 $shopping_query = "SELECT lp.ProductName, lp.Brand, lp.Category, sl.QuantityNeeded 
                    FROM shopping_list sl
                    JOIN local_products lp ON sl.ProductId = lp.ProductId
-                   WHERE sl.UserId = '$user_id'";
+                   WHERE sl.UserId = '$user_id' AND sl.Purchased = '0'
+                   ORDER BY sl.AddedAt ASC
+                   LIMIT 5";
 $shopping_result = $conn->query($shopping_query);
 
 // Fetch inventory items for the logged-in user
 $inventory_query = "SELECT lp.ProductName, lp.Brand, lp.Category, i.Quantity, i.ExpirationDate 
                     FROM inventory i
                     JOIN local_products lp ON i.ProductId = lp.ProductId
-                    WHERE i.UserId = '$user_id'";
+                    WHERE i.UserId = '$user_id'
+                    ORDER BY i.AddedAt ASC
+                    LIMIT 5";
 $inventory_result = $conn->query($inventory_query);
 
 $conn->close();
@@ -46,7 +50,7 @@ $conn->close();
 
             <main class="dashboard-content">
                 <h2>Welcome to Your Dashboard</h2>
-                <p>Manage your groceries and track inventory efficiently.</p>
+                <p>Manage your shopping list and track inventory efficiently.</p>
                 <!-- Shopping List Table -->
                 <div class="table-container">
                     <h2>Shopping List</h2>
@@ -99,5 +103,8 @@ $conn->close();
             </div>
         </main>
     </div>
+
+    <!-- JavaScript file needed for this page 
+    <script src="JS/Dashboard.js"></script> -->
 </body>
 </html>
