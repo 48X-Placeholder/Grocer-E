@@ -50,7 +50,6 @@ function site_dashboard_sidebar_menu()
                     <ul>
                         <li><a href="'.SITE_URL.'shopping-list">Shopping List</a></li>
                         <li><a href="'.SITE_URL.'inventory">Inventory List</a></li>
-                        <!-- <li><a href="'.SITE_URL.'scan">Scan Items</a></li> -->
                         <li><a href="'.SITE_URL.'account">Account</a></li>
                     </ul>
                 </nav>
