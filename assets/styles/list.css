@@ -19,22 +19,30 @@ body {
 }
 
 .logo img {
-	height: 40px;
-    width: auto;
+    height: 40px;
+    width: auto; /* Changed from 40px to auto */
+    border-radius: 50%; /* border-radius makes the corners rounded, 50% makes logo round. Looks better as a logo when round */
+    margin-right: 8px; /* Makes the text slightly to the right of the logo, looks better */
+}
+
+.Business-Name {
+    font-size: 30px;
+    color: white;
+    text-align: center;
 }
 
 .Navigation-Menu-Links {
     display: flex;
-    gap: 15px;
+    gap: 15px; /* Changed from 20px to 15px */
 }
 
 .Navigation-Menu-Links a {
-	font-size: 18px;
+    font-size: 18px; /* Changed from 25px to 18px */
     color: white;
     text-decoration: none; /* It gets rid of the underlined text. */
     padding: 10px; /* Padding makes the hover effect bigger*/
-    border-radius: 5px; /* Makes the logo round*/
-    transition: background-color 0.3s linear;
+    border-radius: 5px; /* Changed from 10px to 5px */
+    transition: background-color 0.3s linear; /* Changed from 0.2s to 0.3s */
 }
 
 .Navigation-Menu-Links a:hover {
@@ -107,8 +115,9 @@ body {
 }
 
 .add-btn,
-.delete-btn {
-    padding: 12px 20px;
+.delete-btn,
+.export-btn {
+    padding: 12px 20px; /* Only changed 'export-btn' */
     background-color: #888888;
     color: white;
     font-size: 16px;
@@ -120,13 +129,14 @@ body {
 
 .add-btn:hover,
 .delete-btn:hover,
+.export-btn:hover,
 .search-btn:hover {
     background-color: #777777;
     transform: scale(1.1);
 }
 
 .table-container {
-    max-height: 450px; /* Keeps vertical scrolling */
+    max-height: 450px; /* Changed from 400px to 450px */
     overflow-y: auto; /* Adds vertical scroll bar */
     border: 1px solid #888; /* Optional: border for better visibility */
     margin: 20px auto; /* Center the table container */
@@ -149,6 +159,13 @@ body {
     color: white;
 }
 
+.grocery-list-table thead {
+    position: sticky;
+    top: 0;
+    background-color: #333; /* Keeps header background */
+    z-index: 10; /* Ensures header stays on top */
+}
+
 th.asc::after {
     content: " ↑";
     font-size: 0.8em;
@@ -162,7 +179,50 @@ th.desc::after {
 }
 
 .page-title {
-	font-size: 25px;
-	padding: 10px 10px; /* Add more padding for better readability */
+    font-size: 25px;
+    padding: 10px 10px; /* Add more padding for better readability */
     text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Hide UPC column by default */
+.upc-column, .upc-header {
+    display: none;
+}
+
+/* Show UPC column for all rows when any row is being edited */
+.edit-mode-active .upc-header,
+.edit-mode-active .upc-column {
+    display: table-cell;
+}
+
+/* Ensure only the selected row shows an editable UPC field */
+.upc-column input {
+    display: none; /* Hide input by default */
+}
+
+/* When a row is in edit mode, show its UPC input */
+.edit-mode .upc-column input {
+    display: inline-block;
+}
+
+.edit-input {
+    display: none;
+}
+
+.edit-mode .edit-text {
+    display: none;
+}
+
+.edit-mode .edit-input {
+    display: inline-block;
+}
+
+.expired-highlight {
+    background-color: rgba(255, 0, 0, 0.3); /* Light red background */
+    font-weight: bold; /* Make text bold for better visibility */
+    border: 2px solid red; /* Optional: Red border for emphasis */
 }
