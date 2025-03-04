@@ -46,7 +46,7 @@ $conn->close();
 
             <main class="dashboard-content">
                 <h2>Welcome to Your Dashboard</h2>
-                <p>Manage your groceries, scan items, and track inventory efficiently.</p>
+                <p>Manage your groceries and track inventory efficiently.</p>
                 <!-- Shopping List Table -->
                 <div class="table-container">
                     <h2>Shopping List</h2>
@@ -99,8 +99,5 @@ $conn->close();
             </div>
         </main>
     </div>
-
-    <!-- JavaScript file needed for this page 
-    <script src="JS/Dashboard.js"></script> -->
 </body>
 </html>

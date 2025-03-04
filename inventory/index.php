@@ -58,6 +58,8 @@ require_once __DIR__ . "/../page-templates/navigation-menu.php"; ?>
         <div class="list-actions">
             <button class="add-btn" onclick="toggleAddItemForm()">Add Item</button>
             <button class="delete-btn" onclick="deleteSelectedItems()">Delete Selected Items</button>
+            <a href="/scan/index.php?source=inventory" class="add-btn">Scan Items</a>
+
         </div>
 
         <div id="editItemForm" style="display: none;">

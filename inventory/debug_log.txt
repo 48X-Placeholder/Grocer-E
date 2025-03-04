@@ -1,9 +1,9 @@
 Array
 (
-    [upcCode] => 000
-    [productName] => Debug
-    [brand] => Test
-    [category] => Debug
-    [quantity] => 1
-    [expirationDate] => 2025-02-28
+    [upcCode] => 123
+    [productName] => test
+    [brand] => test
+    [category] => test
+    [quantity] => 2
+    [expirationDate] => 2025-03-10
 )
