@@ -1,5 +1,18 @@
 <?php
-require_once __DIR__ . "/../page-templates/navigation-menu.php"; ?>
+session_start();
+header('Content-Type: text/html');
+require_once __DIR__ . "/../config.php";
+require_once __DIR__ . "/../page-templates/navigation-menu.php";
+
+// Check if user is authenticated
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.html");
+    exit;
+}
+$userId = $_SESSION['user_id'];
+?>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,8 +21,10 @@ require_once __DIR__ . "/../page-templates/navigation-menu.php"; ?>
     <link rel="stylesheet" href="../assets/styles/list.css">
 </head>
 <body>
-	<!-- Site Navigation -->
-	<?php site_navigation_menu(); ?>
+
+    <nav class="Navigation-Menu">
+        <?php site_navigation_menu(); ?>
+    </nav>
 
     <section class="list-section">
         <div class="list-search-bar">
@@ -30,11 +45,9 @@ require_once __DIR__ . "/../page-templates/navigation-menu.php"; ?>
                     <th onclick="sortTable(1, 'string', this)" data-order="asc">Brand</th>
                     <th onclick="sortTable(2, 'string', this)" data-order="asc">Category</th>
                     <th onclick="sortTable(3, 'number', this)" data-order="asc">Quantity</th>
-                    <th>Purchased</th>
                     <th>Edit</th>
                 </tr>
             </thead>
-
                 
                 <tbody id="shoppingTableBody">
                     <!-- JavaScript will populate this -->
@@ -57,6 +70,7 @@ require_once __DIR__ . "/../page-templates/navigation-menu.php"; ?>
         <div class="list-actions">
             <button class="add-btn" onclick="toggleAddItemForm()">Add Item</button>
             <button class="delete-btn" onclick="deleteSelectedItems()">Delete Selected Items</button>
+            <button class="export-btn" onclick="exportSelectedItems()">Export Selected Items to Inventory</button>
         </div>
 
         <!-- Edit Item Form (Initially Hidden) -->
@@ -81,6 +95,6 @@ require_once __DIR__ . "/../page-templates/navigation-menu.php"; ?>
         </div>
     </section>
 
-    <script src="../assets/js/ShopList.js"></script>
+    <script src="../assets/JS/ShopList.js"></script>
 </body>
 </html>
