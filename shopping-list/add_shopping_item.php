@@ -56,17 +56,43 @@ if (!$product) {
     $productId = $product['ProductId'];
 }
 
-// Insert into SHOPPING_LIST
-$sql_insert_shop = "INSERT INTO SHOPPING_LIST (ProductId, UserId, QuantityNeeded) VALUES (?, ?, ?)";
-$stmt_insert_shop = $conn->prepare($sql_insert_shop);
-$stmt_insert_shop->bind_param('iii', $productId, $userId, $quantityNeeded);
+// Check if the item already exists in SHOPPING_LIST
+$sql_check_shop = "SELECT ListItemId, QuantityNeeded FROM SHOPPING_LIST WHERE ProductId = ? AND UserId = ? AND Purchased = 0";
+$stmt_check_shop = $conn->prepare($sql_check_shop);
+$stmt_check_shop->bind_param('ii', $productId, $userId);
+$stmt_check_shop->execute();
+$result_shop = $stmt_check_shop->get_result();
+$existingShopItem = $result_shop->fetch_assoc();
+$stmt_check_shop->close();
 
-if ($stmt_insert_shop->execute()) {
-    echo json_encode(['success' => true]);
+if ($existingShopItem) {
+    // Item exists → update the quantity instead of adding a duplicate row
+    $newQuantity = $existingShopItem['QuantityNeeded'] + $quantityNeeded;
+    $sql_update_shop = "UPDATE SHOPPING_LIST SET QuantityNeeded = ? WHERE ListItemId = ?";
+    $stmt_update_shop = $conn->prepare($sql_update_shop);
+    $stmt_update_shop->bind_param('ii', $newQuantity, $existingShopItem['ListItemId']);
+
+    if ($stmt_update_shop->execute()) {
+        echo json_encode(['success' => true, 'message' => 'Item already exists in list, quantity has been updated successfully']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Failed to update quantity']);
+    }
+
+    $stmt_update_shop->close();
 } else {
-    echo json_encode(['success' => false, 'message' => 'Failed to add shopping list item']);
+    // New item → insert into SHOPPING_LIST
+    $sql_insert_shop = "INSERT INTO SHOPPING_LIST (ProductId, UserId, QuantityNeeded) VALUES (?, ?, ?)";
+    $stmt_insert_shop = $conn->prepare($sql_insert_shop);
+    $stmt_insert_shop->bind_param('iii', $productId, $userId, $quantityNeeded);
+
+    if ($stmt_insert_shop->execute()) {
+        echo json_encode(['success' => true, 'message' => 'Item added successfully']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Failed to add shopping list item']);
+    }
+
+    $stmt_insert_shop->close();
 }
 
-$stmt_insert_shop->close();
 $conn->close();
 ?>
