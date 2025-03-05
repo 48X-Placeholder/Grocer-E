@@ -151,6 +151,9 @@ function addItem() {
         return;
     }    
 
+    console.log("Sending request data:", requestData); //for debugging
+
+
     fetch('add_inventory_item.php', {
         method: 'POST',
         headers: {
@@ -393,3 +396,6 @@ function cancelEdit(itemId) {
 
 // Load data when the page loads
 document.addEventListener('DOMContentLoaded', loadGroceryData);
+
+
+
