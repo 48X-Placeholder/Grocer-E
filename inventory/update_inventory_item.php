@@ -1,10 +1,21 @@
 <?php
-
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+session_start();
 header("Content-Type: application/json");
-
 require_once __DIR__ . "/../config.php";
+
+// Ensure user is logged in
+if (!isset($_SESSION['user_id'])) {
+    echo json_encode(["success" => false, "message" => "User not authenticated."]);
+    exit;
+}
+$user_id = $_SESSION['user_id'];
+
+// Database connection
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+if ($conn->connect_error) {
+    echo json_encode(["success" => false, "message" => "Database connection failed"]);
+    exit;
+}
 
 // Get data from request
 $data = json_decode(file_get_contents("php://input"), true);
@@ -17,19 +28,17 @@ if (!$data) {
     exit;
 }
 
-// Convert all keys to lowercase (ensures consistency)
+// Convert all keys to lowercase
 $data = array_change_key_case($data, CASE_LOWER);
 
 // Validate required fields
-$requiredFields = ['itemid', 'productname', 'brand', 'category', 'quantity', 'expirationdate'];
+$requiredFields = ['itemid', 'productname', 'brand', 'category', 'quantity'];
 $missingFields = [];
-
 foreach ($requiredFields as $field) {
     if (!isset($data[$field]) || empty($data[$field])) {
         $missingFields[] = $field;
     }
 }
-
 if (!empty($missingFields)) {
     echo json_encode(["success" => false, "message" => "Missing required fields", "missing" => $missingFields]);
     exit;
@@ -41,57 +50,80 @@ $productName = trim($data['productname']);
 $brand = trim($data['brand']);
 $category = trim($data['category']);
 $quantity = intval($data['quantity']);
-$expirationDate = !empty($data['expirationdate']) ? $data['expirationdate'] : NULL;
-if ($expirationDate === NULL) {
-    $sql_update_inventory = "UPDATE INVENTORY SET Quantity = ?, ExpirationDate = NULL WHERE InventoryItemId = ?";
-    $stmt_update_inventory = $conn->prepare($sql_update_inventory);
-    $stmt_update_inventory->bind_param("ii", $quantity, $itemId);
-} else {
-    $sql_update_inventory = "UPDATE INVENTORY SET Quantity = ?, ExpirationDate = ? WHERE InventoryItemId = ?";
-    $stmt_update_inventory = $conn->prepare($sql_update_inventory);
-    $stmt_update_inventory->bind_param("isi", $quantity, $expirationDate, $itemId);
-}
+$expirationDate = isset($data['expirationdate']) && trim($data['expirationdate']) !== "" ? $data['expirationdate'] : NULL;
 
-// Step 1: Get the ProductId from INVENTORY
-$sql_get_product = "SELECT ProductId FROM INVENTORY WHERE InventoryItemId = ?";
+// Handle UPC correctly: Set NULL if empty
+$upc = isset($data['upc']) && trim($data['upc']) !== "" ? trim($data['upc']) : NULL;
+
+// Get the ProductId and verify ownership in INVENTORY
+$sql_get_product = "SELECT ProductId FROM INVENTORY WHERE InventoryItemId = ? AND UserId = ?";
 $stmt_get_product = $conn->prepare($sql_get_product);
-$stmt_get_product->bind_param('i', $itemId);
+$stmt_get_product->bind_param('ii', $itemId, $user_id);
 $stmt_get_product->execute();
 $result = $stmt_get_product->get_result();
 $productData = $result->fetch_assoc();
+$stmt_get_product->close();
 
 if (!$productData) {
-    echo json_encode(["success" => false, "message" => "Inventory item not found"]);
+    echo json_encode(["success" => false, "message" => "Inventory item not found or not owned by user"]);
     exit;
 }
 
 $productId = $productData['ProductId'];
-$stmt_get_product->close();
 
-// Step 2: Update LOCAL_PRODUCTS (ProductName, Brand, Category)
-$sql_update_product = "UPDATE LOCAL_PRODUCTS SET ProductName = ?, Brand = ?, Category = ? WHERE ProductId = ?";
+// Update LOCAL_PRODUCTS (ProductName, Brand, Category, UPC)
+$sql_update_product = "UPDATE LOCAL_PRODUCTS SET ProductName = ?, Brand = ?, Category = ?, UPC = ? WHERE ProductId = ?";
 $stmt_update_product = $conn->prepare($sql_update_product);
-$stmt_update_product->bind_param("sssi", $productName, $brand, $category, $productId);
+$stmt_update_product->bind_param("ssssi", $productName, $brand, $category, $upc, $productId);
 
 if (!$stmt_update_product->execute()) {
     echo json_encode(["success" => false, "message" => "Failed to update product details"]);
     exit;
 }
-
 $stmt_update_product->close();
 
-// Step 3: Update INVENTORY (Quantity, ExpirationDate)
-$sql_update_inventory = "UPDATE INVENTORY SET Quantity = ?, ExpirationDate = ? WHERE InventoryItemId = ?";
-$stmt_update_inventory = $conn->prepare($sql_update_inventory);
-$stmt_update_inventory->bind_param("isi", $quantity, $expirationDate, $itemId);
+// Check if another row exists with the same product and expiration date (merging logic)
+$sql_check_merge = "SELECT InventoryItemId, Quantity FROM INVENTORY 
+                    WHERE ProductId = ? AND ExpirationDate <=> ? AND InventoryItemId != ? AND UserId = ?";
+$stmt_check_merge = $conn->prepare($sql_check_merge);
+$stmt_check_merge->bind_param('isii', $productId, $expirationDate, $itemId, $user_id);
+$stmt_check_merge->execute();
+$result = $stmt_check_merge->get_result();
+$existingRow = $result->fetch_assoc();
+$stmt_check_merge->close();
 
-if ($stmt_update_inventory->execute()) {
-    echo json_encode(["success" => true, "message" => "Item updated successfully"]);
+if ($existingRow) {
+    // Merge quantities and delete the duplicate row
+    $existingItemId = $existingRow['InventoryItemId'];
+    $newQuantity = $existingRow['Quantity'] + $quantity;
+
+    $sql_update_merge = "UPDATE INVENTORY SET Quantity = ? WHERE InventoryItemId = ?";
+    $stmt_update_merge = $conn->prepare($sql_update_merge);
+    $stmt_update_merge->bind_param('ii', $newQuantity, $existingItemId);
+    $stmt_update_merge->execute();
+    $stmt_update_merge->close();
+
+    // Remove the duplicate row
+    $sql_delete_old = "DELETE FROM INVENTORY WHERE InventoryItemId = ?";
+    $stmt_delete_old = $conn->prepare($sql_delete_old);
+    $stmt_delete_old->bind_param('i', $itemId);
+    $stmt_delete_old->execute();
+    $stmt_delete_old->close();
+
+    echo json_encode(["success" => true, "message" => "Item merged successfully"]);
 } else {
-    echo json_encode(["success" => false, "message" => "Failed to update inventory item"]);
+    // No matching expiration date, update the current row
+    $sql_update_inventory = "UPDATE INVENTORY SET Quantity = ?, ExpirationDate = ? WHERE InventoryItemId = ?";
+    $stmt_update_inventory = $conn->prepare($sql_update_inventory);
+    $stmt_update_inventory->bind_param("isi", $quantity, $expirationDate, $itemId);
+
+    if ($stmt_update_inventory->execute()) {
+        echo json_encode(["success" => true, "message" => "Item updated successfully"]);
+    } else {
+        echo json_encode(["success" => false, "message" => "Failed to update inventory item"]);
+    }
+    $stmt_update_inventory->close();
 }
 
-$stmt_update_inventory->close();
 $conn->close();
-
 ?>
