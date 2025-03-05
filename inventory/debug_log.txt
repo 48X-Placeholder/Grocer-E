@@ -1,0 +1,10 @@
+Array
+(
+    [itemId] => 8
+    [productName] => sixtynine
+    [brand] => seven
+    [category] => crackers
+    [quantity] => 3
+    [expirationDate] => 2025-03-19
+    [upc] => 69
+)
