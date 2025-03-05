@@ -1,7 +1,6 @@
 <?php
 header('Content-Type: application/json');
-require_once __DIR__ . "/../config.php";
-// ^^ Check that file correctly connects to database, will need to check AWS db
+require_once __DIR__ . "/../config.php"; 
 
 // Get data from request
 $data = json_decode(file_get_contents('php://input'), true);
@@ -18,7 +17,7 @@ if (!$data) {
 $data = array_change_key_case($data, CASE_LOWER);
 
 // Check for missing fields
-$requiredFields = ['upccode', 'quantity', 'expirationdate', 'productname', 'brand', 'category'];
+$requiredFields = ['upccode', 'quantity', 'productname', 'brand', 'category'];
 $missingFields = [];
 
 foreach ($requiredFields as $field) {
@@ -35,7 +34,7 @@ if (!empty($missingFields)) {
 // Extract and sanitize variables
 $upcCode = trim($data['upccode']);
 $quantity = intval($data['quantity']);
-$expirationDate = $data['expirationdate'];
+$expirationDate = isset($data['expirationdate']) && trim($data['expirationdate']) !== "" ? $data['expirationdate'] : NULL;
 $productName = trim($data['productname']);
 $brand = trim($data['brand']);
 $category = trim($data['category']);
@@ -71,7 +70,14 @@ if (!$product) {
 // Insert into INVENTORY
 $sql_insert_inventory = "INSERT INTO INVENTORY (ProductId, UserId, Quantity, ExpirationDate) VALUES (?, ?, ?, ?)";
 $stmt_insert_inventory = $conn->prepare($sql_insert_inventory);
-$stmt_insert_inventory->bind_param('iiis', $productId, $userId, $quantity, $expirationDate);
+
+// If Expiration Date is NULL, bind accordingly
+if ($expirationDate === NULL) {
+    $stmt_insert_inventory->bind_param('iiis', $productId, $userId, $quantity, $expirationDate);
+} else {
+    $stmt_insert_inventory->bind_param('iiis', $productId, $userId, $quantity, $expirationDate);
+}
+
 
 if ($stmt_insert_inventory->execute()) {
     echo json_encode(['success' => true, 'message' => 'Item added successfully']);

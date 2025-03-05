@@ -5,7 +5,9 @@ require_once __DIR__ . "/../config.php";
 
 // Get data from POST request
 $data = json_decode(file_get_contents('php://input'), true);
-$itemIds = $data['itemIds']; // Array of item IDs to delete
+
+// Handle both single and multiple deletions
+$itemIds = isset($data['itemIds']) ? $data['itemIds'] : (isset($data['itemId']) ? [$data['itemId']] : null);
 
 if (empty($itemIds) || !is_array($itemIds)) {
     echo json_encode(['success' => false, 'message' => 'Invalid request']);

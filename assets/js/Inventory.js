@@ -1,3 +1,89 @@
+// Function to load inventory data from the database
+function loadGroceryData() {
+    fetch('fetch_inventory.php')
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.getElementById('groceryTableBody');
+            tableBody.innerHTML = '';
+
+            if (data.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; font-style: italic;">No items in inventory.</td></tr>`;
+                return;
+            }
+
+            data.forEach(item => {
+                const expirationDisplay = item.ExpirationDate || "N/A";
+                let statusMessages = []; // Store multiple alerts
+                let alertClass = "";
+
+                // Missing UPC / Expiration alerts
+                if (!item.ExpirationDate && (!item.UPC || item.UPC === "UNKNOWN")) {
+                    statusMessages.push("Missing UPC and Expiration Date");
+                } else if (!item.UPC || item.UPC === "UNKNOWN") {
+                    statusMessages.push("Missing UPC");
+                } else if (!item.ExpirationDate) {
+                    statusMessages.push("Missing Expiration Date");
+                }
+
+                // Low stock alert
+                if (item.Quantity <= 1) {  
+                    statusMessages.push("Low Stock");  
+                    alertClass = "low-stock";
+                }
+
+                // Expiration alerts
+                let expirationDate = item.ExpirationDate ? new Date(item.ExpirationDate) : null;
+                let today = new Date();
+                let expirationHighlightClass = ""; // Default empty
+
+                if (expirationDate) {
+                    let sevenDaysAhead = new Date();
+                    sevenDaysAhead.setDate(today.getDate() + 7);
+
+                    if (expirationDate < today) {
+                        statusMessages.unshift("Expired");
+                        alertClass = "expired";
+                        expirationHighlightClass = "expired-highlight"; // Mark cell for highlighting
+                    } else if (expirationDate < sevenDaysAhead) {
+                        statusMessages.push("Expiring Soon");
+                        alertClass = "expiring-soon";
+                    }
+                }
+
+                // Apply the status column as before
+                const statusMessage = statusMessages.length > 0 ? statusMessages.join(" | ") : "";
+                const statusColumn = statusMessage
+                    ? `<td class="alert-column" title="${statusMessage}">⚠️</td>`
+                    : `<td></td>`;
+
+                // Apply the class to the expiration date cell if needed
+                const row = `
+                    <tr id="row-${item.InventoryItemId}">
+                        <td><input type="checkbox" class="item-checkbox" data-id="${item.InventoryItemId}"></td>
+                        <td><span class="edit-text">${item.ProductName}</span><input class="edit-input hidden" type="text" value="${item.ProductName}"></td>
+                        <td><span class="edit-text">${item.Brand}</span><input class="edit-input hidden" type="text" value="${item.Brand}"></td>
+                        <td><span class="edit-text">${item.Category}</span><input class="edit-input hidden" type="text" value="${item.Category}"></td>
+                        <td><span class="edit-text">${item.Quantity}</span><input class="edit-input hidden" type="number" value="${item.Quantity}"></td>
+                        <td class="expiration-date ${expirationHighlightClass}">
+                            <span class="edit-text">${expirationDisplay}</span>
+                            <input class="edit-input hidden" type="date" value="${item.ExpirationDate || ''}">
+                        </td>
+                        <td class="upc-column hidden"><input class="edit-input" type="text" value="${item.UPC || ''}" placeholder="Enter UPC"></td>
+                        ${statusColumn}
+                        <td>
+                            <button class="edit-btn" onclick="toggleEditMode(${item.InventoryItemId})">Edit</button>
+                            <button class="save-btn hidden" onclick="saveEdit(${item.InventoryItemId})">Save</button>
+                            <button class="cancel-btn hidden" onclick="cancelEdit(${item.InventoryItemId})">Cancel</button>
+                        </td>
+                    </tr>
+                `;
+                tableBody.insertAdjacentHTML('beforeend', row);
+            });
+        })
+        .catch(error => console.error('Error fetching data:', error));
+}
+
+// Allows table sorting on various columns
 function sortTable(columnIndex, dataType, headerElement) {
     const tableBody = document.getElementById("groceryTableBody");
     const rows = Array.from(tableBody.rows);
@@ -41,49 +127,6 @@ function sortTable(columnIndex, dataType, headerElement) {
     sortedRows.forEach(row => tableBody.appendChild(row));
 }
 
-// JavaScript function to load data from the PHP script
-function loadGroceryData() {
-    fetch('../inventory/fetch_inventory.php')
-        .then(response => response.json())
-        .then(data => {
-            const tableBody = document.getElementById('groceryTableBody');
-            tableBody.innerHTML = ''; // Clear existing table contents
-
-            if (data.length === 0) {
-                // If no items exist, display a message row
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="6" style="text-align: center; font-style: italic; color: #888;">
-                            No items in inventory. Add some groceries to get started!
-                        </td>
-                    </tr>
-                `;
-                return; // Exit function early since there's nothing else to add
-            }
-
-            // Populate the table with inventory items
-            data.forEach(item => {
-                const row = `
-                    <tr>
-                        <td><input type="checkbox" class="item-checkbox" data-id="${item.InventoryItemId}"></td>
-                        <td>${item.ProductName}</td>
-                        <td>${item.Brand}</td>
-                        <td>${item.Category}</td>
-                        <td>${item.Quantity}</td>
-                        <td>${item.ExpirationDate || 'N/A'}</td>
-                        <td>
-                            <button onclick="editItem(${item.InventoryItemId}, '${item.ProductName}', '${item.Brand}', '${item.Category}', ${item.Quantity}, '${item.ExpirationDate || ''}')">
-                                Edit
-                            </button>
-                        </td>
-                    </tr>
-                `;
-                tableBody.insertAdjacentHTML('beforeend', row);
-            });
-        })
-        .catch(error => console.error('Error fetching data:', error));
-}
-
 // Add item function
 function addItem() {
     const upcCode = document.getElementById('upcCode').value.trim();
@@ -91,11 +134,24 @@ function addItem() {
     const brand = document.getElementById('brand').value.trim();
     const category = document.getElementById('category').value.trim();
     const quantity = parseInt(document.getElementById('quantity').value);
-    const expirationDate = document.getElementById('expirationDate').value;
+    const expirationDate = document.getElementById('expirationDate').value.trim();
+    const formattedExpiration = expirationDate === "" ? null : expirationDate;
 
-    const requestData = { upcCode, productName, brand, category, quantity, expirationDate };
+    const requestData = { upcCode, productName, brand, category, quantity, expirationDate: formattedExpiration };
 
-    fetch('../inventory/add_inventory_item.php', {
+    // Check that primary text fields have values
+    if (!upcCode || !productName || !brand || !category) {
+        alert("Please fill in all required fields.");
+        return;
+    }
+    
+    // Check that quantityNeeded has a positive value
+    if (isNaN(quantity) || quantity <= 0) {
+        alert("Quantity must be a number greater than 0.");
+        return;
+    }    
+
+    fetch('add_inventory_item.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -127,7 +183,7 @@ function deleteSelectedItems() {
         return;
     }
 
-    fetch('../inventory/delete_inventory_item.php', {
+    fetch('delete_inventory_item.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -147,6 +203,23 @@ function deleteSelectedItems() {
     .catch(error => console.error('Error deleting items:', error));
 }
 
+// alternative delete function used when editing quantity to 0
+function deleteItem(itemId) {
+    fetch('delete_inventory_item.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itemId }) // Send as single ID, not an array
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            loadGroceryData(); // Reload table after deletion
+        } else {
+            alert('Error deleting item: ' + result.message);
+        }
+    })
+    .catch(error => console.error('Error deleting item:', error));
+}
 
 // Show the add item form
 function toggleAddItemForm() {
@@ -168,42 +241,109 @@ function cancelAddItem() {
     document.getElementById('expirationDate').value = '';
 }
 
-// 
-function editItem(id, name, brand, category, quantity, expiration) {
-    document.getElementById('editItemId').value = id;
-    document.getElementById('editProductName').value = name;
-    document.getElementById('editBrand').value = brand;
-    document.getElementById('editCategory').value = category;
-    document.getElementById('editQuantity').value = quantity;
-    document.getElementById('editExpirationDate').value = expiration;
+// Toggle editing mode
+function toggleEditMode(itemId) {
+    const row = document.getElementById(`row-${itemId}`);
+    if (!row) {
+        console.error(`Row with ID row-${itemId} not found`);
+        return;
+    }
 
-    document.getElementById('editItemForm').style.display = 'block';
+    console.log(`Entering edit mode for row: ${itemId}`);
+
+    // Store original values in dataset
+    row.dataset.originalProductName = row.querySelectorAll('.edit-input')[0].value;
+    row.dataset.originalBrand = row.querySelectorAll('.edit-input')[1].value;
+    row.dataset.originalCategory = row.querySelectorAll('.edit-input')[2].value;
+    row.dataset.originalQuantity = row.querySelectorAll('.edit-input')[3].value;
+    row.dataset.originalExpirationDate = row.querySelectorAll('.edit-input')[4].value;
+    row.dataset.originalUPC = row.querySelector('.upc-column input').value || ''; 
+
+    // Activate edit mode
+    row.classList.add('edit-mode');
+    document.querySelector("table").classList.add("edit-mode-active");
+
+    // Show inputs, hide static text
+    row.querySelectorAll('.edit-text').forEach(el => el.classList.add('hidden'));
+    row.querySelectorAll('.edit-input').forEach(el => el.classList.remove('hidden'));
+
+    // Show UPC input only for the selected row
+    const upcField = row.querySelector('.upc-column input');
+    if (upcField) upcField.style.display = 'inline-block';
+
+    // Toggle button visibility
+    row.querySelector('.edit-btn').classList.add('hidden');
+    row.querySelector('.save-btn').classList.remove('hidden');
+    row.querySelector('.cancel-btn').classList.remove('hidden');
 }
 
-// 
-function updateItem() {
-    const itemId = document.getElementById('editItemId').value;
-    const productName = document.getElementById('editProductName').value.trim();
-    const brand = document.getElementById('editBrand').value.trim();
-    const category = document.getElementById('editCategory').value.trim();
-    const quantity = parseInt(document.getElementById('editQuantity').value);
-    const expirationDate = document.getElementById('editExpirationDate').value;
+// Save edits
+function saveEdit(itemId) {
+    const row = document.getElementById(`row-${itemId}`);
+    const upcInput = row.querySelector('.upc-column input').value.trim() || null;
 
-    const requestData = { itemId, productName, brand, category, quantity, expirationDate };
+    // BEGIN NEW FEATURE
+    const quantityInput = row.querySelector('input[type="number"]');
+    const quantity = parseInt(quantityInput.value);
 
-    fetch('../inventory/update_inventory_item.php', {
+    // Validation: Prevent negative numbers
+    if (isNaN(quantity) || quantity < 0) {
+        alert("Quantity must be a number greater than or equal to 0.");
+        return;
+    }
+
+    // Confirmation for zero quantity
+    if (quantity === 0) {
+        const confirmDelete = confirm("This item is now out of stock. Would you like to remove it from inventory?");
+        
+        if (confirmDelete) {
+            deleteItem(itemId); // Call delete function
+            return;
+        }
+    }
+    // END NEW FEATURE
+
+    const requestData = {
+        itemId,
+        productName: row.querySelectorAll('input[type="text"]')[0].value,
+        brand: row.querySelectorAll('input[type="text"]')[1].value,
+        category: row.querySelectorAll('input[type="text"]')[2].value,
+        quantity: row.querySelector('input[type="number"]').value,
+        expirationDate: row.querySelector('input[type="date"]').value,
+        upc: upcInput
+    };
+
+    fetch('update_inventory_item.php', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestData)
     })
     .then(response => response.json())
     .then(result => {
         if (result.success) {
-            loadGroceryData();
-            document.getElementById('editItemForm').style.display = 'none';
-            alert('Item updated successfully!');
+            // Update the row dynamically
+            row.querySelectorAll('.edit-text')[0].innerText = requestData.productName;
+            row.querySelectorAll('.edit-text')[1].innerText = requestData.brand;
+            row.querySelectorAll('.edit-text')[2].innerText = requestData.category;
+            row.querySelectorAll('.edit-text')[3].innerText = requestData.quantity;
+            row.querySelectorAll('.edit-text')[4].innerText = requestData.expirationDate || "N/A";
+
+            // Exit edit mode for this row
+            row.classList.remove('edit-mode');
+            row.querySelectorAll('.edit-text').forEach(el => el.classList.remove('hidden'));
+            row.querySelectorAll('.edit-input').forEach(el => el.classList.add('hidden'));
+            row.querySelector('.upc-column input').style.display = 'none';
+
+            row.querySelector('.edit-btn').classList.remove('hidden');
+            row.querySelector('.save-btn').classList.add('hidden');
+            row.querySelector('.cancel-btn').classList.add('hidden');
+
+            // Check if any rows are still being edited
+            const anyRowsStillEditing = document.querySelectorAll('.edit-mode').length > 0;
+            if (!anyRowsStillEditing) {
+                document.querySelector("table").classList.remove("edit-mode-active");
+                loadGroceryData(); // Reload the table when the last edit is saved
+            }
         } else {
             alert('Error updating item: ' + result.message);
         }
@@ -211,9 +351,44 @@ function updateItem() {
     .catch(error => console.error('Error updating item:', error));
 }
 
-// cancel edit function, hide form
-function cancelEdit() {
-    document.getElementById('editItemForm').style.display = 'none';
+// Cancel edit function, hide form
+function cancelEdit(itemId) {
+    const row = document.getElementById(`row-${itemId}`);
+    if (!row) {
+        console.error(`Row with ID row-${itemId} not found`);
+        return;
+    }
+
+    console.log(`Canceling edit for row: ${itemId}`);
+
+    // Restore original values
+    row.querySelectorAll('.edit-input')[0].value = row.dataset.originalProductName;
+    row.querySelectorAll('.edit-input')[1].value = row.dataset.originalBrand;
+    row.querySelectorAll('.edit-input')[2].value = row.dataset.originalCategory;
+    row.querySelectorAll('.edit-input')[3].value = row.dataset.originalQuantity;
+    row.querySelectorAll('.edit-input')[4].value = row.dataset.originalExpirationDate;
+    row.querySelector('.upc-column input').value = row.dataset.originalUPC || '';
+
+    // Remove edit mode
+    row.classList.remove('edit-mode');
+
+    // Show text fields, hide inputs
+    row.querySelectorAll('.edit-text').forEach(el => el.classList.remove('hidden'));
+    row.querySelectorAll('.edit-input').forEach(el => el.classList.add('hidden'));
+
+    // Hide UPC input
+    const upcField = row.querySelector('.upc-column input');
+    if (upcField) upcField.style.display = 'none';
+
+    // Toggle button visibility
+    row.querySelector('.edit-btn').classList.remove('hidden');
+    row.querySelector('.save-btn').classList.add('hidden');
+    row.querySelector('.cancel-btn').classList.add('hidden');
+
+    // Check if any rows are still in edit mode
+    if (!document.querySelectorAll('.edit-mode').length) {
+        document.querySelector("table").classList.remove("edit-mode-active");
+    }
 }
 
 // Load data when the page loads
