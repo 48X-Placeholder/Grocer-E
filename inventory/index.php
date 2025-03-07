@@ -14,8 +14,8 @@ require_once __DIR__ . "/../page-templates/navigation-menu.php"; ?>
     
     <section class="list-section">
         <div class="list-search-bar">
-            <input type="text" id="list-search" placeholder="Search within the list..." />
-            <button class="search-btn" onclick="searchList()">Search</button>
+            <input type="text" id="list-search" placeholder="Search within the list..." oninput="handleSearch()" />
+            <button class="search-btn" onclick="clearSearch()">Clear Search</button>
         </div>
 
         <div class="page-title">
@@ -65,5 +65,6 @@ require_once __DIR__ . "/../page-templates/navigation-menu.php"; ?>
 
     <!-- pull necessary JS code from List.js file -->
     <script src="../assets/js/Inventory.js"></script>
+    <script src="../assets/js/Search.js"></script>
 </body>
 </html>
