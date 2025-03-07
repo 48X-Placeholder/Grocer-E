@@ -28,8 +28,8 @@ $userId = $_SESSION['user_id'];
 
     <section class="list-section">
         <div class="list-search-bar">
-            <input type="text" id="list-search" placeholder="Search within the list..." />
-            <button class="search-btn" onclick="searchList()">Search</button>
+            <input type="text" id="list-search" placeholder="Search within the list..." oninput="handleSearch()" />
+            <button class="search-btn" onclick="clearSearch()">Clear Search</button>
         </div>
 		
 		<div class="page-title">
@@ -97,5 +97,6 @@ $userId = $_SESSION['user_id'];
     </section>
 
     <script src="../assets/js/ShopList.js"></script>
+    <script src="../assets/js/Search.js"></script>
 </body>
 </html>
