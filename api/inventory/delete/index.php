@@ -1,8 +1,13 @@
 <?php
-session_start();
-// Delete item from inventory
 header('Content-Type: application/json');
-require_once __DIR__ . "/../config.php";
+require_once __DIR__ . "/../../../config.php";
+require_once __DIR__ . "/../../../functions/load.php";
+
+// Check if user is authenticated
+if (!is_user_logged_in()) {
+    echo json_encode(['success' => false, 'message' => 'User not authenticated']);
+    exit;
+}
 
 // Create database connection
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);

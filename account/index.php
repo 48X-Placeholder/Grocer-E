@@ -5,8 +5,8 @@ require_once __DIR__ . "/../config.php";
 
 // Redirect if user is not logged in
 if (!is_user_logged_in()) {
-    header("Location: ../login"); // Redirect to dashboard
-    exit(); // Ensure no further code is executed after redirect
+	header("Location: ".SITE_URL.'login'); // Redirect to dashboard
+	exit(); // Ensure no further code is executed after redirect
 } else {
     // Function to sanitize inputs
     function sanitize_input($data)
@@ -117,8 +117,8 @@ if (!is_user_logged_in()) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account Settings</title>
-    <link rel="stylesheet" href="../assets/styles/signin.css">
-    <link rel="stylesheet" href="../assets/styles/account.css">
+    <link rel="stylesheet" href="<? echo SITE_URL.'assets/styles/signin.css'?>">
+    <link rel="stylesheet" href="<? echo SITE_URL.'assets/styles/account.css'?>">
 </head>
 <body>
 

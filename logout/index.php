@@ -8,7 +8,7 @@ CloseSessionReadOnly();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Logout Confirmation</title>
-    <link rel="stylesheet" href="../assets/styles/signin.css">
+    <link rel="stylesheet" href="<? echo SITE_URL.'assets/styles/signin.css'?>">
     <style>
         .confirmation-box {
             background-color: #f4f4f4;
@@ -34,7 +34,7 @@ CloseSessionReadOnly();
     </style>
     <script>
         setTimeout(function() {
-            window.location.href = '../login'; // Redirect to login page
+            window.location.href = "<? echo SITE_URL.'login'?>"; // Redirect to login page
         }, 3000); // 3000 milliseconds = 3 seconds
     </script>
 </head>

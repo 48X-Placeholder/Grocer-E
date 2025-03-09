@@ -1,16 +1,15 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-session_start();
 header('Content-Type: application/json');
-require_once __DIR__ . "/../config.php";
+require_once __DIR__ . "/../../../config.php";
+require_once __DIR__ . "/../../../functions/load.php";
 
 // Check if user is authenticated
-if (!isset($_SESSION['user_id'])) {
+if (!is_user_logged_in()) {
     echo json_encode(['success' => false, 'message' => 'User not authenticated']);
     exit;
 }
-$userId = $_SESSION['user_id'];
 
 // Create database connection
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);

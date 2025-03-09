@@ -1,7 +1,12 @@
 <?php
-session_start();
 header('Content-Type: application/json');
-require_once __DIR__ . "/../config.php"; // Ensure database connection
+require_once __DIR__ . "/../../../config.php"; // Ensure database connection
+require_once __DIR__ . "/../../../functions/load.php";
+
+if (!is_user_logged_in()) {
+    echo json_encode(['success' => false, 'message' => 'User not authenticated']);
+    exit;
+}
 
 // Create database connection
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);

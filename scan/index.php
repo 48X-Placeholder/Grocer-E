@@ -1,4 +1,12 @@
 <?php
+require_once __DIR__ . "/../config.php";
+require_once __DIR__ . "/../functions/load.php";
+
+if (!is_user_logged_in()) {
+	header("Location: ".SITE_URL.'login'); // Redirect to dashboard
+	exit(); // Ensure no further code is executed after redirect
+}
+
 $source = isset($_GET['source']) ? $_GET['source'] : 'inventory'; // Default to inventory
 ?>
 
@@ -34,7 +42,7 @@ $source = isset($_GET['source']) ? $_GET['source'] : 'inventory'; // Default to 
   <h2>Scan a Product</h2>
   <div id="buttonContainer">
     <button id="startScan">Start Scanner</button>
-    <button id="backToDashboard" onclick="window.location.href='../dashboard/index.php';">Back to Dashboard</button>
+    <button id="backToDashboard" onclick="window.location.href='<? echo SITE_URL.(($source === "shopping_list") ? 'shopping-list' : 'inventory')?>';">Exit Scanner</button>
   </div>
   <p id="errorMessage"></p>
   <p id="barcodeResult"></p>
@@ -87,7 +95,7 @@ $source = isset($_GET['source']) ? $_GET['source'] : 'inventory'; // Default to 
           scanAttempts = {};
           document.getElementById("loading").style.display = "block";
 
-          fetch('process_barcode.php', {
+          fetch('<? echo SITE_URL.'api/scan'?>', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ barcode: barcode, source: scanSource })
@@ -96,7 +104,7 @@ $source = isset($_GET['source']) ? $_GET['source'] : 'inventory'; // Default to 
           .then(data => {
             if (data.error) alert("Error: " + data.error);
             else alert("Product Added: " + data.product_name);
-            window.location.href = (scanSource === "shopping_list") ? "../shopping-list/index.php" : "../inventory/index.php";
+            window.location.href = "<? echo SITE_URL?>"+((scanSource === "shopping_list") ? 'shopping-list' : 'inventory');
           })
           .catch(() => document.getElementById("errorMessage").innerText = "Server error.")
           .finally(() => {

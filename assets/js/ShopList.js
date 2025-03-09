@@ -1,6 +1,6 @@
 // Function to load shopping list data from PHP
 function loadShoppingList() {
-    fetch('../shopping-list/fetch_shopping_list.php')
+    fetch('../api/shopping-list/fetch')
         .then(response => response.json())
         .then(data => {
             const tableBody = document.getElementById('shoppingTableBody');
@@ -88,7 +88,7 @@ function deleteSelectedItems() {
         return;
     }
 
-    fetch('../shopping-list/delete_shopping_item.php', {
+    fetch('../api/shopping-list/delete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ itemIds: selectedIds })
@@ -115,7 +115,7 @@ function exportSelectedItems() {
         return;
     }
 
-    fetch('../shopping-list/export_purchased.php', {
+    fetch('../api/shopping-list/export', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ itemIds: selectedIds })
@@ -149,7 +149,7 @@ function addShopItem() {
         return;
     }
 
-    fetch('../shopping-list/add_shopping_item.php', {
+    fetch('../api/shopping-list/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ productName, brand, category, quantityNeeded })
@@ -240,7 +240,7 @@ function saveEdit(itemId) {
 
     console.log("Saving Item with Data:", requestData); // Debugging
 
-    fetch('../shopping-list/update_shopping_item.php', {
+    fetch('../api/shopping-list/update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestData)

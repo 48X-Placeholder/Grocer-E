@@ -12,7 +12,7 @@ function sanitize_input($data)
 }
 
 if (is_user_logged_in()) {
-	header("Location: ../dashboard"); // Redirect to dashboard
+	header("Location: ".SITE_URL.'dashboard'); // Redirect to dashboard
 	exit(); // Ensure no further code is executed after redirect
 } else {
 	// Process form submission if it's a POST request
@@ -46,7 +46,7 @@ if (is_user_logged_in()) {
 					if (user_session_create($user["UserId"], $user["Username"])) {
 						// --- Successful Login ---
 						$_SESSION["success_message"] = "Login successful!"; // Optional success message
-						header("Location: ../dashboard"); // Redirect to dashboard
+						header("Location: ".SITE_URL.'dashboard'); // Redirect to dashboard
 						exit(); // Ensure no further code is executed after redirect
 					}
 				} else {
@@ -67,7 +67,7 @@ if (is_user_logged_in()) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="../assets/styles/signin.css">
+    <link rel="stylesheet" href="<? echo SITE_URL.'assets/styles/signin.css'?>">
 </head>
 <body>
 	<!-- Site Navigation -->
@@ -98,7 +98,7 @@ if (is_user_logged_in()) {
 
         <!-- Right Side: Image -->
         <div class="auth-image">
-            <img src="../assets/images/loginphoto1.jpg" alt="Shopping in Grocery Store">
+            <img src="<? echo SITE_URL.'assets/images/loginphoto1.jpg'?>" alt="Shopping in Grocery Store">
         </div>
     </div>
 </body>

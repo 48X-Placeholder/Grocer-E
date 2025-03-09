@@ -1,15 +1,20 @@
 <?php
 session_start();
 require __DIR__ . "/../config.php";
-
 header('Content-Type: application/json');
+
+// Check if user is authenticated
+if (!is_user_logged_in()) {
+    echo json_encode(['success' => false, 'error' => 'User not authenticated', 'message' => 'User not authenticated']);
+    exit;
+}
 
 $data = json_decode(file_get_contents("php://input"), true);
 $barcode = $data['barcode'] ?? '';
 $source = $data['source'] ?? 'inventory';
 
 if (!$barcode) {
-    echo json_encode(["error" => "No barcode provided"]);
+    echo json_encode(['success' => false, 'error' => 'No barcode provided', 'message' => 'No barcode provided']);
     exit;
 }
 
@@ -19,7 +24,7 @@ $response = @file_get_contents($api_url);
 $product_data = $response ? json_decode($response, true) : null;
 
 if (!$product_data || !isset($product_data['status']) || $product_data['status'] != 1) {
-    echo json_encode(["error" => "Product not found. Add manually?"]);
+    echo json_encode(['success' => false, 'error' => 'Product not found. Add manually?', 'message' => 'Product not found. Add manually?']);
     exit;
 }
 
@@ -28,16 +33,12 @@ $brand = $product_data['product']['brands'] ?? "Unknown Brand";
 $category = $product_data['product']['categories'] ?? "Unknown Category";
 $upc = $barcode;
 
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(["error" => "User not authenticated."]);
-    exit;
-}
-$user_id = $_SESSION['user_id'];
+$user_id = cached_userid_info();
 
 // Database connection
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 if ($conn->connect_error) {
-    echo json_encode(["error" => "Database connection failed"]);
+    echo json_encode(['success' => false, 'error' => 'Database connection failed', 'message' => 'Database connection failed']);
     exit;
 }
 
@@ -68,9 +69,9 @@ if ($source === "shopping_list") {
         $stmt->bind_param("ii", $product_id, $user_id);
         $stmt->execute();
         $stmt->close();
-        echo json_encode(["message" => "Product added to shopping list", "product_name" => $product_name]);
+        echo json_encode(['success' => true, 'message' => 'Product added to shopping list', "product_name" => $product_name]);
     } else {
-        echo json_encode(["message" => "Product already exists in shopping list", "product_name" => $product_name]);
+        echo json_encode(['success' => false, 'message' => "Product already exists in shopping list", "product_name" => $product_name]);
     }
 } else {
     // Insert into inventory
@@ -80,18 +81,11 @@ if ($source === "shopping_list") {
         $stmt->bind_param("ii", $product_id, $user_id);
         $stmt->execute();
         $stmt->close();
-        echo json_encode(["message" => "Product added to inventory", "product_name" => $product_name]);
+        echo json_encode(['success' => true, 'message' => 'Product added to inventory', "product_name" => $product_name]);
     } else {
-        echo json_encode(["message" => "Product already exists in inventory", "product_name" => $product_name]);
+        echo json_encode(['success' => false, 'message' => "Product already exists in inventory", "product_name" => $product_name]);
     }
 }
 
 $conn->close();
 ?>
-
-
-
-
-
-
-
