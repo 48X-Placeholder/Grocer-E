@@ -1,6 +1,6 @@
 // Function to load shopping list data from PHP
 function loadShoppingList() {
-    fetch('../api/shopping-list/fetch')
+    fetch('../api/shopping-list/fetch/', {redirect: 'follow', referrerPolicy: 'no-referrer'})
         .then(response => response.json())
         .then(data => {
             const tableBody = document.getElementById('shoppingTableBody');
@@ -88,8 +88,10 @@ function deleteSelectedItems() {
         return;
     }
 
-    fetch('../api/shopping-list/delete', {
+    fetch('../api/shopping-list/delete/', {
         method: 'POST',
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ itemIds: selectedIds })
     })
@@ -115,8 +117,10 @@ function exportSelectedItems() {
         return;
     }
 
-    fetch('../api/shopping-list/export', {
+    fetch('../api/shopping-list/export/', {
         method: 'POST',
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ itemIds: selectedIds })
     })
@@ -149,8 +153,10 @@ function addShopItem() {
         return;
     }
 
-    fetch('../api/shopping-list/add', {
+    fetch('../api/shopping-list/add/', {
         method: 'POST',
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ productName, brand, category, quantityNeeded })
     })
@@ -240,8 +246,10 @@ function saveEdit(itemId) {
 
     console.log("Saving Item with Data:", requestData); // Debugging
 
-    fetch('../api/shopping-list/update', {
+    fetch('../api/shopping-list/update/', {
         method: 'POST',
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestData)
     })

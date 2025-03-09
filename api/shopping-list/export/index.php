@@ -1,7 +1,7 @@
 <?php
+require_once dirname(__FILE__) . '../../../../config.php'; // Ensure database connection
+require_once dirname(__FILE__) . '../../../../functions/load.php';
 header('Content-Type: application/json');
-require_once __DIR__ . "/../../../config.php"; // Ensure database connection
-require_once __DIR__ . "/../../../functions/load.php";
 
 // Check if user is authenticated
 if (!is_user_logged_in()) {
@@ -33,8 +33,8 @@ $errors = [];
 foreach ($itemIds as $itemId) {
     // Fetch item details from SHOPPING_LIST
     $sql_fetch = "SELECT sl.ProductId, sl.QuantityNeeded, lp.UPC 
-                  FROM SHOPPING_LIST sl
-                  JOIN LOCAL_PRODUCTS lp ON sl.ProductId = lp.ProductId
+                  FROM shopping_list sl
+                  JOIN local_products lp ON sl.ProductId = lp.ProductId
                   WHERE sl.ListItemId = ? AND sl.UserId = ?";
     $stmt_fetch = $conn->prepare($sql_fetch);
     $stmt_fetch->bind_param('ii', $itemId, $userId);
@@ -53,7 +53,7 @@ foreach ($itemIds as $itemId) {
     $upc = !empty($item['UPC']) ? $item['UPC'] : "UNKNOWN";
 
     // Mark item as purchased in SHOPPING_LIST
-    $sql_mark_purchased = "UPDATE SHOPPING_LIST SET Purchased = 1 WHERE ListItemId = ?";
+    $sql_mark_purchased = "UPDATE shopping_list SET Purchased = 1 WHERE ListItemId = ?";
     $stmt_mark_purchased = $conn->prepare($sql_mark_purchased);
     $stmt_mark_purchased->bind_param('i', $itemId);
     if (!$stmt_mark_purchased->execute()) {
@@ -74,7 +74,7 @@ foreach ($itemIds as $itemId) {
     if ($existingItem) {
         // If exists with no expiration date, update quantity
         $newQuantity = $existingItem['Quantity'] + $quantity;
-        $sql_update_inventory = "UPDATE INVENTORY SET Quantity = ? WHERE InventoryItemId = ?";
+        $sql_update_inventory = "UPDATE inventory SET Quantity = ? WHERE InventoryItemId = ?";
         $stmt_update_inventory = $conn->prepare($sql_update_inventory);
         $stmt_update_inventory->bind_param('ii', $newQuantity, $existingItem['InventoryItemId']);
 
@@ -86,7 +86,7 @@ foreach ($itemIds as $itemId) {
         $stmt_update_inventory->close();
     } else {
         // If no existing unexpired item, create a new entry
-        $sql_insert_inventory = "INSERT INTO INVENTORY (ProductId, UserId, Quantity, ExpirationDate) VALUES (?, ?, ?, NULL)";
+        $sql_insert_inventory = "INSERT INTO inventory (ProductId, UserId, Quantity, ExpirationDate) VALUES (?, ?, ?, NULL)";
         $stmt_insert_inventory = $conn->prepare($sql_insert_inventory);
         $stmt_insert_inventory->bind_param('iii', $productId, $userId, $quantity);
 

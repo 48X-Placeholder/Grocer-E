@@ -1,7 +1,7 @@
 <?php
+require_once dirname(__FILE__) . '../../../../config.php'; // Ensure database connection
+require_once dirname(__FILE__) . '../../../../functions/load.php';
 header('Content-Type: application/json');
-require_once __DIR__ . "/../../../config.php";
-require_once __DIR__ . "/../../../functions/load.php";
 
 // Check if user is authenticated
 if (!is_user_logged_in()) {
@@ -56,7 +56,7 @@ $expirationDate = isset($data['expirationdate']) && trim($data['expirationdate']
 $upc = isset($data['upc']) && trim($data['upc']) !== "" ? trim($data['upc']) : NULL;
 
 // Get the ProductId and verify ownership in INVENTORY
-$sql_get_product = "SELECT ProductId FROM INVENTORY WHERE InventoryItemId = ? AND UserId = ?";
+$sql_get_product = "SELECT ProductId FROM inventory WHERE InventoryItemId = ? AND UserId = ?";
 $stmt_get_product = $conn->prepare($sql_get_product);
 $stmt_get_product->bind_param('ii', $itemId, $user_id);
 $stmt_get_product->execute();
@@ -72,7 +72,7 @@ if (!$productData) {
 $productId = $productData['ProductId'];
 
 // Update LOCAL_PRODUCTS (ProductName, Brand, Category, UPC)
-$sql_update_product = "UPDATE LOCAL_PRODUCTS SET ProductName = ?, Brand = ?, Category = ?, UPC = ? WHERE ProductId = ?";
+$sql_update_product = "UPDATE local_products SET ProductName = ?, Brand = ?, Category = ?, UPC = ? WHERE ProductId = ?";
 $stmt_update_product = $conn->prepare($sql_update_product);
 $stmt_update_product->bind_param("ssssi", $productName, $brand, $category, $upc, $productId);
 
@@ -83,7 +83,7 @@ if (!$stmt_update_product->execute()) {
 $stmt_update_product->close();
 
 // Check if another row exists with the same product and expiration date (merging logic)
-$sql_check_merge = "SELECT InventoryItemId, Quantity FROM INVENTORY 
+$sql_check_merge = "SELECT InventoryItemId, Quantity FROM inventory 
                     WHERE ProductId = ? AND ExpirationDate <=> ? AND InventoryItemId != ? AND UserId = ?";
 $stmt_check_merge = $conn->prepare($sql_check_merge);
 $stmt_check_merge->bind_param('isii', $productId, $expirationDate, $itemId, $user_id);
@@ -97,14 +97,14 @@ if ($existingRow) {
     $existingItemId = $existingRow['InventoryItemId'];
     $newQuantity = $existingRow['Quantity'] + $quantity;
 
-    $sql_update_merge = "UPDATE INVENTORY SET Quantity = ? WHERE InventoryItemId = ?";
+    $sql_update_merge = "UPDATE inventory SET Quantity = ? WHERE InventoryItemId = ?";
     $stmt_update_merge = $conn->prepare($sql_update_merge);
     $stmt_update_merge->bind_param('ii', $newQuantity, $existingItemId);
     $stmt_update_merge->execute();
     $stmt_update_merge->close();
 
     // Remove the duplicate row
-    $sql_delete_old = "DELETE FROM INVENTORY WHERE InventoryItemId = ?";
+    $sql_delete_old = "DELETE FROM inventory WHERE InventoryItemId = ?";
     $stmt_delete_old = $conn->prepare($sql_delete_old);
     $stmt_delete_old->bind_param('i', $itemId);
     $stmt_delete_old->execute();
@@ -113,7 +113,7 @@ if ($existingRow) {
     echo json_encode(["success" => true, "message" => "Item merged successfully"]);
 } else {
     // No matching expiration date, update the current row
-    $sql_update_inventory = "UPDATE INVENTORY SET Quantity = ?, ExpirationDate = ? WHERE InventoryItemId = ?";
+    $sql_update_inventory = "UPDATE inventory SET Quantity = ?, ExpirationDate = ? WHERE InventoryItemId = ?";
     $stmt_update_inventory = $conn->prepare($sql_update_inventory);
     $stmt_update_inventory->bind_param("isi", $quantity, $expirationDate, $itemId);
 

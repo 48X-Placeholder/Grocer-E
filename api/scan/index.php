@@ -1,6 +1,6 @@
 <?php
-session_start();
-require __DIR__ . "/../config.php";
+require_once dirname(__FILE__) . '../../../config.php'; // Ensure database connection
+require_once dirname(__FILE__) . '../../../functions/load.php';
 header('Content-Type: application/json');
 
 // Check if user is authenticated

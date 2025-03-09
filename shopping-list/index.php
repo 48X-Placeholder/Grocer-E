@@ -94,7 +94,7 @@ $userId = cached_userid_info();
         </div>
     </section>
 
-    <script src="<? echo SITE_URL.'/assets/js/ShopList.js'?>"></script>
-    <script src="<? echo SITE_URL.'/assets/js/Search.js'?>"></script>
+    <script src="<? echo SITE_URL.'assets/js/ShopList.js'?>"></script>
+    <script src="<? echo SITE_URL.'assets/js/Search.js'?>"></script>
 </body>
 </html>

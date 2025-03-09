@@ -1,7 +1,7 @@
 <?php
+require_once dirname(__FILE__) . '../../../../config.php'; // Ensure database connection
+require_once dirname(__FILE__) . '../../../../functions/load.php';
 header('Content-Type: application/json');
-require_once __DIR__ . "/../../../config.php";
-require_once __DIR__ . "/../../../functions/load.php";
 
 // Check if user is authenticated
 if (!is_user_logged_in()) {
@@ -31,7 +31,7 @@ $category = trim($data['category']);
 $quantityNeeded = intval($data['quantityNeeded']);
 
 // Check if product already exists in LOCAL_PRODUCTS
-$sql_check = "SELECT ProductId FROM LOCAL_PRODUCTS WHERE ProductName = ? AND Brand = ? AND Category = ?";
+$sql_check = "SELECT ProductId FROM local_products WHERE ProductName = ? AND Brand = ? AND Category = ?";
 $stmt_check = $conn->prepare($sql_check);
 $stmt_check->bind_param('sss', $productName, $brand, $category);
 $stmt_check->execute();
@@ -41,7 +41,7 @@ $stmt_check->close();
 
 if (!$product) {
     // Insert new product into LOCAL_PRODUCTS
-    $sql_insert_product = "INSERT INTO LOCAL_PRODUCTS (UserId, ProductName, Brand, Category) VALUES (?, ?, ?, ?)";
+    $sql_insert_product = "INSERT INTO local_products (UserId, ProductName, Brand, Category) VALUES (?, ?, ?, ?)";
     $stmt_insert_product = $conn->prepare($sql_insert_product);
     $stmt_insert_product->bind_param('isss', $userId, $productName, $brand, $category);
     
@@ -57,7 +57,7 @@ if (!$product) {
 }
 
 // Check if the item already exists in SHOPPING_LIST
-$sql_check_shop = "SELECT ListItemId, QuantityNeeded FROM SHOPPING_LIST WHERE ProductId = ? AND UserId = ? AND Purchased = 0";
+$sql_check_shop = "SELECT ListItemId, QuantityNeeded FROM shopping_list WHERE ProductId = ? AND UserId = ? AND Purchased = 0";
 $stmt_check_shop = $conn->prepare($sql_check_shop);
 $stmt_check_shop->bind_param('ii', $productId, $userId);
 $stmt_check_shop->execute();
@@ -68,7 +68,7 @@ $stmt_check_shop->close();
 if ($existingShopItem) {
     // Item exists → update the quantity instead of adding a duplicate row
     $newQuantity = $existingShopItem['QuantityNeeded'] + $quantityNeeded;
-    $sql_update_shop = "UPDATE SHOPPING_LIST SET QuantityNeeded = ? WHERE ListItemId = ?";
+    $sql_update_shop = "UPDATE shopping_list SET QuantityNeeded = ? WHERE ListItemId = ?";
     $stmt_update_shop = $conn->prepare($sql_update_shop);
     $stmt_update_shop->bind_param('ii', $newQuantity, $existingShopItem['ListItemId']);
 
@@ -81,7 +81,7 @@ if ($existingShopItem) {
     $stmt_update_shop->close();
 } else {
     // New item → insert into SHOPPING_LIST
-    $sql_insert_shop = "INSERT INTO SHOPPING_LIST (ProductId, UserId, QuantityNeeded) VALUES (?, ?, ?)";
+    $sql_insert_shop = "INSERT INTO shopping_list (ProductId, UserId, QuantityNeeded) VALUES (?, ?, ?)";
     $stmt_insert_shop = $conn->prepare($sql_insert_shop);
     $stmt_insert_shop->bind_param('iii', $productId, $userId, $quantityNeeded);
 

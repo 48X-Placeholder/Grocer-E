@@ -35,7 +35,7 @@ $category = trim($data['category']);
 $quantityNeeded = intval($data['quantityNeeded']);
 
 // Step 1: Retrieve the ProductId from SHOPPING_LIST
-$sql_get_product = "SELECT ProductId FROM SHOPPING_LIST WHERE ListItemId = ?";
+$sql_get_product = "SELECT ProductId FROM shopping_list WHERE ListItemId = ?";
 $stmt_get_product = $conn->prepare($sql_get_product);
 $stmt_get_product->bind_param('i', $itemId);
 $stmt_get_product->execute();
@@ -51,7 +51,7 @@ if (!$productData) {
 $productId = $productData['ProductId'];
 
 // Step 2: Update LOCAL_PRODUCTS (ProductName, Brand, Category) using the fetched ProductId
-$sql_update_product = "UPDATE LOCAL_PRODUCTS SET ProductName = ?, Brand = ?, Category = ? WHERE ProductId = ?";
+$sql_update_product = "UPDATE local_products SET ProductName = ?, Brand = ?, Category = ? WHERE ProductId = ?";
 $stmt_update_product = $conn->prepare($sql_update_product);
 $stmt_update_product->bind_param("sssi", $productName, $brand, $category, $productId);
 
@@ -62,7 +62,7 @@ if (!$stmt_update_product->execute()) {
 $stmt_update_product->close();
 
 // Step 3: Update SHOPPING_LIST (QuantityNeeded)
-$sql_update_shop = "UPDATE SHOPPING_LIST SET QuantityNeeded = ? WHERE ListItemId = ?";
+$sql_update_shop = "UPDATE shopping_list SET QuantityNeeded = ? WHERE ListItemId = ?";
 $stmt_update_shop = $conn->prepare($sql_update_shop);
 $stmt_update_shop->bind_param("ii", $quantityNeeded, $itemId);
 

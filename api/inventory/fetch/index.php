@@ -1,7 +1,7 @@
 <?php
+require_once dirname(__FILE__) . '../../../../config.php'; // Ensure database connection
+require_once dirname(__FILE__) . '../../../../functions/load.php';
 header('Content-Type: application/json');
-require_once __DIR__ . "/../../../config.php";
-require_once __DIR__ . "/../../../functions/load.php";
 
 // Check if user is authenticated
 if (!is_user_logged_in()) {

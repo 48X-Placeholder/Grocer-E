@@ -1,7 +1,7 @@
 <?php
+require_once dirname(__FILE__) . '../../../../config.php'; // Ensure database connection
+require_once dirname(__FILE__) . '../../../../functions/load.php';
 header('Content-Type: application/json');
-require_once __DIR__ . "/../../../config.php";
-require_once __DIR__ . "/../../../functions/load.php";
 
 // Check if user is authenticated
 if (!is_user_logged_in()) {
@@ -83,7 +83,7 @@ if (!$product) {
 
 
 // Insert into INVENTORY
-$sql_insert_inventory = "INSERT INTO INVENTORY (ProductId, UserId, Quantity, ExpirationDate) VALUES (?, ?, ?, ?)";
+$sql_insert_inventory = "INSERT INTO inventory (ProductId, UserId, Quantity, ExpirationDate) VALUES (?, ?, ?, ?)";
 $stmt_insert_inventory = $conn->prepare($sql_insert_inventory);
 
 // If Expiration Date is NULL, bind accordingly

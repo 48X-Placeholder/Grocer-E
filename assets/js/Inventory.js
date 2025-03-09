@@ -1,6 +1,6 @@
 // Function to load inventory data from the database
 function loadGroceryData() {
-    fetch('../api/inventory/fetch')
+    fetch('../api/inventory/fetch/', {redirect: 'follow', referrerPolicy: 'no-referrer'})
         .then(response => response.json())
         .then(data => {
             const tableBody = document.getElementById('groceryTableBody');
@@ -154,8 +154,10 @@ function addItem() {
     console.log("Sending request data:", requestData); //for debugging
 
 
-    fetch('../api/inventory/add', {
+    fetch('../api/inventory/add/', {
         method: 'POST',
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -186,8 +188,10 @@ function deleteSelectedItems() {
         return;
     }
 
-    fetch('../api/inventory/delete', {
+    fetch('../api/inventory/delete/', {
         method: 'POST',
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -208,8 +212,10 @@ function deleteSelectedItems() {
 
 // alternative delete function used when editing quantity to 0
 function deleteItem(itemId) {
-    fetch('../api/inventory/delete', {
+    fetch('../api/inventory/delete/', {
         method: 'POST',
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ itemId }) // Send as single ID, not an array
     })
@@ -316,8 +322,10 @@ function saveEdit(itemId) {
         upc: upcInput
     };
 
-    fetch('../api/inventory/update', {
+    fetch('../api/inventory/update/', {
         method: 'POST',
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestData)
     })
