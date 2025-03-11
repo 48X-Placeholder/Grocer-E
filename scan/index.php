@@ -1,22 +1,13 @@
 <?php
-require_once __DIR__ . "/../config.php";
-require_once __DIR__ . "/../functions/load.php";
-
-if (!is_user_logged_in()) {
-	header("Location: ".SITE_URL.'login'); // Redirect to dashboard
-	exit(); // Ensure no further code is executed after redirect
-}
-
 $source = isset($_GET['source']) ? $_GET['source'] : 'inventory'; // Default to inventory
+if ($source === 'shopping_list') {
+    $backLabel = 'Back to Shopping List';
+    $backHref = '../shopping-list/index.php';
+} else {
+    $backLabel = 'Back to Inventory';
+    $backHref = '../inventory/index.php';
+}
 ?>
-
-<script>
-    let scanSource = "<?php echo $source; ?>"; // Pass source to JavaScript
-</script>
-
- <!-- as it is when a user scans an item successfully they will be redirected immediately to 
-  the relevant list page. idk if we should keep or change this -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,9 +19,9 @@ $source = isset($_GET['source']) ? $_GET['source'] : 'inventory'; // Default to 
     body { margin: 0; padding: 0; font-family: sans-serif; text-align: center; }
     h2 { margin: 20px 0 10px; }
     #buttonContainer { display: inline-flex; gap: 10px; margin-bottom: 20px; }
-    #startScan, #backToDashboard { padding: 10px 20px; font-size: 16px; border: none; cursor: pointer; }
+    #startScan, #backButton { padding: 10px 20px; font-size: 16px; border: none; cursor: pointer; }
     #startScan { background-color: #007bff; color: white; }
-    #backToDashboard { background-color: #28a745; color: white; }
+    #backButton { background-color: #28a745; color: white; }
     #videoWrapper { display: inline-block; width: 640px; height: 480px; border: 2px solid #ccc; overflow: hidden; margin-bottom: 20px; }
     #scanner { width: 100%; height: 100%; object-fit: cover; }
     #loading, #errorMessage, #barcodeResult { margin: 10px 0; font-weight: bold; }
@@ -42,7 +33,7 @@ $source = isset($_GET['source']) ? $_GET['source'] : 'inventory'; // Default to 
   <h2>Scan a Product</h2>
   <div id="buttonContainer">
     <button id="startScan">Start Scanner</button>
-    <button id="backToDashboard" onclick="window.location.href='<? echo SITE_URL.(($source === "shopping_list") ? 'shopping-list' : 'inventory')?>';">Exit Scanner</button>
+    <button id="backButton" onclick="window.location.href='<?php echo $backHref; ?>';"><?php echo $backLabel; ?></button>
   </div>
   <p id="errorMessage"></p>
   <p id="barcodeResult"></p>
@@ -52,6 +43,7 @@ $source = isset($_GET['source']) ? $_GET['source'] : 'inventory'; // Default to 
   </div>
 
   <script>
+    let scanSource = "<?php echo $source; ?>"; // Pass source to JavaScript
     let lastScannedCode = "";
     let scanAttempts = {};
     let scanningLocked = false; // Prevents multiple submissions
@@ -95,7 +87,7 @@ $source = isset($_GET['source']) ? $_GET['source'] : 'inventory'; // Default to 
           scanAttempts = {};
           document.getElementById("loading").style.display = "block";
 
-          fetch('<? echo SITE_URL.'api/scan'?>', {
+          fetch('process_barcode.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ barcode: barcode, source: scanSource })
@@ -104,7 +96,7 @@ $source = isset($_GET['source']) ? $_GET['source'] : 'inventory'; // Default to 
           .then(data => {
             if (data.error) alert("Error: " + data.error);
             else alert("Product Added: " + data.product_name);
-            window.location.href = "<? echo SITE_URL?>"+((scanSource === "shopping_list") ? 'shopping-list' : 'inventory');
+            window.location.href = (scanSource === "shopping_list") ? "../shopping-list/index.php" : "../inventory/index.php";
           })
           .catch(() => document.getElementById("errorMessage").innerText = "Server error.")
           .finally(() => {
@@ -117,6 +109,7 @@ $source = isset($_GET['source']) ? $_GET['source'] : 'inventory'; // Default to 
   </script>
 </body>
 </html>
+
 
 
 
