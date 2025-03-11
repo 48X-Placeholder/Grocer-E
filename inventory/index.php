@@ -1,11 +1,19 @@
 <?php
-require_once __DIR__ . "/../page-templates/navigation-menu.php"; ?>
+require_once __DIR__ . "/../config.php";
+require_once __DIR__ . "/../page-templates/navigation-menu.php"; 
+
+if (!is_user_logged_in()) {
+	header("Location: ".SITE_URL.'login'); // Redirect to dashboard
+	exit(); // Ensure no further code is executed after redirect
+}
+
+?>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grocery List</title>
-    <link rel="stylesheet" href="../assets/styles/list.css">
+    <link rel="stylesheet" href="<? echo SITE_URL.'assets/styles/list.css'?>">
 </head>
 <body>
     
@@ -57,14 +65,14 @@ require_once __DIR__ . "/../page-templates/navigation-menu.php"; ?>
         </div>
 
         <div class="list-actions">
-            <a href="/scan/index.php?source=inventory" class="add-btn">Scan Item</a>
+            <a href="<? echo SITE_URL.'scan?source=inventory'?>" class="add-btn">Scan Item</a>
             <button class="add-btn" onclick="toggleAddItemForm()">Add Item Manually</button>
             <button class="delete-btn" onclick="deleteSelectedItems()">Delete Selected Items</button>
         </div>
     </section>
 
     <!-- pull necessary JS code from List.js file -->
-    <script src="../assets/js/Inventory.js"></script>
-    <script src="../assets/js/Search.js"></script>
+    <script src="<? echo SITE_URL.'assets/js/Inventory.js'?>"></script>
+    <script src="<? echo SITE_URL.'assets/js/Search.js'?>"></script>
 </body>
 </html>

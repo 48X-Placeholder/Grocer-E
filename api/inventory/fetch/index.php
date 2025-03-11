@@ -1,14 +1,14 @@
 <?php
-session_start();
+require_once dirname(__FILE__) . '../../../../config.php'; // Ensure database connection
+require_once dirname(__FILE__) . '../../../../functions/load.php';
 header('Content-Type: application/json');
-require_once __DIR__ . "/../config.php";
 
-// Ensure user is logged in
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(["error" => "User not authenticated."]);
+// Check if user is authenticated
+if (!is_user_logged_in()) {
+    echo json_encode(['success' => false, 'message' => 'User not authenticated']);
     exit;
 }
-$user_id = $_SESSION['user_id'];
+$user_id = cached_userid_info();
 
 // Database connection
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);

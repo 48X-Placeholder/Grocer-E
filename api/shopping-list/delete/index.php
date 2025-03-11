@@ -1,7 +1,12 @@
 <?php
-session_start();
+require_once dirname(__FILE__) . '../../../../config.php'; // Ensure database connection
+require_once dirname(__FILE__) . '../../../../functions/load.php';
 header('Content-Type: application/json');
-require_once __DIR__ . "/../config.php"; // Ensure database connection
+
+if (!is_user_logged_in()) {
+    echo json_encode(['success' => false, 'message' => 'User not authenticated']);
+    exit;
+}
 
 // Create database connection
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
@@ -21,7 +26,7 @@ if (!isset($data['itemIds']) || empty($data['itemIds'])) {
 // Convert item IDs to a safe format for SQL query
 $itemIds = implode(',', array_map('intval', $data['itemIds']));
 
-$sql = "DELETE FROM SHOPPING_LIST WHERE ListItemId IN ($itemIds)";
+$sql = "DELETE FROM shopping_list WHERE ListItemId IN ($itemIds)";
 if ($conn->query($sql) === TRUE) {
     echo json_encode(['success' => true]);
 } else {

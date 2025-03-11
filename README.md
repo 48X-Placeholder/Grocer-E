@@ -5,10 +5,23 @@ A Complied Site, where development will take place for ease of use.
 
 **Setup:** Run ***db-setup.php*** or run the SQL Commands Below
 
-***Notes**: If using ***db-setup.php***, if you want to reinstall the database (reset) then append **?reset=1** in URL
-For Example: "grocer-e.local:10017/db-setup.php?reset=1"*
+***Notes**:*
+- If using ***db-setup.php***, if you want to reinstall the database (reset) then append **?reset=1** in URL
+For Example: "grocer-e.local/db-setup.php?reset=1"
+- Make Sure to set your credentials of the database in ***db-setup.php*** and/or ***config.php***
+- If Debugging on a Webserver enable the following:
+     - allowUrlFopen
+     - shortOpenTag
+     - displayErrors
 
-****here is sql code to build databases needed*****
+**Tested on/with:**
+- PHP 8.3
+- Nginx
+- LiteSpeed
+
+****Click Details for manual creation of Databases****
+<details>
+    
 **Create the grocery database**
 ```SQL
 CREATE DATABASE IF NOT EXISTS grocery_db;
@@ -160,8 +173,9 @@ CREATE TABLE IF NOT EXISTS themes (
 );
 ```
 
-***-Placeholder DATA-***
-
+***-Placeholder DATA (Click Details below)-***
+<details>
+    
 **Sample Data for Grocery DB**
 ```SQL
 INSERT INTO grocery_db.local_products (UserId, UPC, ProductName, Brand, Category) VALUES
@@ -176,5 +190,6 @@ INSERT INTO user_db.users (Username, Email, PasswordHash) VALUES
 ('testuser1', 'test1@example.com', 'hashedpassword1'),
 ('testuser2', 'test2@example.com', 'hashedpassword2');
 ```
-
+</details>
 ****End****
+</details>

@@ -1,24 +1,22 @@
 <?php
-session_start();
 header('Content-Type: text/html');
 require_once __DIR__ . "/../config.php";
 require_once __DIR__ . "/../page-templates/navigation-menu.php";
 
 // Check if user is authenticated
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.html");
+if (!is_user_logged_in()) {
+    header("Location: ".SITE_URL.'login'); // Redirect to dashboard
     exit;
 }
-$userId = $_SESSION['user_id'];
+$userId = cached_userid_info();
 ?>
 
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping List</title>
-    <link rel="stylesheet" href="../assets/styles/list.css">
+    <link rel="stylesheet" href="<? echo SITE_URL.'assets/styles/list.css'?>">
 </head>
 <body>
 
@@ -68,7 +66,7 @@ $userId = $_SESSION['user_id'];
 
         <!-- Action Buttons (Add/Delete) -->
         <div class="list-actions">
-            <a href="/scan/index.php?source=shopping_list" class="add-btn">Scan Item</a>
+            <a href="<? echo SITE_URL.'/scan?source=shopping_list'?>" class="add-btn">Scan Item</a>
             <button class="add-btn" onclick="toggleAddItemForm()">Add Item Manually</button>
             <button class="delete-btn" onclick="deleteSelectedItems()">Delete Selected Items</button>
             <button class="export-btn" onclick="exportSelectedItems()">Export Selected Items to Inventory</button>
@@ -96,7 +94,7 @@ $userId = $_SESSION['user_id'];
         </div>
     </section>
 
-    <script src="../assets/js/ShopList.js"></script>
-    <script src="../assets/js/Search.js"></script>
+    <script src="<? echo SITE_URL.'assets/js/ShopList.js'?>"></script>
+    <script src="<? echo SITE_URL.'assets/js/Search.js'?>"></script>
 </body>
 </html>

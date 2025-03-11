@@ -2,6 +2,11 @@
 require_once __DIR__ . "/../page-templates/navigation-menu.php";
 require_once __DIR__ . "/../config.php";
 
+if (!is_user_logged_in()) {
+	header("Location: ".SITE_URL.'login'); // Redirect to dashboard
+	exit(); // Ensure no further code is executed after redirect
+}
+
 $username = cached_username_info();
 $user_id = cached_userid_info(); // Get the logged-in user ID
 
@@ -38,7 +43,7 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="../assets/styles/dashboard.css">
+    <link rel="stylesheet" href="<? echo SITE_URL.'assets/styles/dashboard.css'?>">
 </head>
 <body>
     <!-- Site Navigation -->
@@ -103,8 +108,5 @@ $conn->close();
             </div>
         </main>
     </div>
-
-    <!-- JavaScript file needed for this page 
-    <script src="JS/Dashboard.js"></script> -->
 </body>
 </html>

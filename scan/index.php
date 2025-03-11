@@ -1,11 +1,19 @@
 <?php
+require_once __DIR__ . "/../config.php";
+require_once __DIR__ . "/../functions/load.php";
+
+if (!is_user_logged_in()) {
+	header("Location: ".SITE_URL.'login'); // Redirect to dashboard
+	exit(); // Ensure no further code is executed after redirect
+}
+
 $source = isset($_GET['source']) ? $_GET['source'] : 'inventory'; // Default to inventory
 if ($source === 'shopping_list') {
     $backLabel = 'Back to Shopping List';
-    $backHref = '../shopping-list/index.php';
+    $backHref = SITE_URL.'shopping-list';
 } else {
     $backLabel = 'Back to Inventory';
-    $backHref = '../inventory/index.php';
+    $backHref = SITE_URL.'inventory';
 }
 ?>
 <!DOCTYPE html>
@@ -87,7 +95,7 @@ if ($source === 'shopping_list') {
           scanAttempts = {};
           document.getElementById("loading").style.display = "block";
 
-          fetch('process_barcode.php', {
+          fetch('<? echo SITE_URL.'api/scan'?>', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ barcode: barcode, source: scanSource })
@@ -96,7 +104,7 @@ if ($source === 'shopping_list') {
           .then(data => {
             if (data.error) alert("Error: " + data.error);
             else alert("Product Added: " + data.product_name);
-            window.location.href = (scanSource === "shopping_list") ? "../shopping-list/index.php" : "../inventory/index.php";
+            window.location.href = "<?php echo $backHref; ?>";
           })
           .catch(() => document.getElementById("errorMessage").innerText = "Server error.")
           .finally(() => {

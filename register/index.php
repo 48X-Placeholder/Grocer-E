@@ -4,7 +4,7 @@ require_once __DIR__ . "/../page-templates/navigation-menu.php";
 require_once __DIR__ . "/../config.php";
 
 if (is_user_logged_in()) {
-	header("Location: ../dashboard"); // Redirect to dashboard
+	header("Location: ".SITE_URL.'dashboard'); // Redirect to dashboard
 	exit(); // Ensure no further code is executed after redirect
 } else {
 	// Function to sanitize inputs
@@ -69,7 +69,7 @@ if (is_user_logged_in()) {
 		}
 
 		// Redirect back to the registration form (register.php) to display messages
-		header("Location: ../register");
+		header("Location: ".SITE_URL.'register');
 		exit(); // Ensure that script execution stops after redirection
 	}
 }
@@ -79,7 +79,7 @@ if (is_user_logged_in()) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    <link rel="stylesheet" href="../assets/styles/signin.css">
+    <link rel="stylesheet" href="<? echo SITE_URL.'assets/styles/signin.css'?>">
 </head>
 <body>
 	<!-- Site Navigation -->
