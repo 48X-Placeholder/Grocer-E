@@ -15,6 +15,8 @@ function loadGroceryData() {
                 const expirationDisplay = item.ExpirationDate || "N/A";
                 let statusMessages = []; // Store multiple alerts
                 let alertClass = "";
+                let alertIcon = "⚠️"; // Default alert icon
+                let expirationHighlightClass = ""; // Default empty
 
                 // Missing UPC / Expiration alerts
                 if (!item.ExpirationDate && (!item.UPC || item.UPC === "UNKNOWN")) {
@@ -34,7 +36,6 @@ function loadGroceryData() {
                 // Expiration alerts
                 let expirationDate = item.ExpirationDate ? new Date(item.ExpirationDate) : null;
                 let today = new Date();
-                let expirationHighlightClass = ""; // Default empty
 
                 if (expirationDate) {
                     let sevenDaysAhead = new Date();
@@ -43,17 +44,19 @@ function loadGroceryData() {
                     if (expirationDate < today) {
                         statusMessages.unshift("Expired");
                         alertClass = "expired";
-                        expirationHighlightClass = "expired-highlight"; // Mark cell for highlighting
+                        expirationHighlightClass = "expired-highlight"; // Mark cell for red highlighting
+                        alertIcon = "❗"; // High alert for expired items
                     } else if (expirationDate < sevenDaysAhead) {
                         statusMessages.push("Expiring Soon");
                         alertClass = "expiring-soon";
+                        expirationHighlightClass = 'expiring-highlight'; // Mark cell for yellow highlighting
                     }
                 }
 
-                // Apply the status column as before
+                // Apply the status column update
                 const statusMessage = statusMessages.length > 0 ? statusMessages.join(" | ") : "";
                 const statusColumn = statusMessage
-                    ? `<td class="alert-column" title="${statusMessage}">⚠️</td>`
+                    ? `<td class="alert-column ${alertClass}" title="${statusMessage}">${alertIcon}</td>`
                     : `<td></td>`;
 
                 // Apply the class to the expiration date cell if needed
@@ -291,7 +294,6 @@ function saveEdit(itemId) {
     const row = document.getElementById(`row-${itemId}`);
     const upcInput = row.querySelector('.upc-column input').value.trim() || null;
 
-    // BEGIN NEW FEATURE
     const quantityInput = row.querySelector('input[type="number"]');
     const quantity = parseInt(quantityInput.value);
 
@@ -310,7 +312,6 @@ function saveEdit(itemId) {
             return;
         }
     }
-    // END NEW FEATURE
 
     const requestData = {
         itemId,
@@ -318,7 +319,7 @@ function saveEdit(itemId) {
         brand: row.querySelectorAll('input[type="text"]')[1].value,
         category: row.querySelectorAll('input[type="text"]')[2].value,
         quantity: row.querySelector('input[type="number"]').value,
-        expirationDate: row.querySelector('input[type="date"]').value,
+        expirationDate: row.querySelector('input[type="date"]').value || null,
         upc: upcInput
     };
 
@@ -349,6 +350,9 @@ function saveEdit(itemId) {
             row.querySelector('.save-btn').classList.add('hidden');
             row.querySelector('.cancel-btn').classList.add('hidden');
 
+            // **Recalculate Alerts for This Row Only**
+            updateRowAlerts(row, requestData.expirationDate);
+
             // Check if any rows are still being edited
             const anyRowsStillEditing = document.querySelectorAll('.edit-mode').length > 0;
             if (!anyRowsStillEditing) {
@@ -360,6 +364,45 @@ function saveEdit(itemId) {
         }
     })
     .catch(error => console.error('Error updating item:', error));
+}
+
+// Updates the alert column and expiration date styling for a specific row
+function updateRowAlerts(row, expirationDate) {
+    let today = new Date();
+    let sevenDaysAhead = new Date();
+    sevenDaysAhead.setDate(today.getDate() + 7);
+
+    let expirationCell = row.querySelector('td:nth-child(6)'); // Expiration date column
+    let alertCell = row.querySelector('td:nth-child(8)'); // Alerts column
+
+    // Remove existing highlight classes
+    expirationCell.classList.remove("expired-highlight", "expiring-highlight");
+
+    let statusMessages = [];
+    let alertIcon = "⚠️"; // Default alert icon
+    let alertClass = "";
+
+    if (!expirationDate) {
+        statusMessages.push("Missing Expiration Date");
+    } else {
+        let expDate = new Date(expirationDate);
+
+        if (expDate < today) {
+            statusMessages.push("Expired");
+            expirationCell.classList.add("expired-highlight");
+            alertClass = "expired";
+            alertIcon = "❗"; // High alert for expired items
+        } else if (expDate < sevenDaysAhead) {
+            statusMessages.push("Expiring Soon");
+            expirationCell.classList.add("expiring-highlight");
+            alertClass = "expiring-soon";
+        }
+    }
+
+    // Update the alerts column with the new status
+    alertCell.className = alertClass;
+    alertCell.title = statusMessages.join(" | ");
+    alertCell.innerHTML = statusMessages.length > 0 ? alertIcon : "";
 }
 
 // Cancel edit function, hide form
