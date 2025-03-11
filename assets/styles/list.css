@@ -224,5 +224,11 @@ th.desc::after {
 .expired-highlight {
     background-color: rgba(255, 0, 0, 0.3); /* Light red background */
     font-weight: bold; /* Make text bold for better visibility */
-    border: 2px solid red; /* Optional: Red border for emphasis */
+    border: 2px solid red; /* Red border for emphasis */
+}
+
+.expiring-highlight {
+    background-color: rgba(255, 255, 0, 0.3); /* Light yellow background */
+    font-weight: bold; /* Make text bold for better visibility */
+    border: 2px solid gold; /* Gold border for emphasis */
 }
