@@ -95,8 +95,10 @@ if ($source === 'shopping_list') {
           scanAttempts = {};
           document.getElementById("loading").style.display = "block";
 
-          fetch('<? echo SITE_URL.'api/scan'?>', {
+          fetch('<? echo SITE_URL.'api/scan/'?>', {
             method: 'POST',
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ barcode: barcode, source: scanSource })
           })
