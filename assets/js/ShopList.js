@@ -1,6 +1,6 @@
 // Function to load shopping list data from PHP
 function loadShoppingList() {
-    fetch('../api/shopping-list/fetch/', {redirect: 'follow', referrerPolicy: 'no-referrer'})
+    fetch('../api/shopping-list/fetch/', { redirect: 'follow', referrerPolicy: 'no-referrer' })
         .then(response => response.json())
         .then(data => {
             const tableBody = document.getElementById('shoppingTableBody');
@@ -31,7 +31,23 @@ function loadShoppingList() {
                         </td>
                         <td>
                             <span class="edit-text">${item.Category}</span>
-                            <input class="edit-input category hidden" type="text" value="${item.Category}">
+                            <select class="edit-input category hidden" style="width: 100%;">
+                                <option value="">Select a Category</option>
+                                <option value="Fresh Produce" ${item.Category === "Fresh Produce" ? "selected" : ""}>Fresh Produce</option>
+                                <option value="Dairy & Eggs" ${item.Category === "Dairy & Eggs" ? "selected" : ""}>Dairy & Eggs</option>
+                                <option value="Meat & Seafood" ${item.Category === "Meat & Seafood" ? "selected" : ""}>Meat & Seafood</option>
+                                <option value="Deli & Prepared Foods" ${item.Category === "Deli & Prepared Foods" ? "selected" : ""}>Deli & Prepared Foods</option>
+                                <option value="Bakery" ${item.Category === "Bakery" ? "selected" : ""}>Bakery</option>
+                                <option value="Frozen Foods" ${item.Category === "Frozen Foods" ? "selected" : ""}>Frozen Foods</option>
+                                <option value="Pantry Staples (Dry Goods)" ${item.Category === "Pantry Staples (Dry Goods)" ? "selected" : ""}>Pantry Staples (Dry Goods)</option>
+                                <option value="Snacks & Sweets" ${item.Category === "Snacks & Sweets" ? "selected" : ""}>Snacks & Sweets</option>
+                                <option value="Beverages" ${item.Category === "Beverages" ? "selected" : ""}>Beverages</option>
+                                <option value="Cereal & Breakfast Foods" ${item.Category === "Cereal & Breakfast Foods" ? "selected" : ""}>Cereal & Breakfast Foods</option>
+                                <option value="International Foods" ${item.Category === "International Foods" ? "selected" : ""}>International Foods</option>
+                                <option value="Organic & Health Foods" ${item.Category === "Organic & Health Foods" ? "selected" : ""}>Organic & Health Foods</option>
+                                <option value="Baby & Toddler Food" ${item.Category === "Baby & Toddler Food" ? "selected" : ""}>Baby & Toddler Food</option>
+                                <option value="Pet Food" ${item.Category === "Pet Food" ? "selected" : ""}>Pet Food</option>
+                            </select>
                         </td>
                         <td>
                             <span class="edit-text">${item.QuantityNeeded}</span>
@@ -45,6 +61,17 @@ function loadShoppingList() {
                     </tr>
                 `;
                 tableBody.insertAdjacentHTML('beforeend', row);
+            });
+            // Initialize Select2 on dynamically added inline category dropdowns,
+            // with dropdownParent set to 'body' to prevent clipping
+            $('.edit-input.category').select2({
+                placeholder: "Select a Category",
+                width: 'resolve',
+                dropdownParent: $('body')
+            });
+            // Immediately hide the Select2 container for each inline dropdown
+            $('.edit-input.category').each(function() {
+                $(this).data('select2').$container.hide();
             });
         })
         .catch(error => console.error('Error fetching shopping list:', error));
@@ -163,7 +190,7 @@ function addShopItem() {
     .then(response => response.json())
     .then(result => {
         if (result.success) {
-            loadShoppingList(); // **Refresh list after updating quantity or adding a new row**
+            loadShoppingList(); // Refresh list after updating quantity or adding a new row
             cancelAddItem();
             alert(result.message);
         } else {
@@ -172,6 +199,7 @@ function addShopItem() {
     })
     .catch(error => console.error('Error adding item:', error));
 }
+
 // Show/hide the add item form
 function toggleAddItemForm() {
     const form = document.getElementById('addItemForm');
@@ -183,19 +211,18 @@ function cancelAddItem() {
     document.getElementById('addItemForm').style.display = 'none';
     document.getElementById('productName').value = '';
     document.getElementById('brand').value = '';
-    document.getElementById('category').value = '';
+    // For static dropdown in the add form, reset using Select2 API:
+    $('#category').val(null).trigger('change');
     document.getElementById('quantityNeeded').value = '';
 }
 
 // Function to toggle inline editing for a row
 function toggleEditMode(itemId) {
     const row = document.getElementById(`row-${itemId}`);
-
     if (!row) {
         console.error(`Row with ID ${itemId} not found.`);
         return;
     }
-
     // Store original values as data attributes
     row.dataset.originalProductName = row.querySelector('.edit-input.name').value;
     row.dataset.originalBrand = row.querySelector('.edit-input.brand').value;
@@ -205,12 +232,14 @@ function toggleEditMode(itemId) {
     // Show inputs and hide text fields
     row.querySelectorAll('.edit-text').forEach(el => el.classList.add('hidden'));
     row.querySelectorAll('.edit-input').forEach(el => el.classList.remove('hidden'));
-
+    // Specifically show the Select2 container for the category field
+    $(row).find('.edit-input.category').each(function(){
+        $(this).data('select2').$container.show();
+    });
     // Toggle button visibility
     row.querySelector('.edit-btn').classList.add('hidden');
     row.querySelector('.save-btn').classList.remove('hidden');
     row.querySelector('.cancel-btn').classList.remove('hidden');
-
     // Mark row as being edited
     row.classList.add('edit-mode');
 }
@@ -218,19 +247,15 @@ function toggleEditMode(itemId) {
 // Function to save edited shopping list item
 function saveEdit(itemId) {
     const row = document.getElementById(`row-${itemId}`);
-
     if (!row) {
         console.error(`Row with ID ${itemId} not found.`);
         return;
     }
-
-    // Targeting the correct input fields based on your table structure
+    // Targeting the correct input fields
     const productNameInput = row.querySelector('.edit-input.name');
     const brandInput = row.querySelector('.edit-input.brand');
     const categoryInput = row.querySelector('.edit-input.category');
     const quantityInput = row.querySelector('.edit-input.quantity');
-
-    // Ensure extracted values are not null
     const requestData = {
         itemId,
         productName: productNameInput ? productNameInput.value.trim() : '',
@@ -238,14 +263,11 @@ function saveEdit(itemId) {
         category: categoryInput ? categoryInput.value.trim() : '',
         quantityNeeded: quantityInput ? quantityInput.value.trim() : ''
     };
-
     if (isNaN(requestData.quantityNeeded) || requestData.quantityNeeded <= 0) {
         alert("Error: Quantity must be greater than 0.");
         return;
     }
-
-    console.log("Saving Item with Data:", requestData); // Debugging
-
+    console.log("Saving Item with Data:", requestData);
     fetch('../api/shopping-list/update/', {
         method: 'POST',
         redirect: 'follow',
@@ -257,22 +279,22 @@ function saveEdit(itemId) {
     .then(result => {
         if (result.success) {
             console.log("Item successfully updated:", requestData);
-
             // Update only the edited row dynamically
             row.querySelector('.edit-text').innerText = requestData.productName;
             row.querySelectorAll('.edit-text')[1].innerText = requestData.brand;
             row.querySelectorAll('.edit-text')[2].innerText = requestData.category;
             row.querySelectorAll('.edit-text')[3].innerText = requestData.quantityNeeded;
-
             // Restore normal row display
             row.classList.remove('edit-mode');
             row.querySelectorAll('.edit-text').forEach(el => el.classList.remove('hidden'));
             row.querySelectorAll('.edit-input').forEach(el => el.classList.add('hidden'));
-
+            // Hide the Select2 container for the category field
+            $(row).find('.edit-input.category').each(function(){
+                $(this).data('select2').$container.hide();
+            });
             row.querySelector('.edit-btn').classList.remove('hidden');
             row.querySelector('.save-btn').classList.add('hidden');
             row.querySelector('.cancel-btn').classList.add('hidden');
-
         } else {
             alert('Error updating item: ' + result.message);
         }
@@ -283,29 +305,31 @@ function saveEdit(itemId) {
 // Function to cancel inline editing and revert to original display
 function cancelEdit(itemId) {
     const row = document.getElementById(`row-${itemId}`);
-
     if (!row) {
         console.error(`Row with ID ${itemId} not found.`);
         return;
     }
-
     // Restore original values from stored data attributes
     row.querySelector('.edit-input.name').value = row.dataset.originalProductName;
     row.querySelector('.edit-input.brand').value = row.dataset.originalBrand;
     row.querySelector('.edit-input.category').value = row.dataset.originalCategory;
     row.querySelector('.edit-input.quantity').value = row.dataset.originalQuantity;
-
     // Hide inputs and show text fields
     row.querySelectorAll('.edit-text').forEach(el => el.classList.remove('hidden'));
     row.querySelectorAll('.edit-input').forEach(el => el.classList.add('hidden'));
-
+    // Hide the Select2 container for the category field
+    $(row).find('.edit-input.category').each(function(){
+        $(this).data('select2').$container.hide();
+    });
     // Toggle button visibility
     row.querySelector('.edit-btn').classList.remove('hidden');
     row.querySelector('.save-btn').classList.add('hidden');
     row.querySelector('.cancel-btn').classList.add('hidden');
-
     // Remove edit mode class
     row.classList.remove('edit-mode');
 }
 
 document.addEventListener('DOMContentLoaded', loadShoppingList);
+
+
+

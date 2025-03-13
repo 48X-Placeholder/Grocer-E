@@ -9,20 +9,20 @@ body {
 .Navigation-Menu {
     display: flex;
     align-items: center;
-    justify-content: space-between; /*Spaces out the menu navigation items */
+    justify-content: space-between; /* Spaces out the menu navigation items */
     background-color: #222;
     padding: 10px 20px; /* Slight padding centers the logo and menu links nicely */
 }
 
 .logo {
-    text-decoration: none; /* It gets rid of the underlined text. Don't know why it has to be here and not .Business-Name */
+    text-decoration: none; /* Removes underlining */
 }
 
 .logo img {
     height: 40px;
-    width: auto; /* Changed from 40px to auto */
-    border-radius: 50%; /* border-radius makes the corners rounded, 50% makes logo round. Looks better as a logo when round */
-    margin-right: 8px; /* Makes the text slightly to the right of the logo, looks better */
+    width: auto; 
+    border-radius: 50%; 
+    margin-right: 8px; 
 }
 
 .Business-Name {
@@ -33,20 +33,20 @@ body {
 
 .Navigation-Menu-Links {
     display: flex;
-    gap: 15px; /* Changed from 20px to 15px */
+    gap: 15px;
 }
 
 .Navigation-Menu-Links a {
-    font-size: 18px; /* Changed from 25px to 18px */
+    font-size: 18px;
     color: white;
-    text-decoration: none; /* It gets rid of the underlined text. */
-    padding: 10px; /* Padding makes the hover effect bigger*/
-    border-radius: 5px; /* Changed from 10px to 5px */
-    transition: background-color 0.3s linear; /* Changed from 0.2s to 0.3s */
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s linear;
 }
 
 .Navigation-Menu-Links a:hover {
-    background-color: #444; /* Slightly lighter background on hover */
+    background-color: #444;
 }
 
 .list-section {
@@ -55,14 +55,13 @@ body {
     align-items: center;
     justify-content: center;
     padding: 20px;
-    margin: auto; /* Centers the section within the body */
+    margin: auto;
 }
 
-/* Centering the search bar */
 .list-search-bar {
     display: flex;
     justify-content: center;
-    margin-bottom: 20px; /* Space below the search bar */
+    margin-bottom: 20px;
 }
 
 .list-search-bar input[type="text"] {
@@ -72,7 +71,7 @@ body {
     border: 2px solid #888888;
     border-radius: 20px;
     outline: none;
-    margin-right: 10px; /* Space between input and button */
+    margin-right: 10px;
 }
 
 .list-search-bar .search-btn {
@@ -86,12 +85,11 @@ body {
     transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
-/* Styling and centering the table */
 .grocery-list-table {
-    width: 80%; /* Adjusts width; change as needed */
+    width: 80%;
     border-collapse: collapse;
-    margin: 20px auto; /* Centers the table */
-    background-color: #444444; /* Background for contrast */
+    margin: 20px auto;
+    background-color: #444444;
     border: 1px solid #555555;
 }
 
@@ -99,25 +97,24 @@ body {
 .grocery-list-table td {
     padding: 10px;
     text-align: center;
-    border: 1px solid #555555; /* Border around cells */
+    border: 1px solid #555555;
 }
 
 .grocery-list-table th {
-    background-color: #666666; /* Slightly darker header */
+    background-color: #666666;
 }
 
-/* Centering the add/delete buttons */
 .list-actions {
     display: flex;
     justify-content: center;
-    gap: 10px; /* Space between buttons */
-    margin-top: 20px; /* Space above the buttons */
+    gap: 10px;
+    margin-top: 20px;
 }
 
 .add-btn,
 .delete-btn,
 .export-btn {
-    padding: 12px 20px; /* Only changed 'export-btn' */
+    padding: 12px 20px;
     background-color: #888888;
     color: white;
     font-size: 16px;
@@ -136,34 +133,34 @@ body {
 }
 
 .table-container {
-    max-height: 450px; /* Changed from 400px to 450px */
-    overflow-y: auto; /* Adds vertical scroll bar */
-    border: 1px solid #888; /* Optional: border for better visibility */
-    margin: 20px auto; /* Center the table container */
-    width: 90%; /* Increase the width of the table container */
+    max-height: 450px;
+    overflow-y: auto;
+    border: 1px solid #888;
+    margin: 20px auto;
+    width: 90%;
 }
 
 .grocery-list-table {
-    width: 100%; /* Ensure table spans the width of the container */
+    width: 100%;
     border-collapse: collapse;
 }
 
 .grocery-list-table th, .grocery-list-table td {
-    padding: 10px 10px; /* Add more padding for better readability */
+    padding: 10px 10px;
     text-align: center;
-    border-bottom: 2px solid #555; /* Optional: border between rows */
+    border-bottom: 2px solid #555;
 }
 
 .grocery-list-table th {
-    background-color: #333; /* Dark background for header */
+    background-color: #333;
     color: white;
 }
 
 .grocery-list-table thead {
     position: sticky;
     top: 0;
-    background-color: #333; /* Keeps header background */
-    z-index: 10; /* Ensures header stays on top */
+    background-color: #333;
+    z-index: 10;
 }
 
 th.asc::after {
@@ -180,7 +177,7 @@ th.desc::after {
 
 .page-title {
     font-size: 25px;
-    padding: 10px 10px; /* Add more padding for better readability */
+    padding: 10px 10px;
     text-align: center;
 }
 
@@ -188,23 +185,19 @@ th.desc::after {
     display: none;
 }
 
-/* Hide UPC column by default */
 .upc-column, .upc-header {
     display: none;
 }
 
-/* Show UPC column for all rows when any row is being edited */
 .edit-mode-active .upc-header,
 .edit-mode-active .upc-column {
     display: table-cell;
 }
 
-/* Ensure only the selected row shows an editable UPC field */
 .upc-column input {
-    display: none; /* Hide input by default */
+    display: none;
 }
 
-/* When a row is in edit mode, show its UPC input */
 .edit-mode .upc-column input {
     display: inline-block;
 }
@@ -222,13 +215,44 @@ th.desc::after {
 }
 
 .expired-highlight {
-    background-color: rgba(255, 0, 0, 0.3); /* Light red background */
-    font-weight: bold; /* Make text bold for better visibility */
-    border: 2px solid red; /* Red border for emphasis */
+    background-color: rgba(255, 0, 0, 0.3);
+    font-weight: bold;
+    border: 2px solid red;
 }
 
 .expiring-highlight {
-    background-color: rgba(255, 255, 0, 0.3); /* Light yellow background */
-    font-weight: bold; /* Make text bold for better visibility */
-    border: 2px solid gold; /* Gold border for emphasis */
+    background-color: rgba(255, 255, 0, 0.3);
+    font-weight: bold;
+    border: 2px solid gold;
 }
+
+/* --- Select2 Custom Styling --- */
+
+.select2-container--default .select2-selection--single {
+    background-color: #fbfbfb;
+    border: 1px solid #555555;
+    border-radius: 5px;
+    padding: 5px 10px;
+    color: white;
+    height: 40px;
+    line-height: 28px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: black;
+    line-height: 28px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 28px;
+    right: 10px;
+}
+
+.select2-container--default .select2-results__options {
+    max-height: 150px;
+    overflow-y: auto;
+    background-color: #444444;
+    color: white;
+}
+
+

@@ -1,22 +1,23 @@
 <?php
 require_once __DIR__ . "/../config.php";
-require_once __DIR__ . "/../page-templates/navigation-menu.php"; 
+require_once __DIR__ . "/../page-templates/navigation-menu.php";
 
 if (!is_user_logged_in()) {
-	header("Location: ".SITE_URL.'login'); // Redirect to dashboard
-	exit(); // Ensure no further code is executed after redirect
+	header("Location: ".SITE_URL.'login'); // Redirect to login page
+	exit();
 }
-
 ?>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grocery List</title>
-    <link rel="stylesheet" href="<? echo SITE_URL.'assets/styles/list.css'?>">
+    <title>Inventory</title>
+    
+    <!-- Include Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="<?php echo SITE_URL.'assets/styles/list.css'?>">
 </head>
 <body>
-    
     <!-- Site Navigation -->
 	<?php site_navigation_menu(); ?>
     
@@ -57,7 +58,26 @@ if (!is_user_logged_in()) {
             <input type="text" id="upcCode" placeholder="UPC Code" required>
             <input type="text" id="productName" placeholder="Product Name" required>
             <input type="text" id="brand" placeholder="Brand" required>
-            <input type="text" id="category" placeholder="Category" required>
+            
+            <!-- Standardized Category Dropdown -->
+            <select id="category" required>
+            <option value="">Select a Category</option>
+                <option value="Fresh Produce">Fresh Produce</option>
+                <option value="Dairy & Eggs">Dairy & Eggs</option>
+                <option value="Meat & Seafood">Meat & Seafood</option>
+                <option value="Deli & Prepared Foods">Deli & Prepared Foods</option>
+                <option value="Bakery">Bakery</option>
+                <option value="Frozen Foods">Frozen Foods</option>
+                <option value="Pantry Staples (Dry Goods)">Pantry Staples (Dry Goods)</option>
+                <option value="Snacks & Sweets">Snacks & Sweets</option>
+                <option value="Beverages">Beverages</option>
+                <option value="Cereal & Breakfast Foods">Cereal & Breakfast Foods</option>
+                <option value="International Foods">International Foods</option>
+                <option value="Organic & Health Foods">Organic & Health Foods</option>
+                <option value="Baby & Toddler Food">Baby & Toddler Food</option>
+                <option value="Pet Food">Pet Food</option>
+            </select>
+            
             <input type="number" id="quantity" placeholder="Quantity" required>
             <input type="date" id="expirationDate" placeholder="Expiration Date" required>
             <button class="submit-btn" onclick="addItem()">Submit</button>
@@ -65,14 +85,26 @@ if (!is_user_logged_in()) {
         </div>
 
         <div class="list-actions">
-            <a href="<? echo SITE_URL.'scan?source=inventory'?>" class="add-btn">Scan Item</a>
+            <a href="<?php echo SITE_URL.'scan?source=inventory'?>" class="add-btn">Scan Item</a>
             <button class="add-btn" onclick="toggleAddItemForm()">Add Item Manually</button>
             <button class="delete-btn" onclick="deleteSelectedItems()">Delete Selected Items</button>
         </div>
     </section>
 
-    <!-- pull necessary JS code from List.js file -->
-    <script src="<? echo SITE_URL.'assets/js/Inventory.js'?>"></script>
-    <script src="<? echo SITE_URL.'assets/js/Search.js'?>"></script>
+    <!-- Include jQuery and Select2 JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="<?php echo SITE_URL.'assets/js/Inventory.js'?>"></script>
+    <script src="<?php echo SITE_URL.'assets/js/Search.js'?>"></script>
+    <script>
+    // Initialize Select2 for Category Dropdown
+    $(document).ready(function() {
+        $('#category').select2({
+            placeholder: "Select a Category",
+            width: 'resolve'
+        });
+    });
+    </script>
 </body>
 </html>
+
