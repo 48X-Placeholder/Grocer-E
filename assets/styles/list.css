@@ -232,3 +232,35 @@ th.desc::after {
     font-weight: bold; /* Make text bold for better visibility */
     border: 2px solid gold; /* Gold border for emphasis */
 }
+
+/* Ensure the Select2 input box is properly sized */
+#category.select2-container {
+    width: 100% !important; /* Make it responsive */
+    max-width: 250px; /* Limit size */
+}
+
+/* Fix dropdown sizing */
+.select2-dropdown {
+    width: auto !important;
+    max-width: 250px !important; /* Prevent excessive width */
+    max-height: 200px !important; /* Limit dropdown height */
+    overflow-y: auto !important;
+}
+
+/* Ensure search box appears correctly */
+.select2-container--default .select2-search--dropdown .select2-search__field {
+    width: 100% !important;
+    font-size: 14px;
+    padding: 5px;
+}
+
+/* Override Select2 dropdown options for better visibility */
+.select2-container--default .select2-results__option {
+    background-color: #fff !important; /* White background */
+    color: #000 !important;            /* Black text */
+}
+.select2-container--default .select2-results__option--highlighted,
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #5897fb !important; /* Blue background on hover */
+    color: #fff !important;               /* White text on hover */
+}
