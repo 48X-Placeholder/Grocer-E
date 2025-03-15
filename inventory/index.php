@@ -13,6 +13,7 @@ if (!is_user_logged_in()) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grocery List</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="<? echo SITE_URL.'assets/styles/list.css'?>">
 </head>
 <body>
@@ -52,17 +53,36 @@ if (!is_user_logged_in()) {
         </div>
 
         <!-- Add Item Form (Initially hidden) -->
-        <div class="add-item-form" id="addItemForm" style="display: none;">
-            <h3>Add New Item</h3>
-            <input type="text" id="upcCode" placeholder="UPC Code" required>
-            <input type="text" id="productName" placeholder="Product Name" required>
-            <input type="text" id="brand" placeholder="Brand" required>
-            <input type="text" id="category" placeholder="Category" required>
-            <input type="number" id="quantity" placeholder="Quantity" required>
-            <input type="date" id="expirationDate" placeholder="Expiration Date" required>
-            <button class="submit-btn" onclick="addItem()">Submit</button>
-            <button class="cancel-btn" onclick="cancelAddItem()">Cancel</button>
-        </div>
+<div class="add-item-form" id="addItemForm" style="display: none;">
+    <h3>Add New Item</h3>
+    <input type="text" id="upcCode" placeholder="UPC Code" required>
+    <input type="text" id="productName" placeholder="Product Name" required>
+    <input type="text" id="brand" placeholder="Brand" required>
+
+    <!-- Replace text input with a select dropdown -->
+    <select id="category" required>
+        <option value="">Select a Category</option>
+        <option value="Fruits">Fruits</option>
+        <option value="Vegetables">Vegetables</option>
+        <option value="Dairy">Dairy</option>
+        <option value="Bakery">Bakery</option>
+        <option value="Meat">Meat</option>
+        <option value="Seafood">Seafood</option>
+        <option value="Beverages">Beverages</option>
+        <option value="Snacks">Snacks</option>
+        <option value="Frozen Foods">Frozen Foods</option>
+        <option value="Pantry">Pantry</option>
+        <option value="Canned Goods">Canned Goods</option>
+        <option value="Condiments">Condiments</option>
+        <option value="Household Items">Household Items</option>
+        <option value="Personal Care">Personal Care</option>
+    </select>
+
+    <input type="number" id="quantity" placeholder="Quantity" required>
+    <input type="date" id="expirationDate" placeholder="Expiration Date">
+    <button class="submit-btn" onclick="addItem()">Submit</button>
+    <button class="cancel-btn" onclick="cancelAddItem()">Cancel</button>
+</div>
 
         <div class="list-actions">
             <a href="<? echo SITE_URL.'scan?source=inventory'?>" class="add-btn">Scan Item</a>
@@ -72,7 +92,23 @@ if (!is_user_logged_in()) {
     </section>
 
     <!-- pull necessary JS code from List.js file -->
-    <script src="<? echo SITE_URL.'assets/js/Inventory.js'?>"></script>
+     <script src="<?echo SITE_URL.'assets/js/Inventory.js'?>"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    
     <script src="<? echo SITE_URL.'assets/js/Search.js'?>"></script>
+    
+
+    <script>
+        $(document).ready(function() {
+    $('#category').select2({
+        placeholder: "Select a Category",
+        width: 'resolve', // Ensures it resizes properly
+        dropdownAutoWidth: false, // Prevents stretching
+        dropdownParent: $("#addItemForm"), // Ensures dropdown stays within form
+        minimumResultsForSearch: 0 // Always show search box
+    });
+});
+</script>
 </body>
 </html>

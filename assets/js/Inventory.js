@@ -1,3 +1,4 @@
+
 // Function to load inventory data from the database
 function loadGroceryData() {
     fetch('../api/inventory/fetch/', {redirect: 'follow', referrerPolicy: 'no-referrer'})
@@ -71,7 +72,12 @@ function loadGroceryData() {
                             <span class="edit-text">${expirationDisplay}</span>
                             <input class="edit-input hidden" type="date" value="${item.ExpirationDate || ''}">
                         </td>
-                        <td class="upc-column hidden"><input class="edit-input" type="text" value="${item.UPC || ''}" placeholder="Enter UPC"></td>
+
+                        <td class="upc-column">
+    <span class="edit-text">${item.UPC || ''}</span>
+    <input class="edit-input hidden" type="text" value="${item.UPC || ''}" placeholder="Enter UPC">
+</td>
+
                         ${statusColumn}
                         <td>
                             <button class="edit-btn" onclick="toggleEditMode(${item.InventoryItemId})">Edit</button>
@@ -132,7 +138,7 @@ function sortTable(columnIndex, dataType, headerElement) {
 
 // Add item function
 function addItem() {
-    const upcCode = document.getElementById('upcCode').value.trim();
+    const upc = document.getElementById('upcCode').value.trim();
     const productName = document.getElementById('productName').value.trim();
     const brand = document.getElementById('brand').value.trim();
     const category = document.getElementById('category').value.trim();
@@ -140,10 +146,10 @@ function addItem() {
     const expirationDate = document.getElementById('expirationDate').value.trim();
     const formattedExpiration = expirationDate === "" ? null : expirationDate;
 
-    const requestData = { upcCode, productName, brand, category, quantity, expirationDate: formattedExpiration };
+    const requestData = { upcCode: upc, productName, brand, category, quantity, expirationDate: formattedExpiration };
 
     // Check that primary text fields have values
-    if (!upcCode || !productName || !brand || !category) {
+    if (!upc || !productName || !brand || !category) {
         alert("Please fill in all required fields.");
         return;
     }
@@ -263,63 +269,93 @@ function toggleEditMode(itemId) {
 
     console.log(`Entering edit mode for row: ${itemId}`);
 
-    // Store original values in dataset
-    row.dataset.originalProductName = row.querySelectorAll('.edit-input')[0].value;
-    row.dataset.originalBrand = row.querySelectorAll('.edit-input')[1].value;
-    row.dataset.originalCategory = row.querySelectorAll('.edit-input')[2].value;
-    row.dataset.originalQuantity = row.querySelectorAll('.edit-input')[3].value;
-    row.dataset.originalExpirationDate = row.querySelectorAll('.edit-input')[4].value;
-    row.dataset.originalUPC = row.querySelector('.upc-column input').value || ''; 
+    // Store original values in dataset in case of cancel
+    row.dataset.originalProductName = row.cells[1].innerText.trim();
+    row.dataset.originalBrand = row.cells[2].innerText.trim();
+    row.dataset.originalCategory = row.cells[3].innerText.trim();
+    row.dataset.originalQuantity = row.cells[4].innerText.trim();
+    row.dataset.originalExpirationDate = row.cells[5].innerText.trim();
+    row.dataset.originalUPC = row.querySelector('.upc-column .edit-text')?.innerText.trim() || '';
 
-    // Activate edit mode
+    // Replace text with input fields
+    row.innerHTML = `
+        <td><input type="checkbox" class="item-checkbox" data-id="${itemId}"></td>
+        <td><input type="text" class="edit-input" id="edit-product-${itemId}" value="${row.dataset.originalProductName}"></td>
+        <td><input type="text" class="edit-input" id="edit-brand-${itemId}" value="${row.dataset.originalBrand}"></td>
+        <td>
+            <select class="edit-category" id="edit-category-${itemId}">
+                <option value="">Select a Category</option>
+                <option value="Fruits">Fruits</option>
+                <option value="Vegetables">Vegetables</option>
+                <option value="Dairy">Dairy</option>
+                <option value="Bakery">Bakery</option>
+                <option value="Meat">Meat</option>
+                <option value="Seafood">Seafood</option>
+                <option value="Beverages">Beverages</option>
+                <option value="Snacks">Snacks</option>
+                <option value="Frozen Foods">Frozen Foods</option>
+                <option value="Pantry">Pantry</option>
+                <option value="Canned Goods">Canned Goods</option>
+                <option value="Condiments">Condiments</option>
+                <option value="Household Items">Household Items</option>
+                <option value="Personal Care">Personal Care</option>
+            </select>
+        </td>
+        <td><input type="number" class="edit-input" id="edit-quantity-${itemId}" value="${row.dataset.originalQuantity}"></td>
+        <td><input type="date" class="edit-input" id="edit-expiration-${itemId}" value="${row.dataset.originalExpirationDate}"></td>
+        <td class="upc-column"><input type="text" class="edit-input" id="edit-upc-${itemId}" value="${row.dataset.originalUPC}" placeholder="Enter UPC"></td>
+        <td></td>
+        <td>
+            <button class="save-btn" onclick="saveEdit(${itemId})">Save</button>
+            <button class="cancel-btn" onclick="cancelEdit(${itemId})">Cancel</button>
+        </td>
+    `;
+
+    // Initialize Select2 after recreating the dropdown
+    $(`#edit-category-${itemId}`).val(row.dataset.originalCategory).select2({
+        placeholder: "Select a Category",
+        width: '100%',
+        dropdownAutoWidth: true,
+        minimumResultsForSearch: 0
+    });
+
+    // Activate edit mode class
     row.classList.add('edit-mode');
     document.querySelector("table").classList.add("edit-mode-active");
 
-    // Show inputs, hide static text
-    row.querySelectorAll('.edit-text').forEach(el => el.classList.add('hidden'));
-    row.querySelectorAll('.edit-input').forEach(el => el.classList.remove('hidden'));
-
-    // Show UPC input only for the selected row
-    const upcField = row.querySelector('.upc-column input');
-    if (upcField) upcField.style.display = 'inline-block';
-
-    // Toggle button visibility
-    row.querySelector('.edit-btn').classList.add('hidden');
-    row.querySelector('.save-btn').classList.remove('hidden');
-    row.querySelector('.cancel-btn').classList.remove('hidden');
+    console.log("Select element found:", $(`#edit-category-${itemId}`).length); // Debugging
 }
+
+
 
 // Save edits
 function saveEdit(itemId) {
     const row = document.getElementById(`row-${itemId}`);
+
     const upcInput = row.querySelector('.upc-column input').value.trim() || null;
 
-    const quantityInput = row.querySelector('input[type="number"]');
+    const quantityInput = row.querySelector(`#edit-quantity-${itemId}`);
     const quantity = parseInt(quantityInput.value);
 
-    // Validation: Prevent negative numbers
     if (isNaN(quantity) || quantity < 0) {
         alert("Quantity must be a number greater than or equal to 0.");
         return;
     }
 
-    // Confirmation for zero quantity
-    if (quantity === 0) {
-        const confirmDelete = confirm("This item is now out of stock. Would you like to remove it from inventory?");
-        
-        if (confirmDelete) {
-            deleteItem(itemId); // Call delete function
-            return;
-        }
+    if (quantity === 0 && !confirm("This item is now out of stock. Would you like to remove it from inventory?")) {
+        return;
+    } else if (quantity === 0) {
+        deleteItem(itemId);
+        return;
     }
 
     const requestData = {
         itemId,
-        productName: row.querySelectorAll('input[type="text"]')[0].value,
-        brand: row.querySelectorAll('input[type="text"]')[1].value,
-        category: row.querySelectorAll('input[type="text"]')[2].value,
-        quantity: row.querySelector('input[type="number"]').value,
-        expirationDate: row.querySelector('input[type="date"]').value || null,
+        productName: row.querySelector(`#edit-product-${itemId}`).value,
+        brand: row.querySelector(`#edit-brand-${itemId}`).value,
+        category: row.querySelector(`#edit-category-${itemId}`).value,
+        quantity,
+        expirationDate: row.querySelector(`#edit-expiration-${itemId}`).value || null,
         upc: upcInput
     };
 
@@ -333,32 +369,7 @@ function saveEdit(itemId) {
     .then(response => response.json())
     .then(result => {
         if (result.success) {
-            // Update the row dynamically
-            row.querySelectorAll('.edit-text')[0].innerText = requestData.productName;
-            row.querySelectorAll('.edit-text')[1].innerText = requestData.brand;
-            row.querySelectorAll('.edit-text')[2].innerText = requestData.category;
-            row.querySelectorAll('.edit-text')[3].innerText = requestData.quantity;
-            row.querySelectorAll('.edit-text')[4].innerText = requestData.expirationDate || "N/A";
-
-            // Exit edit mode for this row
-            row.classList.remove('edit-mode');
-            row.querySelectorAll('.edit-text').forEach(el => el.classList.remove('hidden'));
-            row.querySelectorAll('.edit-input').forEach(el => el.classList.add('hidden'));
-            row.querySelector('.upc-column input').style.display = 'none';
-
-            row.querySelector('.edit-btn').classList.remove('hidden');
-            row.querySelector('.save-btn').classList.add('hidden');
-            row.querySelector('.cancel-btn').classList.add('hidden');
-
-            // **Recalculate Alerts for This Row Only**
-            updateRowAlerts(row, requestData.expirationDate);
-
-            // Check if any rows are still being edited
-            const anyRowsStillEditing = document.querySelectorAll('.edit-mode').length > 0;
-            if (!anyRowsStillEditing) {
-                document.querySelector("table").classList.remove("edit-mode-active");
-                loadGroceryData(); // Reload the table when the last edit is saved
-            }
+            loadGroceryData(); // Reload the updated data
         } else {
             alert('Error updating item: ' + result.message);
         }
@@ -408,45 +419,10 @@ function updateRowAlerts(row, expirationDate) {
 // Cancel edit function, hide form
 function cancelEdit(itemId) {
     const row = document.getElementById(`row-${itemId}`);
-    if (!row) {
-        console.error(`Row with ID row-${itemId} not found`);
-        return;
-    }
+    if (!row) return;
 
-    console.log(`Canceling edit for row: ${itemId}`);
-
-    // Restore original values
-    row.querySelectorAll('.edit-input')[0].value = row.dataset.originalProductName;
-    row.querySelectorAll('.edit-input')[1].value = row.dataset.originalBrand;
-    row.querySelectorAll('.edit-input')[2].value = row.dataset.originalCategory;
-    row.querySelectorAll('.edit-input')[3].value = row.dataset.originalQuantity;
-    row.querySelectorAll('.edit-input')[4].value = row.dataset.originalExpirationDate;
-    row.querySelector('.upc-column input').value = row.dataset.originalUPC || '';
-
-    // Remove edit mode
-    row.classList.remove('edit-mode');
-
-    // Show text fields, hide inputs
-    row.querySelectorAll('.edit-text').forEach(el => el.classList.remove('hidden'));
-    row.querySelectorAll('.edit-input').forEach(el => el.classList.add('hidden'));
-
-    // Hide UPC input
-    const upcField = row.querySelector('.upc-column input');
-    if (upcField) upcField.style.display = 'none';
-
-    // Toggle button visibility
-    row.querySelector('.edit-btn').classList.remove('hidden');
-    row.querySelector('.save-btn').classList.add('hidden');
-    row.querySelector('.cancel-btn').classList.add('hidden');
-
-    // Check if any rows are still in edit mode
-    if (!document.querySelectorAll('.edit-mode').length) {
-        document.querySelector("table").classList.remove("edit-mode-active");
-    }
+    loadGroceryData(); // Simply reload data to restore original values
 }
 
 // Load data when the page loads
 document.addEventListener('DOMContentLoaded', loadGroceryData);
-
-
-

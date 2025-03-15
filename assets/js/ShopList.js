@@ -29,10 +29,31 @@ function loadShoppingList() {
                             <span class="edit-text">${item.Brand}</span>
                             <input class="edit-input brand hidden" type="text" value="${item.Brand}">
                         </td>
+
                         <td>
-                            <span class="edit-text">${item.Category}</span>
-                            <input class="edit-input category hidden" type="text" value="${item.Category}">
-                        </td>
+    <span class="edit-text">${item.Category}</span>
+    <select class="edit-input category hidden">
+        <option value="Dairy">Dairy</option>
+        <option value="Meat">Meat</option>
+        <option value="Vegetables">Vegetables</option>
+        <option value="Fruits">Fruits</option>
+        <option value="Beverages">Beverages</option>
+        <option value="Bakery">Bakery</option>
+        <option value="Frozen Foods">Frozen Foods</option>
+        <option value="Snacks">Snacks</option>
+        <option value="Canned Goods">Canned Goods</option>
+        <option value="Grains">Grains</option>
+        <option value="Condiments">Condiments</option>
+        <option value="Deli">Deli</option>
+        <option value="Seafood">Seafood</option>
+        <option value="Spices & Herbs">Spices & Herbs</option>
+        <option value="Pasta & Rice">Pasta & Rice</option>
+        <option value="Household Items">Household Items</option>
+        <option value="Personal Care">Personal Care</option>
+    </select>
+</td>
+
+
                         <td>
                             <span class="edit-text">${item.QuantityNeeded}</span>
                             <input class="edit-input quantity hidden" type="number" value="${item.QuantityNeeded}">
@@ -46,6 +67,15 @@ function loadShoppingList() {
                 `;
                 tableBody.insertAdjacentHTML('beforeend', row);
             });
+
+            // Reinitialize Select2 for dynamically added category dropdowns
+            $('.category-dropdown').select2({
+                placeholder: "Select a Category",
+                allowClear: true,
+                width: '100%'
+            });
+
+
         })
         .catch(error => console.error('Error fetching shopping list:', error));
 }
@@ -199,12 +229,24 @@ function toggleEditMode(itemId) {
     // Store original values as data attributes
     row.dataset.originalProductName = row.querySelector('.edit-input.name').value;
     row.dataset.originalBrand = row.querySelector('.edit-input.brand').value;
-    row.dataset.originalCategory = row.querySelector('.edit-input.category').value;
+    row.dataset.originalCategory = row.querySelectorAll('.edit-text')[2].innerText;
     row.dataset.originalQuantity = row.querySelector('.edit-input.quantity').value;
+
 
     // Show inputs and hide text fields
     row.querySelectorAll('.edit-text').forEach(el => el.classList.add('hidden'));
     row.querySelectorAll('.edit-input').forEach(el => el.classList.remove('hidden'));
+
+     // Convert the category field into a Select2 dropdown
+     const categoryDropdown = $(row).find('.edit-input.category');
+     categoryDropdown.select2({
+         placeholder: "Select a Category",
+         allowClear: true,
+         width: '100%'
+     });
+
+     // Set the dropdown value to match the existing category
+    categoryDropdown.val(row.dataset.originalCategory).trigger('change');
 
     // Toggle button visibility
     row.querySelector('.edit-btn').classList.add('hidden');
@@ -227,7 +269,8 @@ function saveEdit(itemId) {
     // Targeting the correct input fields based on your table structure
     const productNameInput = row.querySelector('.edit-input.name');
     const brandInput = row.querySelector('.edit-input.brand');
-    const categoryInput = row.querySelector('.edit-input.category');
+    const categoryDropDown = $(row).find('.edit-input.category'); // Use jQuery to get Select2 value
+    const categoryValue = categoryDropDown.val();
     const quantityInput = row.querySelector('.edit-input.quantity');
 
     // Ensure extracted values are not null
@@ -235,9 +278,14 @@ function saveEdit(itemId) {
         itemId,
         productName: productNameInput ? productNameInput.value.trim() : '',
         brand: brandInput ? brandInput.value.trim() : '',
-        category: categoryInput ? categoryInput.value.trim() : '',
+        category: categoryValue,
         quantityNeeded: quantityInput ? quantityInput.value.trim() : ''
     };
+
+    if (!requestData.productName || !requestData.brand || !requestData.category) {
+        alert("Please fill in all fields.");
+        return;
+    }
 
     if (isNaN(requestData.quantityNeeded) || requestData.quantityNeeded <= 0) {
         alert("Error: Quantity must be greater than 0.");
@@ -263,6 +311,11 @@ function saveEdit(itemId) {
             row.querySelectorAll('.edit-text')[1].innerText = requestData.brand;
             row.querySelectorAll('.edit-text')[2].innerText = requestData.category;
             row.querySelectorAll('.edit-text')[3].innerText = requestData.quantityNeeded;
+
+            // ✅ Remove Select2 and hide the dropdown
+            categoryDropDown.select2('destroy');  // Destroy Select2 instance
+            categoryDropDown.addClass('hidden');  // Hide dropdown
+            // row.querySelector('.edit-text.category').classList.remove('hidden'); // Show text
 
             // Restore normal row display
             row.classList.remove('edit-mode');
@@ -292,7 +345,7 @@ function cancelEdit(itemId) {
     // Restore original values from stored data attributes
     row.querySelector('.edit-input.name').value = row.dataset.originalProductName;
     row.querySelector('.edit-input.brand').value = row.dataset.originalBrand;
-    row.querySelector('.edit-input.category').value = row.dataset.originalCategory;
+    $(row).find('.edit-input.category').val(row.dataset.originalCategory).trigger('change');
     row.querySelector('.edit-input.quantity').value = row.dataset.originalQuantity;
 
     // Hide inputs and show text fields

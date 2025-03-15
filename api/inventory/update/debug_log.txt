@@ -1,0 +1,10 @@
+Array
+(
+    [itemId] => 33
+    [productName] => sixty
+    [brand] => nine
+    [category] => Meat
+    [quantity] => 35
+    [expirationDate] => 2025-03-15
+    [upc] => 70
+)
