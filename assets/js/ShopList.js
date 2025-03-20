@@ -1,3 +1,11 @@
+// Define predefined category list
+const predefinedCategories = [
+    "Dairy", "Meat", "Vegetables", "Fruits", "Beverages", "Bakery",
+    "Frozen Foods", "Snacks", "Canned Goods", "Grains", "Condiments",
+    "Deli", "Seafood", "Spices & Herbs", "Pasta & Rice", "Household Items",
+    "Personal Care"
+];
+
 // Function to load shopping list data from PHP
 function loadShoppingList() {
     fetch('../api/shopping-list/fetch/', {redirect: 'follow', referrerPolicy: 'no-referrer'})
@@ -18,25 +26,27 @@ function loadShoppingList() {
             }
 
             data.forEach(item => {
+                console.log("Received Category:", item.Category);
+                // Match category for scanned items
+                const category = item.Category;
+            
                 const row = `
                     <tr id="row-${item.ListItemId}">
                         <td><input type="checkbox" class="item-checkbox" data-id="${item.ListItemId}"></td>
+                        <td><span class="edit-text">${item.ProductName}</span>
+                            <input class="edit-input name hidden" type="text" value="${item.ProductName}"></td>
+                        <td><span class="edit-text">${item.Brand}</span>
+                            <input class="edit-input brand hidden" type="text" value="${item.Brand}"></td>
                         <td>
-                            <span class="edit-text">${item.ProductName}</span>
-                            <input class="edit-input name hidden" type="text" value="${item.ProductName}">
+                            <span class="edit-text">${category}</span>
+                            <select class="edit-input category hidden">
+                                ${predefinedCategories.map(cat => 
+                                    `<option value="${cat}" ${cat === category ? 'selected' : ''}>${cat}</option>`
+                                ).join('')}
+                            </select>
                         </td>
-                        <td>
-                            <span class="edit-text">${item.Brand}</span>
-                            <input class="edit-input brand hidden" type="text" value="${item.Brand}">
-                        </td>
-                        <td>
-                            <span class="edit-text">${item.Category}</span>
-                            <input class="edit-input category hidden" type="text" value="${item.Category}">
-                        </td>
-                        <td>
-                            <span class="edit-text">${item.QuantityNeeded}</span>
-                            <input class="edit-input quantity hidden" type="number" value="${item.QuantityNeeded}">
-                        </td>
+                        <td><span class="edit-text">${item.QuantityNeeded}</span>
+                            <input class="edit-input quantity hidden" type="number" value="${item.QuantityNeeded}"></td>
                         <td>
                             <button class="edit-btn" onclick="toggleEditMode(${item.ListItemId})">Edit</button>
                             <button class="save-btn hidden" onclick="saveEdit(${item.ListItemId})">Save</button>
@@ -44,8 +54,17 @@ function loadShoppingList() {
                         </td>
                     </tr>
                 `;
-                tableBody.insertAdjacentHTML('beforeend', row);
+                document.getElementById('shoppingTableBody').insertAdjacentHTML('beforeend', row);
+            });            
+
+            // Reinitialize Select2 for dynamically added category dropdowns
+            $('.category-dropdown').select2({
+                placeholder: "Select a Category",
+                allowClear: true,
+                width: '100%'
             });
+
+
         })
         .catch(error => console.error('Error fetching shopping list:', error));
 }
@@ -199,12 +218,24 @@ function toggleEditMode(itemId) {
     // Store original values as data attributes
     row.dataset.originalProductName = row.querySelector('.edit-input.name').value;
     row.dataset.originalBrand = row.querySelector('.edit-input.brand').value;
-    row.dataset.originalCategory = row.querySelector('.edit-input.category').value;
+    row.dataset.originalCategory = row.querySelectorAll('.edit-text')[2].innerText;
     row.dataset.originalQuantity = row.querySelector('.edit-input.quantity').value;
+
 
     // Show inputs and hide text fields
     row.querySelectorAll('.edit-text').forEach(el => el.classList.add('hidden'));
     row.querySelectorAll('.edit-input').forEach(el => el.classList.remove('hidden'));
+
+     // Convert the category field into a Select2 dropdown
+     const categoryDropdown = $(row).find('.edit-input.category');
+     categoryDropdown.select2({
+         placeholder: "Select a Category",
+         allowClear: true,
+         width: '100%'
+     });
+
+     // Set the dropdown value to match the existing category
+    categoryDropdown.val(row.dataset.originalCategory).trigger('change');
 
     // Toggle button visibility
     row.querySelector('.edit-btn').classList.add('hidden');
@@ -227,7 +258,8 @@ function saveEdit(itemId) {
     // Targeting the correct input fields based on your table structure
     const productNameInput = row.querySelector('.edit-input.name');
     const brandInput = row.querySelector('.edit-input.brand');
-    const categoryInput = row.querySelector('.edit-input.category');
+    const categoryDropDown = $(row).find('.edit-input.category'); // Use jQuery to get Select2 value
+    const categoryValue = categoryDropDown.val();
     const quantityInput = row.querySelector('.edit-input.quantity');
 
     // Ensure extracted values are not null
@@ -235,9 +267,14 @@ function saveEdit(itemId) {
         itemId,
         productName: productNameInput ? productNameInput.value.trim() : '',
         brand: brandInput ? brandInput.value.trim() : '',
-        category: categoryInput ? categoryInput.value.trim() : '',
+        category: categoryValue,
         quantityNeeded: quantityInput ? quantityInput.value.trim() : ''
     };
+
+    if (!requestData.productName || !requestData.brand || !requestData.category) {
+        alert("Please fill in all fields.");
+        return;
+    }
 
     if (isNaN(requestData.quantityNeeded) || requestData.quantityNeeded <= 0) {
         alert("Error: Quantity must be greater than 0.");
@@ -263,6 +300,11 @@ function saveEdit(itemId) {
             row.querySelectorAll('.edit-text')[1].innerText = requestData.brand;
             row.querySelectorAll('.edit-text')[2].innerText = requestData.category;
             row.querySelectorAll('.edit-text')[3].innerText = requestData.quantityNeeded;
+
+            // ✅ Remove Select2 and hide the dropdown
+            categoryDropDown.select2('destroy');  // Destroy Select2 instance
+            categoryDropDown.addClass('hidden');  // Hide dropdown
+            // row.querySelector('.edit-text.category').classList.remove('hidden'); // Show text
 
             // Restore normal row display
             row.classList.remove('edit-mode');
@@ -292,20 +334,24 @@ function cancelEdit(itemId) {
     // Restore original values from stored data attributes
     row.querySelector('.edit-input.name').value = row.dataset.originalProductName;
     row.querySelector('.edit-input.brand').value = row.dataset.originalBrand;
-    row.querySelector('.edit-input.category').value = row.dataset.originalCategory;
-    row.querySelector('.edit-input.quantity').value = row.dataset.originalQuantity;
-
-    // Hide inputs and show text fields
+    
+    // Ensure category dropdown reverts to original text
+    $(row).find('.edit-input.category').val(row.dataset.originalCategory).trigger('change');
+    
+    // Hide all input fields again
     row.querySelectorAll('.edit-text').forEach(el => el.classList.remove('hidden'));
     row.querySelectorAll('.edit-input').forEach(el => el.classList.add('hidden'));
+
+    // Destroy Select2 dropdown instance to prevent persisting
+    $(row).find('.edit-input.category').select2("destroy");
 
     // Toggle button visibility
     row.querySelector('.edit-btn').classList.remove('hidden');
     row.querySelector('.save-btn').classList.add('hidden');
     row.querySelector('.cancel-btn').classList.add('hidden');
 
-    // Remove edit mode class
     row.classList.remove('edit-mode');
 }
+
 
 document.addEventListener('DOMContentLoaded', loadShoppingList);

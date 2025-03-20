@@ -22,6 +22,9 @@ $sql = "SELECT sl.ListItemId, lp.ProductName, lp.Brand, lp.Category, sl.Quantity
         FROM shopping_list sl
         JOIN local_products lp ON sl.ProductId = lp.ProductId
         WHERE sl.UserId = ? AND sl.Purchased = 0";  // Exclude purchased items
+        //might have to remove AND sl.Purchased = 0, causing bugs 
+        //if newly scanned item was automatically marked as Purchased = 1, it would never show up in the shopping list
+        //removing AND sl.Purchased = 0, means all items (purchased and not purchased) are now fetched. 
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('i', $userId);

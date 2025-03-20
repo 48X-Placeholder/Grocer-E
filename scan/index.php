@@ -22,7 +22,7 @@ if ($source === 'shopping_list') {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Barcode Scanner</title>
-  <script src="https://unpkg.com/quagga"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
   <style>
     body { margin: 0; padding: 0; font-family: sans-serif; text-align: center; }
     h2 { margin: 20px 0 10px; }

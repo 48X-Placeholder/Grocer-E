@@ -1,42 +1,34 @@
 <?php
-require_once dirname(__FILE__) . '../../../../config.php'; // Ensure database connection
-require_once dirname(__FILE__) . '../../../../functions/load.php';
+require_once dirname(__FILE__) . '/../../../config.php';
+require_once dirname(__FILE__) . '/../../../functions/load.php';
 header('Content-Type: application/json');
 
-// Check if user is authenticated
 if (!is_user_logged_in()) {
     echo json_encode(['success' => false, 'message' => 'User not authenticated']);
     exit;
 }
+
 $userId = cached_userid_info();
 
-// Create database connection
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 if ($conn->connect_error) {
-    echo json_encode(["error" => "Database connection failed"]);
+    echo json_encode(["success" => false, "message" => "Database connection failed"]);
     exit;
 }
 
-// Get the request data
 $data = json_decode(file_get_contents('php://input'), true);
 
-// Validate input
-if (!isset($data['itemIds']) || !is_array($data['itemIds'])) {
+if (!isset($data['itemIds']) || !is_array($data['itemIds']) || empty($data['itemIds'])) {
     echo json_encode(['success' => false, 'message' => 'No valid items selected.']);
     exit;
 }
 
-$itemIds = $data['itemIds'];
+$itemIds = array_filter($data['itemIds'], fn($id) => ctype_digit(strval($id)));
 $successCount = 0;
 $errors = [];
 
 foreach ($itemIds as $itemId) {
-    // Fetch item details from SHOPPING_LIST
-    $sql_fetch = "SELECT sl.ProductId, sl.QuantityNeeded, lp.UPC 
-                  FROM shopping_list sl
-                  JOIN local_products lp ON sl.ProductId = lp.ProductId
-                  WHERE sl.ListItemId = ? AND sl.UserId = ?";
-    $stmt_fetch = $conn->prepare($sql_fetch);
+    $stmt_fetch = $conn->prepare("SELECT sl.ProductId, sl.QuantityNeeded, lp.UPC FROM shopping_list sl JOIN local_products lp ON sl.ProductId = lp.ProductId WHERE sl.ListItemId = ? AND sl.UserId = ?");
     $stmt_fetch->bind_param('ii', $itemId, $userId);
     $stmt_fetch->execute();
     $result_fetch = $stmt_fetch->get_result();
@@ -50,11 +42,8 @@ foreach ($itemIds as $itemId) {
 
     $productId = $item['ProductId'];
     $quantity = $item['QuantityNeeded'];
-    $upc = !empty($item['UPC']) ? $item['UPC'] : "UNKNOWN";
 
-    // Mark item as purchased in SHOPPING_LIST
-    $sql_mark_purchased = "UPDATE shopping_list SET Purchased = 1 WHERE ListItemId = ?";
-    $stmt_mark_purchased = $conn->prepare($sql_mark_purchased);
+    $stmt_mark_purchased = $conn->prepare("UPDATE shopping_list SET Purchased = 1 WHERE ListItemId = ?");
     $stmt_mark_purchased->bind_param('i', $itemId);
     if (!$stmt_mark_purchased->execute()) {
         $errors[] = "Failed to mark item ID $itemId as purchased.";
@@ -62,50 +51,38 @@ foreach ($itemIds as $itemId) {
     }
     $stmt_mark_purchased->close();
 
-    // Check if the product exists in INVENTORY with no expiration date
-    $sql_check_inventory = "SELECT InventoryItemId, Quantity FROM INVENTORY WHERE ProductId = ? AND UserId = ? AND ExpirationDate IS NULL";
-    $stmt_check_inventory = $conn->prepare($sql_check_inventory);
+    $stmt_check_inventory = $conn->prepare("SELECT InventoryItemId, Quantity FROM inventory WHERE ProductId = ? AND UserId = ? AND ExpirationDate IS NULL");
     $stmt_check_inventory->bind_param('ii', $productId, $userId);
     $stmt_check_inventory->execute();
-    $result_check = $stmt_check_inventory->get_result();
-    $existingItem = $result_check->fetch_assoc();
+    $existingItem = $stmt_check_inventory->get_result()->fetch_assoc();
     $stmt_check_inventory->close();
 
     if ($existingItem) {
-        // If exists with no expiration date, update quantity
         $newQuantity = $existingItem['Quantity'] + $quantity;
-        $sql_update_inventory = "UPDATE inventory SET Quantity = ? WHERE InventoryItemId = ?";
-        $stmt_update_inventory = $conn->prepare($sql_update_inventory);
+        $stmt_update_inventory = $conn->prepare("UPDATE inventory SET Quantity = ? WHERE InventoryItemId = ?");
         $stmt_update_inventory->bind_param('ii', $newQuantity, $existingItem['InventoryItemId']);
-
-        if ($stmt_update_inventory->execute()) {
-            $successCount++;
-        } else {
+        $newQuantity = $newQuantity ?? $existingItem['Quantity'] + $quantity; // fix for undefined variable
+        if (!$stmt_update_inventory->execute()) {
             $errors[] = "Failed to update inventory for ProductId $productId.";
+            continue;
         }
         $stmt_update_inventory->close();
     } else {
-        // If no existing unexpired item, create a new entry
-        $sql_insert_inventory = "INSERT INTO inventory (ProductId, UserId, Quantity, ExpirationDate) VALUES (?, ?, ?, NULL)";
-        $stmt_insert_inventory = $conn->prepare($sql_insert_inventory);
+        $stmt_insert_inventory = $conn->prepare("INSERT INTO inventory (ProductId, UserId, Quantity, ExpirationDate) VALUES (?, ?, ?, NULL)");
         $stmt_insert_inventory->bind_param('iii', $productId, $userId, $quantity);
-
-        if ($stmt_insert_inventory->execute()) {
-            $successCount++;
-        } else {
+        if (!$stmt_insert_inventory->execute()) {
             $errors[] = "Failed to add ProductId $productId to inventory.";
+            continue;
         }
         $stmt_insert_inventory->close();
     }
+    $successCount++;
 }
 
-// Return a JSON response
 $response = ['success' => true, 'message' => "$successCount items exported successfully."];
-if (!empty($errors)) {
-    $response['errors'] = $errors;
-}
+if (!empty($errors)) $response['errors'] = $errors;
 
 echo json_encode($response);
 $conn->close();
 exit;
-?>
+

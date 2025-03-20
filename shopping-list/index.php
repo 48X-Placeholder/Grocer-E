@@ -16,6 +16,7 @@ $userId = cached_userid_info();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping List</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="<? echo SITE_URL.'assets/styles/list.css'?>">
 </head>
 <body>
@@ -58,7 +59,29 @@ $userId = cached_userid_info();
             <h3>Add New Item</h3>
             <input type="text" id="productName" placeholder="Product Name" required>
             <input type="text" id="brand" placeholder="Brand" required>
-            <input type="text" id="category" placeholder="Category" required>
+
+            <select id="category" class="category-dropdown" required>
+            <option value="" disabled selected>Select a category</option>
+            <option value="Dairy">Dairy</option>
+            <option value="Meat">Meat</option>
+            <option value="Vegetables">Vegetables</option>
+            <option value="Fruits">Fruits</option>
+            <option value="Beverages">Beverages</option>
+            <option value="Bakery">Bakery</option>
+            <option value="Frozen Foods">Frozen Foods</option>
+            <option value="Snacks">Snacks</option>
+            <option value="Canned Goods">Canned Goods</option>
+            <option value="Grains">Grains</option>
+            <option value="Condiments">Condiments</option>
+            <option value="Deli">Deli</option>
+            <option value="Seafood">Seafood</option>
+            <option value="Spices & Herbs">Spices & Herbs</option>
+            <option value="Pasta & Rice">Pasta & Rice</option>
+            <option value="Household Items">Household Items</option>
+            <option value="Personal Care">Personal Care</option>
+            </select>
+
+
             <input type="number" id="quantityNeeded" placeholder="Quantity" required>
             <button class="submit-btn" onclick="addShopItem()">Submit</button>
             <button class="cancel-btn" onclick="cancelAddItem()">Cancel</button>
@@ -94,7 +117,20 @@ $userId = cached_userid_info();
         </div>
     </section>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
     <script src="<? echo SITE_URL.'assets/js/ShopList.js'?>"></script>
     <script src="<? echo SITE_URL.'assets/js/Search.js'?>"></script>
+    <script>
+        $(document).ready(function() {
+    $('#category').select2({
+        placeholder: "Select a Category",
+        width: 'resolve', // Ensures it resizes properly
+        dropdownAutoWidth: false, // Prevents stretching
+        dropdownParent: $("#addItemForm"), // Ensures dropdown stays within form
+        minimumResultsForSearch: 0 // Always show search box
+    });
+});
+</script>
 </body>
 </html>

@@ -1,0 +1,10 @@
+Array
+(
+    [itemId] => 1
+    [productName] => dfsfd
+    [brand] => fdsfds
+    [category] => Beverages
+    [quantity] => 4
+    [expirationDate] => 2025-03-16
+    [upc] => 345234
+)

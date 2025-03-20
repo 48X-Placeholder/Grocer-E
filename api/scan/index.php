@@ -1,4 +1,5 @@
 <?php
+//processes barcode
 require_once dirname(__FILE__) . '../../../config.php'; // Ensure database connection
 require_once dirname(__FILE__) . '../../../functions/load.php';
 header('Content-Type: application/json');
@@ -30,8 +31,35 @@ if (!$product_data || !isset($product_data['status']) || $product_data['status']
 
 $product_name = $product_data['product']['product_name'] ?? "Unknown Product";
 $brand = $product_data['product']['brands'] ?? "Unknown Brand";
-$category = $product_data['product']['categories'] ?? "Unknown Category";
+// *** CHANGED: Capture raw category from API ***
+$rawCategory = $product_data['product']['categories'] ?? "Unknown Category";
 $upc = $barcode;
+
+/* --- ADDED: Mapping function to normalize category --- */
+function mapCategory($category) {
+    $predefinedCategories = [
+        "Dairy", "Meat", "Vegetables", "Fruits", "Beverages", "Bakery",
+        "Frozen Foods", "Snacks", "Canned Goods", "Grains", "Condiments",
+        "Deli", "Seafood", "Spices & Herbs", "Pasta & Rice", "Household Items",
+        "Personal Care"
+    ];
+    
+    if (!$category) {
+        return "Unknown";
+    }
+    
+    $catLower = strtolower($category);
+    foreach ($predefinedCategories as $pre) {
+        if (strpos($catLower, strtolower($pre)) !== false) {
+            return $pre;
+        }
+    }
+    return "Other";
+}
+/* --- END ADDED: Mapping function --- */
+
+// *** CHANGED: Normalize the category using the mapping function ***
+$category = mapCategory($rawCategory);
 
 $user_id = cached_userid_info();
 
@@ -47,15 +75,17 @@ $product_check = $conn->query("SELECT ProductId FROM local_products WHERE UPC='$
 $product_id = ($product_check->num_rows > 0) ? $product_check->fetch_assoc()['ProductId'] : null;
 
 if (!$product_id) {
-    // Insert new product with Brand and Category
+    // Insert new product with Brand and normalized Category
     $stmt = $conn->prepare("INSERT INTO local_products (UserId, UPC, ProductName, Brand, Category, AddedAt) VALUES (?, ?, ?, ?, ?, NOW())");
+    // *** CHANGED: Using $category (normalized) instead of raw category ***
     $stmt->bind_param("issss", $user_id, $upc, $product_name, $brand, $category);
     $stmt->execute();
     $product_id = $stmt->insert_id;
     $stmt->close();
 } else {
-    // Update Brand & Category in case they are missing
+    // Update Brand & Category in case they are missing or outdated
     $stmt = $conn->prepare("UPDATE local_products SET Brand = ?, Category = ? WHERE ProductId = ?");
+    // *** CHANGED: Using $category (normalized) here as well ***
     $stmt->bind_param("ssi", $brand, $category, $product_id);
     $stmt->execute();
     $stmt->close();
@@ -65,10 +95,17 @@ if (!$product_id) {
 if ($source === "shopping_list") {
     $check = $conn->query("SELECT 1 FROM shopping_list WHERE ProductId='$product_id' AND UserId='$user_id'");
     if ($check->num_rows == 0) {
-        $stmt = $conn->prepare("INSERT INTO shopping_list (ProductId, UserId, QuantityNeeded, AddedAt) VALUES (?, ?, 1, NOW())");
+        $stmt = $conn->prepare("INSERT INTO shopping_list (ProductId, UserId, QuantityNeeded, Purchased, AddedAt) 
+                        VALUES (?, ?, 1, 0, NOW())");
+
         $stmt->bind_param("ii", $product_id, $user_id);
         $stmt->execute();
         $stmt->close();
+        // Debugging: Fetch and print the inserted item
+$debug_check = $conn->query("SELECT * FROM shopping_list WHERE ProductId='$product_id' AND UserId='$user_id'");
+$debug_data = $debug_check->fetch_assoc();
+echo json_encode(['success' => true, 'message' => 'Product added to shopping list', "product_name" => $product_name, "debug_data" => $debug_data]);
+exit;
         echo json_encode(['success' => true, 'message' => 'Product added to shopping list', "product_name" => $product_name]);
     } else {
         echo json_encode(['success' => false, 'message' => "Product already exists in shopping list", "product_name" => $product_name]);
