@@ -84,9 +84,9 @@ if (is_user_logged_in()) {
 <body>
 	<!-- Site Navigation -->
 	<?php site_navigation_menu(); ?>
-	
-	<div class="auth-box">
-        <h2>Register</h2>
+	<div class="auth-container">
+		<div class="auth-box">
+			<h2>Register</h2>
 
         <?php
         if (isset($_SESSION["error_message"])) {
@@ -99,20 +99,29 @@ if (is_user_logged_in()) {
         }
         ?>
 
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">             <div class="user-box">
-                <input type="text" name="username" required="">                 <label>Username</label>
-            </div>
-            <div class="user-box">
-                <input type="email" name="email" required="">                 <label>Email</label>
-            </div>
-            <div class="user-box">
-                <input type="password" name="password" required="">                 <label>Password</label>
-            </div>
-            <div class="user-box">
-                <input type="password" name="confirm_password" required="">                 <label>Confirm Password</label>
-            </div>
-            <button type="submit" class="button">Register</button>         </form>
-    </div>
+        	<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+             	<div class="user-box">
+                 	<input type="text" name="username" required="">
+                  	<label>Username</label>
+             	</div>
+             	<div class="user-box">
+                	<input type="email" name="email" required="">
+                	<label>Email</label>
+             	</div>
+             	<div class="user-box">
+                 	<input type="password" name="password" required="">
+                  	<label>Password</label>
+             	</div>
+             	<div class="user-box">
+             		<input type="password" name="confirm_password" required="">
+              		<label>Confirm Password</label>
+             	</div>
+             	<button type="submit" class="button">Register</button>
+         	</form>
+     	</div>
+    <div class="auth-image">
+        <img src="<? echo SITE_URL.'assets/images/registerphoto1.jpg'?>" alt="Signup today">
+    </div>
 	
 </body>
 </html>
