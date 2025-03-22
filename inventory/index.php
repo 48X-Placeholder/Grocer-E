@@ -62,9 +62,6 @@ if (!is_user_logged_in()) {
                     <input type="text" id="upcCode" placeholder="UPC Code" required>
                     <input type="text" id="productName" placeholder="Product Name" required>
                     <input type="text" id="brand" placeholder="Brand" required>
-                </div>
-                <div class="input-container">
-                    <!--<input type="text" id="category" placeholder="Category" required>-->
                     <select id="category" required>
                         <option value="">Select a Category</option>
                         <option value="Dairy">Dairy</option>
