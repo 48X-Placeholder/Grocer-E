@@ -1,3 +1,11 @@
+// Define predefined category list
+const predefinedCategories = [
+    "Dairy", "Meat", "Vegetables", "Fruits", "Beverages", "Bakery",
+    "Frozen Foods", "Snacks", "Canned Goods", "Grains", "Condiments",
+    "Deli", "Seafood", "Spices & Herbs", "Pasta & Rice", "Household Items",
+    "Personal Care"
+];
+
 // Function to load inventory data from the database
 function loadGroceryData() {
     fetch('../api/inventory/fetch/', {redirect: 'follow', referrerPolicy: 'no-referrer'})
@@ -65,7 +73,12 @@ function loadGroceryData() {
                         <td><input type="checkbox" class="item-checkbox" data-id="${item.InventoryItemId}"></td>
                         <td><span class="edit-text">${item.ProductName}</span><input class="edit-input hidden" type="text" value="${item.ProductName}"></td>
                         <td><span class="edit-text">${item.Brand}</span><input class="edit-input hidden" type="text" value="${item.Brand}"></td>
-                        <td><span class="edit-text">${item.Category}</span><input class="edit-input hidden" type="text" value="${item.Category}"></td>
+                        <td>
+                            <span class="edit-text">${item.Category}</span>
+                            <select class="edit-input category hidden">
+                                ${predefinedCategories.map(cat => `<option value="${cat}" ${cat === item.Category ? 'selected' : ''}>${cat}</option>`).join('')}
+                            </select>
+                        </td>
                         <td><span class="edit-text">${item.Quantity}</span><input class="edit-input hidden" type="number" value="${item.Quantity}"></td>
                         <td class="expiration-date ${expirationHighlightClass}">
                             <span class="edit-text">${expirationDisplay}</span>
@@ -132,7 +145,7 @@ function sortTable(columnIndex, dataType, headerElement) {
 
 // Add item function
 function addItem() {
-    const upcCode = document.getElementById('upcCode').value.trim();
+    const upc = document.getElementById('upcCode').value.trim();
     const productName = document.getElementById('productName').value.trim();
     const brand = document.getElementById('brand').value.trim();
     const category = document.getElementById('category').value.trim();
@@ -140,10 +153,10 @@ function addItem() {
     const expirationDate = document.getElementById('expirationDate').value.trim();
     const formattedExpiration = expirationDate === "" ? null : expirationDate;
 
-    const requestData = { upcCode, productName, brand, category, quantity, expirationDate: formattedExpiration };
+    const requestData = { upcCode: upc, productName, brand, category, quantity, expirationDate: formattedExpiration };
 
     // Check that primary text fields have values
-    if (!upcCode || !productName || !brand || !category) {
+    if (!upc || !productName || !brand || !category) {
         alert("Please fill in all required fields.");
         return;
     }
@@ -154,8 +167,7 @@ function addItem() {
         return;
     }    
 
-    console.log("Sending request data:", requestData); //for debugging
-
+    console.log("Sending request data:", requestData); // Debugging
 
     fetch('../api/inventory/add/', {
         method: 'POST',
@@ -170,8 +182,8 @@ function addItem() {
     .then(result => {
         if (result.success) {
             loadGroceryData();
-            cancelAddItem();
             alert('Item added successfully!');
+            cancelAddItem(); // Clears fields & closes modal
         } else {
             alert('Error adding item: ' + result.message);
         }
@@ -233,24 +245,46 @@ function deleteItem(itemId) {
     .catch(error => console.error('Error deleting item:', error));
 }
 
+// Show Add Item modal
+function showAddItemModal() {
+    document.getElementById("addItemModal").style.display = "flex";
+}
+
+// Close/hide Add Item modal
+function closeModal() {
+    document.querySelectorAll("#addItemModalForm input").forEach(input => input.value = "");
+    document.getElementById("addItemModal").style.display = "none";
+    let categoryDropdown = document.getElementById("category");
+    categoryDropdown.selectedIndex = 0; // Reset selection
+    categoryDropdown.blur(); // Close dropdown if it was open
+}
+
+// Show Add Item form (modal)
+function showItemForm() {
+    $('.select2-selection').remove();     
+    document.getElementById("addItemModalForm").style.display = "flex";
+}
+
+// Close/hide Add Item form (modal)
+function closeItemForm() {
+    document.getElementById("addItemModalForm").style.display = "none";
+    let categoryDropdown = document.getElementById("category");
+}
+
 // Show the add item form
 function toggleAddItemForm() {
+    closeModal();
     const form = document.getElementById('addItemForm');
     form.style.display = form.style.display === 'none' ? 'block' : 'none';
 }
 
-// Cancel the add item form (hide and reset)
+// Close modal and clear fields
 function cancelAddItem() {
-    const form = document.getElementById('addItemForm');
-    form.style.display = 'none'; // Hide the form
-    
+    const modal = document.getElementById('addItemModalForm');
+    modal.style.display = 'none'; // Hide the modal
+
     // Reset all form fields
-    document.getElementById('upcCode').value = '';
-    document.getElementById('productName').value = '';
-    document.getElementById('brand').value = '';
-    document.getElementById('category').value = '';
-    document.getElementById('quantity').value = '';
-    document.getElementById('expirationDate').value = '';
+    document.querySelectorAll("#addItemModalForm input").forEach(input => input.value = "");
 }
 
 // Toggle editing mode
@@ -270,6 +304,37 @@ function toggleEditMode(itemId) {
     row.dataset.originalQuantity = row.querySelectorAll('.edit-input')[3].value;
     row.dataset.originalExpirationDate = row.querySelectorAll('.edit-input')[4].value;
     row.dataset.originalUPC = row.querySelector('.upc-column input').value || ''; 
+
+    // Next 2 sections are brandon's code...
+    /* Replace row with input fields
+    row.innerHTML = `
+        <td><input type="checkbox" class="item-checkbox" data-id="${itemId}"></td>
+        <td><input type="text" class="edit-input" id="edit-product-${itemId}" value="${row.dataset.originalProductName}"></td>
+        <td><input type="text" class="edit-input" id="edit-brand-${itemId}" value="${row.dataset.originalBrand}"></td>
+        <td>
+            <select class="edit-category" id="edit-category-${itemId}">
+                ${predefinedCategories.map(cat => 
+                    `<option value="${cat}" ${cat === row.dataset.originalCategory ? 'selected' : ''}>${cat}</option>`
+                ).join('')}
+            </select>
+        </td>
+        <td><input type="number" class="edit-input" id="edit-quantity-${itemId}" value="${row.dataset.originalQuantity}"></td>
+        <td><input type="date" class="edit-input" id="edit-expiration-${itemId}" value="${row.dataset.originalExpirationDate}"></td>
+        <td class="upc-column"><input type="text" class="edit-input" id="edit-upc-${itemId}" value="${row.dataset.originalUPC}" placeholder="Enter UPC"></td>
+        <td></td>
+        <td>
+            <button class="save-btn" onclick="saveEdit(${itemId})">Save</button>
+            <button class="cancel-btn" onclick="cancelEdit(${itemId})">Cancel</button>
+        </td>
+    `;
+
+    // Initialize Select2 for the category dropdown
+    $(`#edit-category-${itemId}`).select2({
+        placeholder: "Select a Category",
+        width: '100%',
+        dropdownAutoWidth: true,
+        minimumResultsForSearch: 0
+    });*/
 
     // Activate edit mode
     row.classList.add('edit-mode');
@@ -317,7 +382,7 @@ function saveEdit(itemId) {
         itemId,
         productName: row.querySelectorAll('input[type="text"]')[0].value,
         brand: row.querySelectorAll('input[type="text"]')[1].value,
-        category: row.querySelectorAll('input[type="text"]')[2].value,
+        category: row.querySelector('.edit-input.category').value,
         quantity: row.querySelector('input[type="number"]').value,
         expirationDate: row.querySelector('input[type="date"]').value || null,
         upc: upcInput
@@ -447,6 +512,3 @@ function cancelEdit(itemId) {
 
 // Load data when the page loads
 document.addEventListener('DOMContentLoaded', loadGroceryData);
-
-
-

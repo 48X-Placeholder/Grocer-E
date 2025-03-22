@@ -116,7 +116,7 @@ body {
 .add-btn,
 .delete-btn,
 .export-btn {
-    padding: 12px 20px; /* Only changed 'export-btn' */
+    padding: 12px 20px;
     background-color: #888888;
     color: white;
     font-size: 16px;
@@ -187,6 +187,10 @@ th.desc::after {
     display: none;
 }
 
+.add-item-form h3 {
+    text-align: center;
+}
+
 /* Hide UPC column by default */
 .upc-column, .upc-header {
     display: none;
@@ -230,4 +234,246 @@ th.desc::after {
     background-color: rgba(255, 255, 0, 0.3); /* Light yellow background */
     font-weight: bold; /* Make text bold for better visibility */
     border: 2px solid gold; /* Gold border for emphasis */
+}
+
+/* additional button effects */
+.add-btn {
+    background-color: #5cb85c; /* Green */
+}
+
+.add-btn:hover {
+    background-color: #4cae4c;
+    transform: scale(1.05);
+}
+
+.delete-btn {
+    background-color: #d9534f; /* Red */
+}
+
+.delete-btn:hover {
+    background-color: #c9302c;
+    transform: scale(1.05);
+}
+
+.export-btn {
+ background-color:rgb(44, 121, 121);
+}
+
+.export-btn:hover {
+    background-color:rgb(30, 108, 134);
+    transform: scale(1.05);
+}
+
+#togglePurchasedItems {
+    padding: 12px 20px;
+    margin-bottom: 25px;
+    background-color: #888888;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+#togglePurchasedItems:hover {
+    background-color:#777777;
+    transform: scale(1.05);
+}
+
+.bulk-actions {
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 5px;
+}
+
+/* Modal CSS for both Shopping List and Inventory */
+.modal, .add-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+/* Adjusted Modal Content for Add Item (Wider) */
+.add-modal-content {
+    background: rgb(126, 122, 122);
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    width: 80%; /* Increase width to fit all inputs */
+    max-width: 800px; /* Prevent it from becoming too wide on larger screens */
+    position: relative;
+}
+
+/* Modal Content Box */
+.modal-content, .add-modal-content {
+    background: rgb(126, 122, 122);
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    width: 350px; /* Adjust width as needed */
+    position: relative;
+}
+
+/* Flex container for inputs */
+.input-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px; /* Adjust space between inputs */
+    margin-bottom: 15px; /* Space between rows */
+}
+
+/* Ensuring inputs align properly */
+.input-container input {
+    flex: 1; /* Makes inputs flexible in width */
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Button container for proper spacing */
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Standard Button Styles */
+.modal-content button, .modal-btn, 
+.add-modal-content button, .modal-submit-btn, .modal-cancel-btn {
+    display: inline-block;
+    margin: 10px 5px;
+    padding: 10px 15px;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    min-width: 100px; /* Ensures buttons are consistent */
+}
+
+/* Primary Buttons (Submit, Modal Options) */
+.modal-btn, .modal-submit-btn {
+    background: #007bff;
+}
+
+.modal-btn:hover, .modal-submit-btn:hover {
+    background: #0056b3;
+}
+
+/* Cancel Buttons */
+.modal-content button, .modal-cancel-btn {
+    background: #dc3545;
+}
+
+.modal-content button:hover, .modal-cancel-btn:hover {
+    background: #b52b35;
+}
+
+
+
+
+
+
+
+
+/* Adjusted Modal Content for Add Item (Wider) */
+.add-modal-content {
+    background: rgb(126, 122, 122);
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    width: 80%; /* Increase width to fit all inputs */
+    max-width: 900px; /* Prevent it from becoming too wide on larger screens */
+    position: relative;
+}
+
+/* Arrange all inputs in a single row */
+.input-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px; /* Space between inputs */
+    flex-wrap: wrap; /* Allows wrapping on smaller screens */
+}
+
+/* Ensuring inputs align and grow with modal */
+.input-container input, 
+.input-container select { /* Include dropdown */
+    flex: 1; /* Make inputs flexible in width */
+    min-width: 100px; /* Prevents inputs from shrinking too much */
+    max-width: 150px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Center Buttons Below Inputs */
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.input-container input,
+.input-container select,
+.button-container button {
+    padding: 10px;
+    margin: 5px 0;
+}
+
+/* Style for the select dropdown */
+#category {
+    position: relative;
+    z-index: 10; /* Ensure dropdown appears above other elements */
+    max-width: 100%;
+    height: 40px; /* Adjust height of the dropdown input field */
+}
+
+/* Create a scrollable dropdown with a maximum height */
+#category option {
+    max-height: 40px; /* Limit the height of individual options */
+}
+
+/* Container for dropdown items */
+select#category {
+    overflow-y: auto;
+    height: auto;
+    max-height: 200px; /* Limit the dropdown to 200px height */
+    display: block;
+    width: 100%;
+    z-index: 10;
+}
+
+/* Ensure the input container is aligned properly */
+.input-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* This will center all form elements horizontally */
+    width: 100%;
+}
+
+/* Specifically for inputs (make them all the same width) */
+.input-container input,
+.input-container select {
+    width: 100%;
+    max-width: 300px; /* You can adjust this value to control the input field width */
+    margin: 5px 0; /* Add space between fields */
 }

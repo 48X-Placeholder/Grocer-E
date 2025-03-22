@@ -167,3 +167,78 @@ body {
 .settings-section form {
     margin-top: 20px;
 }
+
+
+
+
+/* Activity Logs Table Styling */
+.activity-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 30px;
+    background-color: #222; /* Match Account Settings background */
+    border-radius: 8px;
+    text-align: center;
+}
+
+.activity-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #444;
+    color: white;
+    margin-top: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.activity-table th, .activity-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #666;
+}
+
+.activity-table th {
+    background-color: #222;
+    font-weight: bold;
+}
+
+.activity-table tr:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+
+/* Bulk Actions Section */
+.bulk-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.action-btn {
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: white;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+#restoreSelected {
+    background-color: #5cb85c; /* Green */
+}
+
+#restoreSelected:hover {
+    background-color: #4cae4c;
+    transform: scale(1.05);
+}
+
+.delete-btn {
+    background-color: #d9534f; /* Red */
+}
+
+.delete-btn:hover {
+    background-color: #c9302c;
+    transform: scale(1.05);
+}

@@ -1,5 +1,4 @@
 <?php
-
 require_once __DIR__ . "/../page-templates/navigation-menu.php";
 require_once __DIR__ . "/../config.php";
 
@@ -126,74 +125,99 @@ if (!is_user_logged_in()) {
 
     <div class="dashboard-container">
     <!-- Sidebar Navigation -->
-                <aside class="dashboard-sidebar">
-                    <nav>
-                        <ul>
-                           <li><a href="#">Account Settings</a></li>
-                           <li><a href="#">Notifications/Alerts</a></li>
-                           <li><a href="#">Activity Logs</a></li>
-                           <li><a href="#">Login History</a></li>
-                        </ul>
-                    </nav>
-                </aside>
+        <aside class="dashboard-sidebar">
+            <nav>
+                <ul>
+                    <li><a href="#" id="account-settings-btn">Account Settings</a></li>
+                    <li><a href="#" id="activity-logs-btn">Activity Logs</a></li>
+                    <li><a href="#" id="login-history-btn">Login History</a></li>
+                </ul>
+            </nav>
+        </aside>
 
         <main class="dashboard-content">
             <!-- content-box -->
         <div class=" account-container auth-box">
-        <h2>Account Settings</h2>
-        <div class="user-details">
-            <p><strong>Username:</strong> <?php echo htmlspecialchars($username); ?></p>
-            <p><strong>Email:</strong> <?php echo htmlspecialchars($current_email); ?></p>
+            <h2>Account Settings</h2>
+            <div class="user-details">
+                <p><strong>Username:</strong> <?php echo htmlspecialchars($username); ?></p>
+                <p><strong>Email:</strong> <?php echo htmlspecialchars($current_email); ?></p>
+            </div>
+
+            <?php
+            if (isset($_SESSION["account_error_message"])) {
+                echo '<div class="error-message">' . $_SESSION["account_error_message"] . "</div>";
+                unset($_SESSION["account_error_message"]);
+            }
+            if (isset($_SESSION["account_success_message"])) {
+                echo '<div class="success-message">' . $_SESSION["account_success_message"] . "</div>";
+                unset($_SESSION["account_success_message"]);
+            }
+            ?>
+
+            <div class="settings-section">
+                <h3>Change Password</h3>
+                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+                    <div class="user-box">
+                        <input type="password" name="old_password" required="">
+                        <label>Current Password</label>
+                    </div>
+                    <div class="user-box">
+                        <input type="password" name="new_password" required="">
+                        <label>New Password</label>
+                    </div>
+                    <div class="user-box">
+                        <input type="password" name="confirm_new_password" required="">
+                        <label>Confirm New Password</label>
+                    </div>
+                    <button type="submit" class="button" name="change_password">Change Password</button>
+                </form>
+            </div>
+
+            <div class="settings-section">
+                <h3>Change Email</h3>
+                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+                    <div class="user-box">
+                        <input type="email" name="new_email" value="<?php echo htmlspecialchars(
+                            $current_email
+                        ); ?>" required="">
+                        <label>New Email</label>
+                    </div>
+                    <div class="user-box">
+                        <input type="email" name="confirm_new_email" required="">
+                        <label>Confirm New Email</label>
+                    </div>
+                    <button type="submit" class="button" name="change_email">Change Email</button>
+                </form>
+            </div>
         </div>
 
-        <?php
-        if (isset($_SESSION["account_error_message"])) {
-            echo '<div class="error-message">' . $_SESSION["account_error_message"] . "</div>";
-            unset($_SESSION["account_error_message"]);
-        }
-        if (isset($_SESSION["account_success_message"])) {
-            echo '<div class="success-message">' . $_SESSION["account_success_message"] . "</div>";
-            unset($_SESSION["account_success_message"]);
-        }
-        ?>
+        <!-- Space for Activity Logs -->
+        <!-- <div class="activity-container">
+            <h1>Activity Logs</h1>
+            
+            <div class="settings-section">
+                <table class="purchases-table">
+                    <thead>
+                        <tr>
+                            <th>Select</th>
+                            <th>Product Name</th>
+                            <th>Brand</th>
+                            <th>Category</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody id="purchasesTableBody">
+                        <!-- Rows will be inserted dynamically here --><!--
+                    </tbody>
+                </table>
+            </div>
+        </div> -->
+        <!-- END -->
 
-        <div class="settings-section">
-            <h3>Change Password</h3>
-            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
-                <div class="user-box">
-                    <input type="password" name="old_password" required="">
-                    <label>Current Password</label>
-                </div>
-                <div class="user-box">
-                    <input type="password" name="new_password" required="">
-                    <label>New Password</label>
-                </div>
-                <div class="user-box">
-                    <input type="password" name="confirm_new_password" required="">
-                    <label>Confirm New Password</label>
-                </div>
-                <button type="submit" class="button" name="change_password">Change Password</button>
-            </form>
-        </div>
-
-        <div class="settings-section">
-            <h3>Change Email</h3>
-            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
-                <div class="user-box">
-                    <input type="email" name="new_email" value="<?php echo htmlspecialchars(
-                        $current_email
-                    ); ?>" required="">
-                    <label>New Email</label>
-                </div>
-                <div class="user-box">
-                    <input type="email" name="confirm_new_email" required="">
-                    <label>Confirm New Email</label>
-                </div>
-                <button type="submit" class="button" name="change_email">Change Email</button>
-            </form>
-        </div>
-    </div>
         </main>
     </div>
+
+    <script src="<?php echo SITE_URL . 'assets/js/Account.js'; ?>"></script>
 </body>
 </html>

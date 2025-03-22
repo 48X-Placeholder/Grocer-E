@@ -1,3 +1,11 @@
+// Define predefined category list
+const predefinedCategories = [
+    "Dairy", "Meat", "Vegetables", "Fruits", "Beverages", "Bakery",
+    "Frozen Foods", "Snacks", "Canned Goods", "Grains", "Condiments",
+    "Deli", "Seafood", "Spices & Herbs", "Pasta & Rice", "Household Items",
+    "Personal Care"
+];
+
 // Function to load shopping list data from PHP
 function loadShoppingList() {
     fetch('../api/shopping-list/fetch/', {redirect: 'follow', referrerPolicy: 'no-referrer'})
@@ -31,7 +39,9 @@ function loadShoppingList() {
                         </td>
                         <td>
                             <span class="edit-text">${item.Category}</span>
-                            <input class="edit-input category hidden" type="text" value="${item.Category}">
+                            <select class="edit-input category hidden">
+                                ${predefinedCategories.map(cat => `<option value="${cat}" ${cat === item.Category ? 'selected' : ''}>${cat}</option>`).join('')}
+                            </select>
                         </td>
                         <td>
                             <span class="edit-text">${item.QuantityNeeded}</span>
@@ -137,12 +147,16 @@ function exportSelectedItems() {
 }
 
 // Handles adding an item to the shopping list
-function addShopItem() {
+function addShopItem(event) {
+    if (event) event.preventDefault(); // Prevent form default behavior
+
+    // Get input values
     const productName = document.getElementById('productName').value.trim();
     const brand = document.getElementById('brand').value.trim();
     const category = document.getElementById('category').value.trim();
     const quantityNeeded = parseInt(document.getElementById('quantityNeeded').value);
 
+    // Validation checks
     if (!productName || !brand || !category) {
         alert("Please fill in all required fields.");
         return;
@@ -153,6 +167,7 @@ function addShopItem() {
         return;
     }
 
+    // Send data to API
     fetch('../api/shopping-list/add/', {
         method: 'POST',
         redirect: 'follow',
@@ -163,28 +178,63 @@ function addShopItem() {
     .then(response => response.json())
     .then(result => {
         if (result.success) {
-            loadShoppingList(); // **Refresh list after updating quantity or adding a new row**
-            cancelAddItem();
-            alert(result.message);
+            alert(result.message || "Item successfully added!"); // Show success message
+            loadShoppingList(); // Refresh list
+            closeItemForm(); // Close modal & clear fields
         } else {
-            alert("Error adding item: " + result.message);
+            alert("Error adding item: " + (result.message || "Unknown error.")); // Show actual error message
         }
     })
-    .catch(error => console.error('Error adding item:', error));
+    .catch(error => {
+        console.error('Error adding item:', error);
+        alert("An error occurred while adding the item. Please try again.");
+    });
 }
+
+// Show Add Item modal
+function showAddItemModal() {
+    document.getElementById("addItemModal").style.display = "flex";
+}
+
+// Close/hide Add Item modal
+function closeModal() {
+    document.querySelectorAll("#addItemModalForm input, #addItemModalForm select").forEach(input => input.value = "");
+    document.getElementById("addItemModal").style.display = "none";
+}
+
+// Show Add Item form (modal)
+function showItemForm() {
+    document.getElementById("addItemModalForm").style.display = "flex";
+}
+
+// Close/hide Add Item form (modal)
+function closeItemForm() {
+    document.getElementById("addItemModalForm").style.display = "none";
+}
+
 // Show/hide the add item form
 function toggleAddItemForm() {
+    closeModal();
     const form = document.getElementById('addItemForm');
     form.style.display = form.style.display === 'none' ? 'block' : 'none';
 }
 
 // Clear and hide the add item form
 function cancelAddItem() {
-    document.getElementById('addItemForm').style.display = 'none';
-    document.getElementById('productName').value = '';
-    document.getElementById('brand').value = '';
-    document.getElementById('category').value = '';
-    document.getElementById('quantityNeeded').value = '';
+    const modal = document.getElementById('addItemModal'); // Ensure modal exists
+    if (modal) {
+        modal.style.display = "none"; // Force hide modal
+    }
+
+    // Clear input fields
+    ['productName', 'brand', 'category', 'quantityNeeded'].forEach(id => {
+        const inputElement = document.getElementById(id);
+        if (inputElement) {
+            inputElement.value = ""; // Reset field value
+        }
+    });
+
+    console.log("Modal closed and fields cleared."); // Debugging step
 }
 
 // Function to toggle inline editing for a row
@@ -306,6 +356,139 @@ function cancelEdit(itemId) {
 
     // Remove edit mode class
     row.classList.remove('edit-mode');
+}
+
+// Switch to/from Purchased Items table
+function togglePurchasedView() {
+    const shoppingListContainer = document.getElementById("shoppingListContainer");
+    const purchasedItemsContainer = document.getElementById("purchasedItemsContainer");
+    const toggleButton = document.getElementById("togglePurchasedItems");
+
+    // Action buttons
+    const shoppingListActions = document.querySelector(".list-actions");
+    const purchasedItemsActions = document.querySelector(".bulk-actions");
+
+    if (shoppingListContainer.style.display === "none") {
+        // Show Shopping List, Hide Purchased Items
+        shoppingListContainer.style.display = "block";
+        purchasedItemsContainer.style.display = "none";
+        toggleButton.textContent = "View Purchased Items";
+
+        // Show Shopping List buttons, Hide Purchased Items buttons
+        shoppingListActions.style.display = "flex";
+        purchasedItemsActions.style.display = "none";
+    } else {
+        // Show Purchased Items, Hide Shopping List
+        shoppingListContainer.style.display = "none";
+        purchasedItemsContainer.style.display = "block";
+        toggleButton.textContent = "Back to Shopping List";
+
+        // Show Purchased Items buttons, Hide Shopping List buttons
+        shoppingListActions.style.display = "none";
+        purchasedItemsActions.style.display = "flex";
+
+        // Load Purchased Items when switching views
+        loadPurchasedItems();
+    }
+}
+
+// Loads Previously Purchased Items
+function loadPurchasedItems() {
+    fetch('../api/shopping-list/fetch-purchased/', { redirect: 'follow', referrerPolicy: 'no-referrer' })
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.getElementById('purchasesTableBody');
+            tableBody.innerHTML = ''; // Clear existing table content
+
+            if (data.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; font-style: italic; color: #888;">
+                            No previously purchased items found.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            data.forEach(item => {
+                const row = `
+                    <tr id="row-${item.ListItemId}">
+                        <td><input type="checkbox" class="item-checkbox" data-id="${item.ListItemId}"></td>
+                        <td>${item.ProductName}</td>
+                        <td>${item.Brand}</td>
+                        <td>${item.Category}</td>
+                        <td>${item.QuantityNeeded}</td>
+                    </tr>
+                `;
+                tableBody.insertAdjacentHTML('beforeend', row);
+            });
+        })
+        .catch(error => console.error('Error fetching purchased items:', error));
+}
+
+// Delete items from Previous Purchases (clear cache)
+function deletePurchasedItems() {
+    // Ensure we're only selecting checkboxes from the purchased table
+    const selectedIds = Array.from(document.querySelectorAll('#purchasesTableBody .item-checkbox:checked'))
+        .map(checkbox => checkbox.getAttribute('data-id'));
+
+    if (selectedIds.length === 0) {
+        alert('Please select at least one item to remove from history.');
+        return;
+    }
+
+    if (!confirm('Are you sure you want to remove the selected items from history? This action cannot be undone.')) {
+        return;
+    }
+
+    fetch('../api/shopping-list/delete-purchased/', {
+        method: 'POST',
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itemIds: selectedIds })
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            loadPurchasedItems(); // Refresh the table after deletion
+            alert('Selected items removed from history!');
+        } else {
+            alert('Error removing items: ' + result.message);
+        }
+    })
+    .catch(error => console.error('Error removing items:', error));
+}
+
+// Returns an item to the shopping list by setting Purchased = 0 again
+function restoreToShoppingList() {
+    const selectedIds = Array.from(document.querySelectorAll('#purchasesTableBody .item-checkbox:checked'))
+        .map(checkbox => checkbox.getAttribute('data-id'));
+
+    if (selectedIds.length === 0) {
+        alert('Please select at least one item to restore to the shopping list.');
+        return;
+    }
+
+    fetch('../api/shopping-list/restore-purchased/', {
+        method: 'POST',
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itemIds: selectedIds })
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            alert('Selected items restored to shopping list!');
+            loadPurchasedItems(); // Refresh purchased items table
+            loadShoppingList();   // Refresh shopping list table
+        } else {
+            alert('Error restoring items: ' + result.message);
+        }
+    })
+    .catch(error => console.error('Error restoring items:', error));
 }
 
 document.addEventListener('DOMContentLoaded', loadShoppingList);
