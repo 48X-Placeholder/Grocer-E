@@ -20,9 +20,7 @@ $userId = cached_userid_info();
 </head>
 <body>
 
-    <nav class="Navigation-Menu">
-        <?php site_navigation_menu(); ?>
-    </nav>
+    <?php site_navigation_menu(); ?>
 
     <section class="list-section">		
 		<div class="page-title">
@@ -145,7 +143,5 @@ $userId = cached_userid_info();
     <script src="<? echo SITE_URL.'assets/js/Search.js'?>"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
-
-
 </body>
 </html>
