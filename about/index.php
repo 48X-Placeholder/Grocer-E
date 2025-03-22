@@ -11,12 +11,8 @@ require __DIR__ . "/../page-templates/navigation-menu.php";
     <link rel="icon" type="image/png" href="<? echo SITE_URL.'assets/images/grocer-e_favicon.png'?>">
 </head>
 <body>
-
-<nav class="Navigation-Menu">
     <!-- Site Navigation -->
 	<?php site_navigation_menu(); ?>
-</nav>
-
     <section>
         <h2>Meet Our Team</h2>
         <p>We were all a bunch of chill guys who met at CSUN through our program and wanted to come together to build

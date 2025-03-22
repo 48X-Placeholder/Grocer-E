@@ -20,9 +20,7 @@ $userId = cached_userid_info();
 </head>
 <body>
 
-    <nav class="Navigation-Menu">
-        <?php site_navigation_menu(); ?>
-    </nav>
+    <?php site_navigation_menu(); ?>
 
     <section class="list-section">
         <div class="list-search-bar">
