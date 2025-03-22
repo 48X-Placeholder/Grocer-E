@@ -2,7 +2,7 @@ body {
     font-family: Tahoma, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #111; /* Dark grey background */
+    background-color: #333; /* Dark grey background */
     color: white; /* White text color */
 }
 
@@ -10,8 +10,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between; /*Spaces out the menu navigation items */
-    background-color: #222;
-    padding: 10px 20px; /* Slight padding centers the logo and menu links nicely */
+    background-color: #333;
+    padding: 5px; /* Slight padding centers the logo and menu links nicely */
 }
 
 .logo {
@@ -19,10 +19,9 @@ body {
 }
 
 .logo img {
-    height: 40px;
-    width: auto; /* Changed from 40px to auto */
-    border-radius: 50%; /* border-radius makes the corners rounded, 50% makes logo round. Looks better as a logo when round */
-    margin-right: 8px; /* Makes the text slightly to the right of the logo, looks better */
+    height: 50px;
+    width: auto;
+    display: block;
 }
 
 .Business-Name {
@@ -33,20 +32,20 @@ body {
 
 .Navigation-Menu-Links {
     display: flex;
-    gap: 15px; /* Changed from 20px to 15px */
+    gap: 20px; /* Changed from 20px to 15px */
 }
 
 .Navigation-Menu-Links a {
-    font-size: 18px; /* Changed from 25px to 18px */
+    font-size: 25px; /* Changed from 25px to 18px */
     color: white;
     text-decoration: none; /* It gets rid of the underlined text. */
-    padding: 10px; /* Padding makes the hover effect bigger*/
-    border-radius: 5px; /* Changed from 10px to 5px */
-    transition: background-color 0.3s linear; /* Changed from 0.2s to 0.3s */
+    padding: 10px 10px; /* Padding makes the hover effect bigger*/
+    border-radius: 10px; /* Changed from 10px to 5px */
+    transition: background-color 0.2s linear; /* Changed from 0.2s to 0.3s */
 }
 
 .Navigation-Menu-Links a:hover {
-    background-color: #444; /* Slightly lighter background on hover */
+    background-color: #555; /* Slightly lighter background on hover */
 }
 
 .list-section {

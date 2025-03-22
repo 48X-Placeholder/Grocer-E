@@ -26,9 +26,6 @@ function site_navigation_menu($dashboard = false)
         // Logged in user links
         echo '
         <a href="'.SITE_URL.'dashboard">Dashboard</a>
-        <a href="'.SITE_URL.'inventory">Inventory List</a>
-        <a href="'.SITE_URL.'shopping-list">Shopping List</a>
-        <a href="'.SITE_URL.'account">Account</a>
         <a href="'.SITE_URL.'logout">Signout</a>'; // Assuming you will create a logout.php
     } else {
         // Not logged in user links
