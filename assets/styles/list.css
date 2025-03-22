@@ -32,16 +32,16 @@ body {
 
 .Navigation-Menu-Links {
     display: flex;
-    gap: 20px;
+    gap: 20px; /* Changed from 20px to 15px */
 }
 
 .Navigation-Menu-Links a {
-    font-size: 25px;
+    font-size: 25px; /* Changed from 25px to 18px */
     color: white;
     text-decoration: none; /* It gets rid of the underlined text. */
     padding: 10px 10px; /* Padding makes the hover effect bigger*/
-    border-radius: 10px;
-    transition: background-color 0.2s linear;
+    border-radius: 10px; /* Changed from 10px to 5px */
+    transition: background-color 0.2s linear; /* Changed from 0.2s to 0.3s */
 }
 
 .Navigation-Menu-Links a:hover {
