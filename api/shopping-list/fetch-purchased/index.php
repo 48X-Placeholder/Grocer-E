@@ -8,6 +8,7 @@ if (!is_user_logged_in()) {
     echo json_encode(['success' => false, 'message' => 'User not authenticated']);
     exit;
 }
+
 $userId = cached_userid_info();
 
 // Create database connection
@@ -17,12 +18,12 @@ if ($conn->connect_error) {
     exit;
 }
 
-// Query to fetch only unpurchased items
+// Query to fetch only **purchased** items
 $sql = "SELECT sl.ListItemId, lp.ProductName, lp.Brand, lp.Category, sl.QuantityNeeded 
         FROM shopping_list sl
         JOIN local_products lp ON sl.ProductId = lp.ProductId
-        WHERE sl.UserId = ? AND sl.Purchased = 0
-        ORDER BY sl.AddedAt ASC"; 
+        WHERE sl.UserId = ? AND sl.Purchased = 1
+        ORDER BY sl.AddedAt ASC";
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('i', $userId);
