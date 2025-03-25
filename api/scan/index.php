@@ -90,27 +90,29 @@ if (!$product_id) {
     $stmt->execute();
     $stmt->close();
 }
-
-// Insert into correct table
 if ($source === "shopping_list") {
-    $check = $conn->query("SELECT 1 FROM shopping_list WHERE ProductId='$product_id' AND UserId='$user_id'");
+    // Check if the product exists in the shopping list (only active items, Purchased = 0)
+    $check = $conn->query("SELECT ListItemId, QuantityNeeded FROM shopping_list WHERE ProductId='$product_id' AND UserId='$user_id' AND Purchased=0");
+    
     if ($check->num_rows == 0) {
-        $stmt = $conn->prepare("INSERT INTO shopping_list (ProductId, UserId, QuantityNeeded, Purchased, AddedAt) 
-                        VALUES (?, ?, 1, 0, NOW())");
-
+        // If it does not exist, insert the product with a default quantity of 1
+        $stmt = $conn->prepare("INSERT INTO shopping_list (ProductId, UserId, QuantityNeeded, Purchased, AddedAt) VALUES (?, ?, 1, 0, NOW())");
         $stmt->bind_param("ii", $product_id, $user_id);
         $stmt->execute();
         $stmt->close();
-        // Debugging: Fetch and print the inserted item
-$debug_check = $conn->query("SELECT * FROM shopping_list WHERE ProductId='$product_id' AND UserId='$user_id'");
-$debug_data = $debug_check->fetch_assoc();
-echo json_encode(['success' => true, 'message' => 'Product added to shopping list', "product_name" => $product_name, "debug_data" => $debug_data]);
-exit;
         echo json_encode(['success' => true, 'message' => 'Product added to shopping list', "product_name" => $product_name]);
     } else {
-        echo json_encode(['success' => false, 'message' => "Product already exists in shopping list", "product_name" => $product_name]);
+        // If it exists, update the existing quantity by adding 1
+        $row = $check->fetch_assoc();
+        $newQuantity = $row['QuantityNeeded'] + 1;
+        $stmt = $conn->prepare("UPDATE shopping_list SET QuantityNeeded = ? WHERE ProductId = ? AND UserId = ? AND Purchased = 0");
+        $stmt->bind_param("iii", $newQuantity, $product_id, $user_id);
+        $stmt->execute();
+        $stmt->close();
+        echo json_encode(['success' => true, 'message' => 'Product quantity updated in shopping list', "product_name" => $product_name]);
     }
-} else {
+}
+ else {
     // Insert into inventory
     $check = $conn->query("SELECT 1 FROM inventory WHERE ProductId='$product_id' AND UserId='$user_id'");
     if ($check->num_rows == 0) {
