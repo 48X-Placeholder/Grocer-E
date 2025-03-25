@@ -4,8 +4,8 @@ ini_set("display_startup_errors", 1);
 error_reporting(E_ALL);
 
 $host = "localhost"; // Your database host
-$username = "u359724030_Brandyn"; // Your database username
-$password = "ACKR|O#XV@2Fn]3f"; // Your database password
+$username = "root"; // Your database username
+$password = "root"; // Your database password
 
 // Flag for dropping tables (fresh install)
 $freshInstall = isset($_GET["reset"]) && $_GET["reset"] == 1; // Example: ?reset=1 in URL
@@ -20,10 +20,10 @@ if ($conn->connect_error) {
 
 // Create grocery database
 echo "Creating database grocery_db <br>";
-if (!$conn->query("CREATE DATABASE IF NOT EXISTS u359724030_Brandyn")) {
+if (!$conn->query("CREATE DATABASE IF NOT EXISTS grocery_db")) {
     echo "MySQL Error creating grocery_db: " . $conn->error . "<br>";
 }
-$conn->select_db("u359724030_Brandyn");
+$conn->select_db("grocery_db");
 echo "grocery_db selected <br>";
 
 // Check if tables exist and drop if fresh install flag is set
@@ -113,10 +113,10 @@ echo "shopping_list created <br>";
 
 // Create user database
 echo "Creating database user_db <br>";
-if (!$conn->query("CREATE DATABASE IF NOT EXISTS u359724030_Brandyn")) {
+if (!$conn->query("CREATE DATABASE IF NOT EXISTS user_db")) {
     echo "MySQL Error creating user_db: " . $conn->error . "<br>";
 }
-$conn->select_db("u359724030_Brandyn");
+$conn->select_db("user_db");
 echo "user_db selected <br>";
 
 // Check if tables exist and drop if fresh install flag is set
