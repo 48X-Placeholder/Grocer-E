@@ -3,22 +3,22 @@
 // ** Database settings - You can get this info from your web host ** //
 /** The name of the database for Core Site */
 if (!defined('DB_NAME')) {
- define('DB_NAME', 'u359724030_Brandyn');
+ define('DB_NAME', 'grocery_db');
 }
 
 /** The name of the database for Core Site Accounts */
 if (!defined('DB_NAME_ACCOUNTS')) {
- define('DB_NAME_ACCOUNTS', 'u359724030_Brandyn');
+ define('DB_NAME_ACCOUNTS', 'user_db');
 }
 
 /** Database username */
 if (!defined('DB_USER')) {
- define('DB_USER', 'u359724030_Brandyn');
+ define('DB_USER', 'root');
 }
 
 /** Database password */
 if (!defined('DB_PASSWORD')) {
- define('DB_PASSWORD', 'ACKR|O#XV@2Fn]3f');
+ define('DB_PASSWORD', 'root');
 }
 
 /** Database hostname */
