@@ -112,19 +112,15 @@ if ($source === "shopping_list") {
         echo json_encode(['success' => true, 'message' => 'Product quantity updated in shopping list', "product_name" => $product_name]);
     }
 }
- else {
-    // Insert into inventory
-    $check = $conn->query("SELECT 1 FROM inventory WHERE ProductId='$product_id' AND UserId='$user_id'");
-    if ($check->num_rows == 0) {
-        $stmt = $conn->prepare("INSERT INTO inventory (ProductId, UserId, Quantity, AddedAt) VALUES (?, ?, 1, NOW())");
-        $stmt->bind_param("ii", $product_id, $user_id);
-        $stmt->execute();
-        $stmt->close();
-        echo json_encode(['success' => true, 'message' => 'Product added to inventory', "product_name" => $product_name]);
-    } else {
-        echo json_encode(['success' => false, 'message' => "Product already exists in inventory", "product_name" => $product_name]);
-    }
+else {
+    // Always insert a new row into inventory for scanned items
+    $stmt = $conn->prepare("INSERT INTO inventory (ProductId, UserId, Quantity, AddedAt) VALUES (?, ?, 1, NOW())");
+    $stmt->bind_param("ii", $product_id, $user_id);
+    $stmt->execute();
+    $stmt->close();
+    echo json_encode(['success' => true, 'message' => 'Product added to inventory', "product_name" => $product_name]);
 }
+
 
 $conn->close();
 ?>
