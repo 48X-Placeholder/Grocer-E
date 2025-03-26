@@ -1,24 +1,28 @@
-/*document.addEventListener("DOMContentLoaded", function () {
-    // Define the sections (Use correct IDs from navigation buttons)
+document.addEventListener("DOMContentLoaded", function () {
+    // Map buttons to their corresponding sections
     const sections = {
         "account-settings-btn": document.querySelector(".account-container"),
         "activity-logs-btn": document.querySelector(".activity-container"),
-        "login-history-btn": document.querySelector(".login-container")  // Placeholder for login history section
+        "login-history-btn": document.querySelector(".login-container")
     };
 
-    // Ensure only Account Settings is visible by default
+    // Hide all sections initially
     Object.values(sections).forEach(section => {
         if (section) section.style.display = "none";
     });
-    sections["account-settings-btn"].style.display = "block"; // Default section
 
-    // Sidebar buttons: Switch sections when clicked
-    document.querySelectorAll(".dashboard-sidebar nav ul li a").forEach(item => {
-        item.addEventListener("click", function (event) {
-            event.preventDefault(); // Prevent page reload
+    // Show the default section (Account Settings)
+    const defaultSectionId = "account-settings-btn";
+    if (sections[defaultSectionId]) {
+        sections[defaultSectionId].style.display = "block";
+    }
 
-            // Get the section ID from the clicked button
-            let selectedSection = this.id;
+    // Handle sidebar navigation clicks
+    document.querySelectorAll(".dashboard-sidebar nav ul li a").forEach(link => {
+        link.addEventListener("click", function (event) {
+            event.preventDefault();
+
+            const clickedId = this.id;
 
             // Hide all sections
             Object.values(sections).forEach(section => {
@@ -26,14 +30,60 @@
             });
 
             // Show the selected section
-            if (sections[selectedSection]) {
-                sections[selectedSection].style.display = "block";
-
-                // Load purchased items when viewing 'Previously Purchased Items'
-                if (selectedSection === "previous-purchases-btn") {
-                    fetchPurchasedItems();
-                }
+            if (sections[clickedId]) {
+                sections[clickedId].style.display = "block";
             }
         });
     });
-});*/
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    loadActivityLogs(); // Ensure this is executed when the page loads
+});
+
+function loadActivityLogs() {
+    fetch('../api/account/fetch_activity_logs/', {
+        method: 'GET',
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer'
+    })
+    .then(response => response.json())
+    .then(result => {
+        const tableBody = document.getElementById('activityLogsTableBody');
+        tableBody.innerHTML = ''; // Clear existing table content
+
+        if (!result.success || result.logs.length === 0) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="3" style="text-align: center; font-style: italic; color: #888;">
+                        No activity logs found.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        result.logs.forEach(log => {
+            let actionType = log.LogSource === "scan" ? log.ActionType : log.Action;
+            let details = log.LogSource === "scan"
+                ? `UPC: ${log.UPC}, ${log.ActionType}, Amount: ${log.AmountChanged}`
+                : "User Activity";
+
+            const row = `
+                <tr>
+                    <td>${formatDate(log.ActionTimestamp)}</td>  <!-- FIX: Timestamp First -->
+                    <td>${actionType}</td>  <!-- FIX: Action Type -->
+                    <td>${details}</td>  <!-- FIX: Details Last -->
+                </tr>
+            `;
+            tableBody.insertAdjacentHTML('beforeend', row);
+        });
+    })
+    .catch(error => console.error('Error fetching activity logs:', error));
+}
+
+// Helper function to format timestamps
+function formatDate(timestamp) {
+    const date = new Date(timestamp);
+    return date.toLocaleString(); // Formats as readable date/time
+}
