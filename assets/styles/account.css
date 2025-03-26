@@ -37,7 +37,7 @@ body {
     text-decoration: none;
     padding: 10px 10px;
     border-radius: 10px;
-    transition: background-color 0.2s linear;
+    transition: background-color 0.2s ease;
 }
 
 .Navigation-Menu-Links a:hover {
@@ -168,15 +168,12 @@ body {
     margin-top: 20px;
 }
 
-
-
-
 /* Activity Logs Table Styling */
 .activity-container {
     max-width: 800px;
     margin: 20px auto;
     padding: 30px;
-    background-color: #222; /* Match Account Settings background */
+    background-color: #222;
     border-radius: 8px;
     text-align: center;
 }
@@ -241,4 +238,14 @@ body {
 .delete-btn:hover {
     background-color: #c9302c;
     transform: scale(1.05);
+}
+
+/* Syncing styles for the section headers */
+.account-container h2,
+.activity-container h2,
+.login-container h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: white;
 }
