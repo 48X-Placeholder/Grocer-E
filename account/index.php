@@ -192,28 +192,31 @@ if (!is_user_logged_in()) {
             </div>
         </div>
 
-        <!-- Space for Activity Logs -->
-        <!-- <div class="activity-container">
-            <h1>Activity Logs</h1>
+        <div class="activity-container">
+            <h2>Activity Logs</h2>
             
             <div class="settings-section">
-                <table class="purchases-table">
+                <table class="activity-table">
                     <thead>
                         <tr>
-                            <th>Select</th>
-                            <th>Product Name</th>
-                            <th>Brand</th>
-                            <th>Category</th>
-                            <th>Quantity</th>
+                            <th>Timestamp</th>
+                            <th>Action Type</th>
+                            <th>Details</th>
                         </tr>
                     </thead>
-                    <tbody id="purchasesTableBody">
-                        <!-- Rows will be inserted dynamically here --><!--
+                    <tbody id="activityLogsTableBody">
+                        <!-- JavaScript will populate this -->
                     </tbody>
                 </table>
             </div>
-        </div> -->
-        <!-- END -->
+        </div>
+
+        <div class="login-container">
+            <h2>Login History</h2>
+
+            <p>Space reserved for the Login History table, or whatever it needs to be...</p>
+
+        </div>
 
         </main>
     </div>
