@@ -24,6 +24,17 @@ if (!is_user_logged_in()) {
         die("Connection failed: " . $conn->connect_error);
     }
 
+    // Log current login activity if not already logged this session
+    if (!isset($_SESSION['login_logged'])) {
+        $ip = $_SERVER['REMOTE_ADDR'];
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+        $stmt_log = $conn->prepare("INSERT INTO login_history (UserId, IPAddress, UserAgent) VALUES (?, ?, ?)");
+        $stmt_log->bind_param("iss", $user_id, $ip, $user_agent);
+        $stmt_log->execute();
+        $stmt_log->close();
+        $_SESSION['login_logged'] = true;
+    }
+
     // Fetch current user email from database
     $stmt_email = $conn->prepare("SELECT Email FROM users WHERE UserId = ?");
     $stmt_email->bind_param("i", $user_id);
@@ -212,9 +223,61 @@ if (!is_user_logged_in()) {
         </div>
 
         <div class="login-container">
-            <h2>Login History</h2>
-
-            <p>Space reserved for the Login History table, or whatever it needs to be...</p>
+        <?php
+    // Create a connection (adjust the DB name if needed)
+    $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME_ACCOUNTS);
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    
+    // Get the current user ID from session
+    $user_id = $_SESSION["user_id"];
+    
+    // Prepare the query to fetch login history (oldest to newest)
+    $stmt = $conn->prepare("SELECT LoginTimestamp, IPAddress, UserAgent FROM login_history WHERE UserId = ? ORDER BY LoginTimestamp ASC");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    ?>
+    
+    <h2>Login History</h2>
+    <table class="activity-table"> <!-- Matches Activity Logs -->
+        <thead>
+            <tr>
+                <th>Login Timestamp</th>
+                <th>IP Address</th>
+                <th>User Agent</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if ($result->num_rows > 0): ?>
+                <?php while($row = $result->fetch_assoc()): ?>
+                    <tr>
+                        <td>
+                            <?php
+                            $date = new DateTime($row['LoginTimestamp'], new DateTimeZone('UTC'));
+                            $date->setTimezone(new DateTimeZone('America/Los_Angeles'));
+                            echo $date->format('Y-m-d h:i A');
+                            ?>
+                        </td>
+                        <td><?php echo htmlspecialchars($row['IPAddress']); ?></td>
+                        <td><?php echo htmlspecialchars($row['UserAgent']); ?></td>
+                    </tr>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="3" style="text-align: center; font-style: italic; color: #888;">
+                        No login history available.
+                    </td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+    
+    <?php
+    $stmt->close();
+    $conn->close();
+    ?>
 
         </div>
 
