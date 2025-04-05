@@ -211,8 +211,8 @@ if (!is_user_logged_in()) {
                     <thead>
                         <tr>
                             <th>Timestamp</th>
-                            <th>Action Type</th>
                             <th>Details</th>
+                            <th>Action Type</th>
                         </tr>
                     </thead>
                     <tbody id="activityLogsTableBody">
@@ -233,8 +233,8 @@ if (!is_user_logged_in()) {
     // Get the current user ID from session
     $user_id = $_SESSION["user_id"];
     
-    // Prepare the query to fetch login history (oldest to newest)
-    $stmt = $conn->prepare("SELECT LoginTimestamp, IPAddress, UserAgent FROM login_history WHERE UserId = ? ORDER BY LoginTimestamp ASC");
+    // Prepare the query to fetch login history
+    $stmt = $conn->prepare("SELECT LoginTimestamp, IPAddress, UserAgent FROM login_history WHERE UserId = ? ORDER BY LoginTimestamp DESC");
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
     $result = $stmt->get_result();
