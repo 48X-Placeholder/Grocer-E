@@ -438,7 +438,7 @@ function deletePurchasedItems() {
         return;
     }
 
-    if (!confirm('Are you sure you want to remove the selected items from history? This action cannot be undone.')) {
+    if (!confirm('Are you sure you want to remove the selected item(s) from your purchase history? This action cannot be undone.')) {
         return;
     }
 

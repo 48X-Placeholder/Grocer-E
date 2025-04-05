@@ -175,3 +175,39 @@ body {
     transform: scale(1.1);
     box-shadow: 0px 5px 10px rgba(255, 255, 255, 0.2);
 }
+
+/* Styling for empty table message inside tbody */
+.faint-text {
+    color: #bbb;
+    font-style: italic;
+    text-align: center;
+    padding: 15px;
+}
+
+/* Styling for the "Showing X of Y" message below the table */
+.note-text {
+    font-style: italic;
+    color: #ddd;
+    margin-top: -10px;
+    margin-bottom: 20px;
+}
+
+/* Dashboard heading spacing tweaks */
+.dashboard-content h2:first-of-type {
+    margin-bottom: 5px; /* Reduce space below welcome heading */
+}
+
+/* Add space between welcome text and first table heading */
+.dashboard-content p {
+    margin-bottom: 30px;
+}
+
+/* Reduce space between each section heading and its table */
+.table-container h2 {
+    margin-bottom: 10px;
+}
+
+/* Add a bit more space between dashboard tables */
+.table-container {
+    margin-top: 20px;
+}
