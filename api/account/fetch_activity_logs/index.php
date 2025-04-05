@@ -38,7 +38,7 @@ $stmtScanLogs->close();
 $conn->close(); // Close the grocery_db connection
 
 // Create a separate connection for user activity logs (stored in user_db)
-$conn_user_db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, 'user_db'); // Connect to user_db
+$conn_user_db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME_ACCOUNTS); // Connect to user_db
 if ($conn_user_db->connect_error) {
     echo json_encode(["error" => "Database connection to user_db failed"]);
     exit;
