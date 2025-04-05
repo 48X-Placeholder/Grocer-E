@@ -171,7 +171,7 @@ echo "password_reset_tokens created <br>";
 $sql = "CREATE TABLE IF NOT EXISTS user_activity_logs (
         LogId INT AUTO_INCREMENT PRIMARY KEY,
         UserId INT NOT NULL,
-        Action VARCHAR(255) NOT NULL,
+        Action TEXT NOT NULL,
         ActionTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (UserId) REFERENCES users(UserId) ON DELETE CASCADE
     )";
