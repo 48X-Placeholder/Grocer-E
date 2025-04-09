@@ -91,7 +91,7 @@ if ($expirationDate === NULL) {
 
 if ($stmt_insert_inventory->execute()) {
     // Log the action to user_activity_logs
-    $conn_user_db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, 'user_db');
+    $conn_user_db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME_ACCOUNTS);
     if (!$conn_user_db->connect_error) {
         $log_stmt = $conn_user_db->prepare("INSERT INTO user_activity_logs (UserId, Action) VALUES (?, ?)");
         $log_action = "Inventory Item Added Manually — Product Name: $productName, Brand: $brand, Category: $category, Quantity: $quantity";

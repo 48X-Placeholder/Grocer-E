@@ -49,7 +49,7 @@ $deleteSuccess = $conn->query($sql_delete);
 
 if ($deleteSuccess) {
     // Log each deletion
-    $conn_user_db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, 'user_db');
+    $conn_user_db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME_ACCOUNTS;
     if (!$conn_user_db->connect_error) {
         $userId = cached_userid_info();
         $log_stmt = $conn_user_db->prepare("INSERT INTO user_activity_logs (UserId, Action) VALUES (?, ?)");
