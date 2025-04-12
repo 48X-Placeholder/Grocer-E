@@ -211,8 +211,8 @@ if (!is_user_logged_in()) {
                     <thead>
                         <tr>
                             <th>Timestamp</th>
-                            <th>Details</th>
                             <th>Action Type</th>
+                            <th>Details</th>
                         </tr>
                     </thead>
                     <tbody id="activityLogsTableBody">
