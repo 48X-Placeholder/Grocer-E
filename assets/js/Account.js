@@ -64,10 +64,10 @@ function loadActivityLogs() {
         }
 
         result.logs.forEach(log => {
-            let actionType = log.LogSource === "scan" ? log.ActionType : log.Action;
+            let actionType = log.LogSource === "scan" ? "Item Scan" : "User Activity";
             let details = log.LogSource === "scan"
                 ? `UPC: ${log.UPC}, ${log.ActionType}, Amount: ${log.AmountChanged}`
-                : "User Activity";
+                : log.Action;
 
             const row = `
                 <tr>
