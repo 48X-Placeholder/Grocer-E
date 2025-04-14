@@ -67,35 +67,20 @@ foreach ($itemIds as $itemId) {
     }
     $stmt_mark_purchased->close();
 
-    // Check if the product already exists in inventory
-    $stmt_check_inventory = $conn->prepare("SELECT InventoryItemId, Quantity FROM inventory WHERE ProductId = ? AND UserId = ? AND ExpirationDate IS NULL");
-    $stmt_check_inventory->bind_param('ii', $productId, $userId);
-    $stmt_check_inventory->execute();
-    $existingItem = $stmt_check_inventory->get_result()->fetch_assoc();
-    $stmt_check_inventory->close();
+    // Always insert a new inventory record
+    $stmt_insert_inventory = $conn->prepare("
+    INSERT INTO inventory (ProductId, UserId, Quantity, ExpirationDate)
+    VALUES (?, ?, ?, NULL)
+    ");
+    $stmt_insert_inventory->bind_param('iii', $productId, $userId, $quantity);
 
-    if ($existingItem) {
-        // Update existing inventory quantity
-        $newQuantity = $existingItem['Quantity'] + $quantity;
-        $stmt_update_inventory = $conn->prepare("UPDATE inventory SET Quantity = ? WHERE InventoryItemId = ?");
-        $stmt_update_inventory->bind_param('ii', $newQuantity, $existingItem['InventoryItemId']);
-        if (!$stmt_update_inventory->execute()) {
-            $errors[] = "Failed to update inventory for $productName: " . $stmt_update_inventory->error;
-            error_log("SQL Error (Update Inventory): " . $stmt_update_inventory->error);
-            continue;
-        }
-        $stmt_update_inventory->close();
-    } else {
-        // Insert new inventory record
-        $stmt_insert_inventory = $conn->prepare("INSERT INTO inventory (ProductId, UserId, Quantity, ExpirationDate) VALUES (?, ?, ?, NULL)");
-        $stmt_insert_inventory->bind_param('iii', $productId, $userId, $quantity);
-        if (!$stmt_insert_inventory->execute()) {
-            $errors[] = "Failed to add $productName to inventory: " . $stmt_insert_inventory->error;
-            error_log("SQL Error (Insert Inventory): " . $stmt_insert_inventory->error);
-            continue;
-        }
-        $stmt_insert_inventory->close();
+    if (!$stmt_insert_inventory->execute()) {
+    $errors[] = "Failed to add $productName to inventory: " . $stmt_insert_inventory->error;
+    error_log("SQL Error (Insert Inventory): " . $stmt_insert_inventory->error);
+    continue;
     }
+    $stmt_insert_inventory->close();
+
 
     // Log the export action with a separate connection to user_db
     $stmt_log_action = $userDbConn->prepare("INSERT INTO user_activity_logs (UserId, Action, ActionTimestamp) VALUES (?, ?, NOW())");
