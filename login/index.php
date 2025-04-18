@@ -77,23 +77,27 @@ if (is_user_logged_in()) {
         <div class="auth-box">
             <h2>Login</h2>
 			<?php
-   if (isset($_SESSION["error_message"])) {
-   	echo '<div class="error-message">' . $_SESSION["error_message"] . "</div>";
-   	unset($_SESSION["error_message"]);
-   }
-   if (isset($_SESSION["success_message"])) {
-   	echo '<div class="success-message">' . $_SESSION["success_message"] . "</div>";
-   	unset($_SESSION["success_message"]);
-   }
-   ?>
+				if (isset($_SESSION["error_message"])) {
+					echo '<div class="error-message">' . $_SESSION["error_message"] . "</div>";
+					unset($_SESSION["error_message"]);
+				}
+				if (isset($_SESSION["success_message"])) {
+					echo '<div class="success-message">' . $_SESSION["success_message"] . "</div>";
+					unset($_SESSION["success_message"]);
+				}
+			?>
+
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
-            <div class="user-box">
-                <input type="text" name="usernameOrEmail" required="">                 <label>Username or Email</label>             </div>
-            <div class="user-box">
-                <input type="password" name="password" required="">                 <label>Password</label>
-            </div>
-            <button type="submit" class="button">Login</button>
-        </form>
+				<div class="user-box">
+					<input type="text" name="usernameOrEmail" required="">                 <label>Username or Email</label>             </div>
+				<div class="user-box">
+					<input type="password" name="password" required="">                 <label>Password</label>
+				</div>
+				<button type="submit" class="button">Login</button>
+				<div class="forgot" style="text-align: center;">
+					<a class="forgot-link" href="<?php echo SITE_URL . 'login/forgot/index.php'; ?>">Forgot Password?</a>
+				</div>
+			</form>
         </div>
 
         <!-- Right Side: Image -->
