@@ -1,6 +1,6 @@
 <?php
 require __DIR__ . "/../../page-templates/navigation-menu.php";
-require_once dirname(__FILE__) . '../../../config.php';
+require __DIR__ . "/../../config.php";
 
 // Autoload PHPMailer classes
 use PHPMailer\PHPMailer\PHPMailer;
@@ -58,13 +58,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && !empty($_POST['email'])) {
 		    $mail->Host = 'smtp.gmail.com';
 		    $mail->SMTPAuth = true;
 		
-		    // Credentials from config
-		    $mail->Username = EMAIL_FROM_ADDRESS;
-		    $mail->Password = EMAIL_APP_PASSWORD;
-		
-		    // Set sender details
-		    $mail->setFrom(EMAIL_FROM_ADDRESS, EMAIL_FROM_NAME);
-		    $mail->addReplyTo(EMAIL_FROM_ADDRESS, EMAIL_FROM_NAME);
+		    $mail->Username = 'grocere481@gmail.com';
+		    $mail->Password = 'llzo stkf sazp xlco';
+		    $mail->setFrom('grocere481@gmail.com', 'Grocer-E');
+		    $mail->addReplyTo('grocere481@gmail.com', 'Grocer-E');
+
 		
 		    $mail->SMTPSecure = 'tls';
 		    $mail->Port = 587;
