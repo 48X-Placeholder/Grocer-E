@@ -1,7 +1,6 @@
 <?php
 require_once dirname(__FILE__) . "/../../page-templates/navigation-menu.php";
 require_once dirname(__FILE__) . '../../../config.php';
-require_once __DIR__ . '/creds.php';
 
 // Autoload PHPMailer classes
 use PHPMailer\PHPMailer\PHPMailer;
