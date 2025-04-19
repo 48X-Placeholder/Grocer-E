@@ -52,30 +52,33 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && !empty($_POST['email'])) {
 
 		// Send email using PHPMailer
 		$mail = new PHPMailer(true);
+
 		try {
-			$mail->isSMTP();
-			$mail->Host = 'smtp.gmail.com';
-			$mail->SMTPAuth = true;
-
-			// credentials for the mail server (MAKE SECURE)
-			$mail->Username = EMAIL_FROM_ADDRESS;
-			$mail->Password = EMAIL_APP_PASSWORD;
-			$mail->setFrom(EMAIL_FROM_ADDRESS, EMAIL_FROM_NAME);
-			$mail->addReplyTo(EMAIL_FROM_ADDRESS, EMAIL_FROM_NAME);
-
-
-			$mail->SMTPSecure = 'tls';
-			$mail->Port = 587;
-
-			$mail->setFrom('your_email@gmail.com', 'Grocer-E');
-			$mail->addAddress($email);
-			$mail->Subject = 'Password Reset Request';
-			$mail->Body = "Hello,\n\nWe received a request to reset your password. Click the link below to reset it:\n\n$reset_link\n\nThis link will expire in 30 minutes.\n\nIf you did not request this, you can safely ignore this email.\n\nGrocer-E";
-
-			$mail->send();
+		    $mail->isSMTP();
+		    $mail->Host = 'smtp.gmail.com';
+		    $mail->SMTPAuth = true;
+		
+		    // Credentials from config
+		    $mail->Username = EMAIL_FROM_ADDRESS;
+		    $mail->Password = EMAIL_APP_PASSWORD;
+		
+		    // Set sender details
+		    $mail->setFrom(EMAIL_FROM_ADDRESS, EMAIL_FROM_NAME);
+		    $mail->addReplyTo(EMAIL_FROM_ADDRESS, EMAIL_FROM_NAME);
+		
+		    $mail->SMTPSecure = 'tls';
+		    $mail->Port = 587;
+		
+		    // Recipient and content
+		    $mail->addAddress($email);
+		    $mail->Subject = 'Password Reset Request';
+		    $mail->Body = "Hello,\n\nWe received a request to reset your password. Click the link below to reset it:\n\n$reset_link\n\nThis link will expire in 30 minutes.\n\nIf you did not request this, you can safely ignore this email.\n\n– Grocer-E";
+		
+		    $mail->send();
 		} catch (Exception $e) {
-			error_log("PHPMailer Error: " . $mail->ErrorInfo); // Optional debug logging
+		    error_log("PHPMailer Error: " . $mail->ErrorInfo); // Optional debug log
 		}
+
 	}
 
 	$conn->close();
