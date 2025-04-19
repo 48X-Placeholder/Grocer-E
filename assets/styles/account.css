@@ -3,7 +3,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: Tahoma, sans-serif;
-    background-color: #333;
+    background-color: #18230F;
     color: white;
 }
 
@@ -12,7 +12,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #333333;
+    background-color: #27391C;
     padding: 5px;
 }
 
@@ -41,7 +41,7 @@ body {
 }
 
 .Navigation-Menu-Links a:hover {
-    background-color: #555;
+    background-color: #255F38;
 }
 
 /* Dashboard Layout */
@@ -53,7 +53,7 @@ body {
 /* Sidebar Navigation */
 .dashboard-sidebar {
     width: 250px;
-    background-color: #222;
+    background-color: #27391C;
     padding: 20px;
     height: 100vh;
 }
@@ -73,7 +73,7 @@ body {
     color: white;
     display: block;
     padding: 12px;
-    background-color: #333;
+    background-color: #18230F;
     border-radius: 5px;
     text-align: center;
     transition: background-color 0.3s ease;
@@ -92,7 +92,7 @@ body {
 /* Sidebar Styles */
 .dashboard-sidebar {
     width: 250px;
-    background-color: #222;
+    background-color: #27391C;
     padding: 20px;
     height: 100vh;
 }
@@ -106,7 +106,7 @@ body {
 
 /* Content Box */
 .content-box {
-    background-color: #555;
+    background-color: #328E6E;
     padding: 20px;
     text-align: center;
     width: 60%;
@@ -140,7 +140,7 @@ body {
 }
 
 .user-details {
-    background-color: #444;
+    background-color: #27391C;
     padding: 20px;
     border-radius: 8px;
     margin-bottom: 20px;
@@ -151,7 +151,7 @@ body {
 }
 
 .settings-section {
-    background-color: #444;
+    background-color: #27391C;
     padding: 20px;
     border-radius: 8px;
     margin-bottom: 20px;
@@ -173,7 +173,7 @@ body {
     max-width: 800px;
     margin: 20px auto;
     padding: 30px;
-    background-color: #222;
+    background-color: #328E6E;
     border-radius: 8px;
     text-align: center;
 }
@@ -181,7 +181,7 @@ body {
 .activity-table {
     width: 100%;
     border-collapse: collapse;
-    background-color: #444;
+    background-color: #255F38;
     color: white;
     margin-top: 20px;
     border-radius: 8px;
@@ -195,7 +195,7 @@ body {
 }
 
 .activity-table th {
-    background-color: #222;
+    background-color: #27391C;
     font-weight: bold;
 }
 

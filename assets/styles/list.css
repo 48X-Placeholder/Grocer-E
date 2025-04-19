@@ -2,7 +2,7 @@ body {
     font-family: Tahoma, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #333; /* Dark grey background */
+    background-color: #18230F; /* Dark grey background */
     color: white; /* White text color */
 }
 
@@ -10,7 +10,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between; /*Spaces out the menu navigation items */
-    background-color: #333;
+    background-color: #27391C;
     padding: 5px; /* Slight padding centers the logo and menu links nicely */
 }
 
@@ -45,7 +45,7 @@ body {
 }
 
 .Navigation-Menu-Links a:hover {
-    background-color: #555; /* Slightly lighter background on hover */
+    background-color: #255F38; /* Slightly lighter background on hover */
 }
 
 .list-section {
@@ -90,7 +90,7 @@ body {
     width: 80%; /* Adjusts width; change as needed */
     border-collapse: collapse;
     margin: 20px auto; /* Centers the table */
-    background-color: #444444; /* Background for contrast */
+    background-color: #255F38; /* Background for contrast */
     border: 1px solid #555555;
 }
 
@@ -102,7 +102,7 @@ body {
 }
 
 .grocery-list-table th {
-    background-color: #666666; /* Slightly darker header */
+    background-color: #27391C; /* Slightly darker header */
 }
 
 /* Centering the add/delete buttons */
@@ -154,7 +154,7 @@ body {
 }
 
 .grocery-list-table th {
-    background-color: #333; /* Dark background for header */
+    background-color: #27391C; /* Dark background for header */
     color: white;
 }
 

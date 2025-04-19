@@ -30,7 +30,6 @@ $userId = cached_userid_info();
         <!-- Toggle Button for Shopping List / Previously Purchased Items -->
         <div class="toggle-section">
             <button id="togglePurchasedItems" onclick="togglePurchasedView()">View Purchased Items</button>
-            <button id="togglePurchasedItems" onclick="<? echo SITE_URL.'inventory'?>">View Inventory List</button>
         </div>
 
         <div class="list-search-bar">

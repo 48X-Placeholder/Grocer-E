@@ -2,7 +2,7 @@ body {
     font-family: Tahoma, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #333; /* Dark grey background */
+    background-color: #18230F; /* Dark grey background */
     color: white; /* White text color */
 }
 
@@ -29,7 +29,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between; /*Spaces out the menu navigation items */
-    background-color: #333333;
+    background-color: #27391C;
     padding: 5px; /* Slight padding centers the logo and menu links nicely */
 }
 
@@ -64,7 +64,7 @@ body {
 }
 
 .Navigation-Menu-Links a:hover {
-    background-color: #555; /* Slightly lighter background on hover */
+    background-color: #255F38; /* Slightly lighter background on hover */
 }
 
 /* https://codepen.io/soufiane-khalfaoui-hassani/pen/LYpPWda for login box */
@@ -98,7 +98,7 @@ html {
     max-width: 350px;
     min-height: 500px;
     padding: 60px 40px;
-    background: rgba(0,0,0,.5);
+    background: #328E6E;
     box-shadow: 0 15px 25px rgba(0,0,0,.6);
     border-radius: 10px;
 }
@@ -114,7 +114,7 @@ html {
     margin: 10px auto; /* Centers the buttons with consistent spacing */
     padding: 8px; /* Same padding for all buttons */
     font-size: 18px;
-    background-color: #444;
+    background-color: #18230F;
     border: none;
     border-radius: 5px;
     color: white;
@@ -124,7 +124,7 @@ html {
 }
 
 .auth-box form .button:hover {
-    background-color: #555;
+    background-color: #255F38;
 }
 
 /* fairly basic CSS for the Forgot Button, which currently doesnt match the Login button */
@@ -133,7 +133,7 @@ html {
     width: 48%;
 	padding: 10px 20px;
 	text-align: center;
-	background-color: #444;
+	background-color: #18230F;
 	color: white;
 	text-decoration: none;
 	border: none;
@@ -145,7 +145,8 @@ html {
 }
 
 .forgot-link:hover {
-	background-color: #555;
+	background-color: #255F38;
+	transform: scale(1.1)
 }
 
 /* Adjust input fields for better alignment */

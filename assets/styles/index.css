@@ -2,7 +2,7 @@ body {
     font-family: Tahoma, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #333; /* Dark grey background */
+    background-color: #18230F; /* Dark grey background */
     color: white; /* White text color */
 }
 
@@ -17,7 +17,7 @@ section {
     display: flex;
     align-items: center;
     justify-content: space-between; /* Spaces out the menu navigation items */
-    background-color: #333333;
+    background-color: #27391C;
     padding: 5px; /* Slight padding centers the logo and menu links nicely */
 }
 
@@ -42,7 +42,7 @@ section {
 }
 
 .Navigation-Menu-Links a:hover {
-    background-color: #555; /* Slightly lighter background on hover */
+    background-color: #255F38; /* Slightly lighter background on hover */
 }
 
 
@@ -75,7 +75,7 @@ section {
     width: 100%;
     text-align: center;
     padding: 15px 0;
-    background-color: #333;
+    background-color: #18230F;
 }
 
 .footer a {
@@ -87,6 +87,6 @@ section {
 }
 
 .footer a:hover {
-    background-color: #777777;
+    background-color: #255F38;
     transform: scale(1.1);
 }

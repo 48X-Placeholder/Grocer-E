@@ -95,13 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && !empty($_POST['email'])) {
 	<link rel="stylesheet" href="<?php echo SITE_URL . 'assets/styles/signin.css'; ?>">
 </head>
 <body>
-	<nav class="Navigation-Menu">
-		<a href="<?php echo SITE_URL ?>" class="logo">
-			<img src="<?php echo SITE_URL . 'assets/images/Logo.png'; ?>" alt="Logo">
-			<span class="Business-Name">Grocer-E</span>
-		</a>
 		<?php site_navigation_menu(); ?>
-	</nav>
 
 	<div class="auth-container">
 		<div class="auth-box">
