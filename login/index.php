@@ -68,6 +68,7 @@ if (is_user_logged_in()) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="<? echo SITE_URL.'assets/styles/signin.css'?>">
+	<link rel="icon" type="image/png" href="<? echo SITE_URL.'assets/images/grocer-e_favicon.png'?>">
 </head>
 <body>
 	<!-- Site Navigation -->
@@ -94,9 +95,7 @@ if (is_user_logged_in()) {
 					<input type="password" name="password" required="">                 <label>Password</label>
 				</div>
 				<button type="submit" class="button">Login</button>
-				<div class="forgot" style="text-align: center;">
-					<a class="forgot-link" href="<?php echo SITE_URL . 'login/forgot/index.php'; ?>">Forgot Password?</a>
-				</div>
+				<a href="forgot/index.php" class="button">Forgot Password?</button>
 			</form>
         </div>
 

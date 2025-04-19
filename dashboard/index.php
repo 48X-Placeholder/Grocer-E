@@ -50,6 +50,7 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="<?php echo SITE_URL.'assets/styles/dashboard.css' ?>">
+	<link rel="icon" type="image/png" href="<? echo SITE_URL.'assets/images/grocer-e_favicon.png'?>">
 </head>
 <body>
     <?php site_navigation_menu(true); ?>

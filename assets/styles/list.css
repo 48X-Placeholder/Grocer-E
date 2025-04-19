@@ -14,20 +14,10 @@ body {
     padding: 5px; /* Slight padding centers the logo and menu links nicely */
 }
 
-.logo {
-    text-decoration: none; /* It gets rid of the underlined text. Don't know why it has to be here and not .Business-Name */
-}
-
 .logo img {
     height: 50px;
     width: auto;
     display: block;
-}
-
-.Business-Name {
-    font-size: 30px;
-    color: white;
-    text-align: center;
 }
 
 .Navigation-Menu-Links {

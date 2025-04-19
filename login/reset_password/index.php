@@ -56,6 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["password"]) && $valid
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<title>Reset Password</title>
 	<link rel="stylesheet" href="<?php echo SITE_URL . 'assets/styles/signin.css'; ?>">
+	<link rel="icon" type="image/png" href="<? echo SITE_URL.'assets/images/grocer-e_favicon.png'?>">
 </head>
 <body>
 	<?php site_navigation_menu(); ?>
