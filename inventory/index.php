@@ -25,7 +25,11 @@ if (!is_user_logged_in()) {
         <div class="page-title">
             <h2>Inventory</h2>
         </div>
-
+        
+        <div class="toggle-section">
+            <button id="togglePurchasedItems" onclick="<? echo SITE_URL.'shopping-list'?>">View Shopping List</button>
+        </div>
+        
         <div class="list-search-bar">
             <input type="text" id="list-search" placeholder="Search within the list..." oninput="handleSearch()" />
             <button class="search-btn" onclick="clearSearch()">Clear Search</button>
