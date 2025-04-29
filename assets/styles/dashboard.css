@@ -109,14 +109,6 @@ body {
     }
 }
 
-.tables-container {
-    display: flex;
-    justify-content: center;
-    gap: 100px;
-    padding: 20px;
-    min-width: 65%;
-}
-
 .table-container {
     display: flex;
     flex-direction: column;
@@ -153,27 +145,6 @@ body {
 	justify-content: space-between;
     width: 100%;
     margin-top: 20px;
-}
-
-.list-actions a {
-    padding: 12px 20px;
-    background-color: #888888;
-    color: white;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    text-align: center;
-    width: 100px;
-    display: inline-block;
-}
-
-.list-actions a:hover {
-    background-color: #777777;
-    transform: scale(1.1);
-    box-shadow: 0px 5px 10px rgba(255, 255, 255, 0.2);
 }
 
 /* Styling for empty table message inside tbody */

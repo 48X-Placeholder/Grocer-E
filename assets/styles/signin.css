@@ -6,25 +6,6 @@ body {
     color: white; /* White text color */
 }
 
-.button {
-    display: inline-block;
-    padding: 12px 20px;
-    font-size: 16px;
-    margin: 10px;
-    color: white;
-    background-color: #888888;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-}
-
-.button:hover {
-    background-color: #777777;
-    transform: scale(1.1);
-}
-
 .Navigation-Menu {
     display: flex;
     align-items: center;
@@ -33,20 +14,10 @@ body {
     padding: 5px; /* Slight padding centers the logo and menu links nicely */
 }
 
-.logo {
-    text-decoration: none; /* It gets rid of the underlined text. Don't know why it has to be here and not .Business-Name */
-}
-
 .logo img {
     height: 50px;
     width: auto;
     display: block;
-}
-
-.Business-Name {
-    font-size: 30px;
-    color: white;
-    text-align: center;
 }
 
 .Navigation-Menu-Links {
@@ -65,20 +36,6 @@ body {
 
 .Navigation-Menu-Links a:hover {
     background-color: #255F38; /* Slightly lighter background on hover */
-}
-
-/* https://codepen.io/soufiane-khalfaoui-hassani/pen/LYpPWda for login box */
-
-html {
-    height: 100%;
-}
-
-.button {
-    background-color: #444; /* Slightly darker background for Register button */
-}
-
-.button:hover {
-    background-color: #555; /* Hover effect for Register button */
 }
 
 .auth-container {
@@ -112,6 +69,7 @@ html {
     display: block;
     width: 60%; /* Ensures all buttons take the full width of the form */
     margin: 10px auto; /* Centers the buttons with consistent spacing */
+	margin-bottom: 25px;
     padding: 8px; /* Same padding for all buttons */
     font-size: 18px;
     background-color: #18230F;
@@ -121,32 +79,11 @@ html {
     cursor: pointer;
     transition: background-color 0.3s ease;
     text-align: center;
+	text-decoration: none;
 }
 
 .auth-box form .button:hover {
     background-color: #255F38;
-}
-
-/* fairly basic CSS for the Forgot Button, which currently doesnt match the Login button */
-.forgot-link {
-	display: inline-block;
-    width: 48%;
-	padding: 10px 20px;
-	text-align: center;
-	background-color: #18230F;
-	color: white;
-	text-decoration: none;
-	border: none;
-	border-radius: 4px;
-	font-size: 16px;
-	cursor: pointer;
-	transition: background-color 0.3s ease;
-	margin-top: 30px;
-}
-
-.forgot-link:hover {
-	background-color: #255F38;
-	transform: scale(1.1)
 }
 
 /* Adjust input fields for better alignment */
@@ -189,8 +126,6 @@ html {
         max-width: 100%;
     }
 }
-
-
 
 .error-message {
     color: #721c24; /* Dark red color for error messages */

@@ -9,14 +9,16 @@ CloseSessionReadOnly();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Logout Confirmation</title>
     <link rel="stylesheet" href="<? echo SITE_URL.'assets/styles/signin.css'?>">
+	<link rel="icon" type="image/png" href="<? echo SITE_URL.'assets/images/grocer-e_favicon.png'?>">
     <style>
         .confirmation-wrapper {
             display: flex;
             justify-content: center;
             align-items: center;
+			padding-top: 100px;
         }
 		.confirmation-box {
-			background: rgba(0,0,0,.5);
+			background: #328E6E
 			padding: 30px;
 			border-radius: 8px;
 			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -41,7 +43,7 @@ CloseSessionReadOnly();
         }
     </style>
     <script>
-        setTimeout(function() {
+         setTimeout(function() {
             window.location.href = "<? echo SITE_URL.'login'?>"; // Redirect to login page
         }, 3000); // 3000 milliseconds = 3 seconds
     </script>

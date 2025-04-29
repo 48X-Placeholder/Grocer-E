@@ -17,6 +17,7 @@ $userId = cached_userid_info();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping List</title>
     <link rel="stylesheet" href="<? echo SITE_URL.'assets/styles/list.css'?>">
+	<link rel="icon" type="image/png" href="<? echo SITE_URL.'assets/images/grocer-e_favicon.png'?>">
 </head>
 <body>
 

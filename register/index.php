@@ -80,6 +80,7 @@ if (is_user_logged_in()) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     <link rel="stylesheet" href="<? echo SITE_URL.'assets/styles/signin.css'?>">
+	<link rel="icon" type="image/png" href="<? echo SITE_URL.'assets/images/grocer-e_favicon.png'?>">
 </head>
 <body>
 	<!-- Site Navigation -->

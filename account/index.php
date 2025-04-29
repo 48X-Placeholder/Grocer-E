@@ -129,6 +129,7 @@ if (!is_user_logged_in()) {
     <title>Account Settings</title>
     <link rel="stylesheet" href="<? echo SITE_URL.'assets/styles/signin.css'?>">
     <link rel="stylesheet" href="<? echo SITE_URL.'assets/styles/account.css'?>">
+	<link rel="icon" type="image/png" href="<? echo SITE_URL.'assets/images/grocer-e_favicon.png'?>">
 </head>
 <body>
 

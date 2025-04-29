@@ -6,6 +6,7 @@ require_once dirname(__FILE__) . "/page-templates/navigation-menu.php"; ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grocery Tracker</title>
     <link rel="stylesheet" href="<?php echo SITE_URL.'assets/styles/index.css'?>">
+	<link rel="icon" type="image/png" href="<? echo SITE_URL.'assets/images/grocer-e_favicon.png'?>">
 </head>
 <body>
 	<!-- Site Navigation -->
