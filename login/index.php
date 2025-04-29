@@ -95,7 +95,7 @@ if (is_user_logged_in()) {
 					<input type="password" name="password" required="">                 <label>Password</label>
 				</div>
 				<button type="submit" class="button">Login</button>
-				<a href="forgot/index.php" class="button">Forgot Password?</button>
+				<a href="forgot/index.php" class="button">Forgot Password?</a>
 			</form>
         </div>
 
