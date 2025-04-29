@@ -1,0 +1,28 @@
+name: Deploy RELEASE Build to FTP Server
+on:
+  push:
+    tags:
+    - "[0-9]+.[0-9]+.[0-9]+"
+    branches:
+    - release
+jobs:
+  web-deploy:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v4
+
+    - name: 📂 Sync files
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: ${{ secrets.FTP_URL_IP_RELEASE }}
+        username: ${{ secrets.FTP_USER_RELEASE }}
+        password: ${{ secrets.FTP_PASS_RELEASE }}
+        exclude: |
+          **/.git*
+          **/.git*/**
+          **/node_modules/**
+          config.php
+          db-setup.php
+          README.md
