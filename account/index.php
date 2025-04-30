@@ -151,136 +151,141 @@ if (!is_user_logged_in()) {
             <!-- content-box -->
         <div class=" account-container auth-box">
             <h2>Account Settings</h2>
-            <div class="user-details">
-                <p><strong>Username:</strong> <?php echo htmlspecialchars($username); ?></p>
-                <p><strong>Email:</strong> <?php echo htmlspecialchars($current_email); ?></p>
-            </div>
+            <div class="scrollable-account-content">
+                <div class="user-details">
+                    <p><strong>Username:</strong> <?php echo htmlspecialchars($username); ?></p>
+                    <p><strong>Email:</strong> <?php echo htmlspecialchars($current_email); ?></p>
+                </div>
 
-            <?php
-            if (isset($_SESSION["account_error_message"])) {
-                echo '<div class="error-message">' . $_SESSION["account_error_message"] . "</div>";
-                unset($_SESSION["account_error_message"]);
-            }
-            if (isset($_SESSION["account_success_message"])) {
-                echo '<div class="success-message">' . $_SESSION["account_success_message"] . "</div>";
-                unset($_SESSION["account_success_message"]);
-            }
-            ?>
+                <?php
+                if (isset($_SESSION["account_error_message"])) {
+                    echo '<div class="error-message">' . $_SESSION["account_error_message"] . "</div>";
+                    unset($_SESSION["account_error_message"]);
+                }
+                if (isset($_SESSION["account_success_message"])) {
+                    echo '<div class="success-message">' . $_SESSION["account_success_message"] . "</div>";
+                    unset($_SESSION["account_success_message"]);
+                }
+                ?>
 
-            <div class="settings-section">
-                <h3>Change Password</h3>
-                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
-                    <div class="user-box">
-                        <input type="password" name="old_password" required="">
-                        <label>Current Password</label>
-                    </div>
-                    <div class="user-box">
-                        <input type="password" name="new_password" required="">
-                        <label>New Password</label>
-                    </div>
-                    <div class="user-box">
-                        <input type="password" name="confirm_new_password" required="">
-                        <label>Confirm New Password</label>
-                    </div>
-                    <button type="submit" class="button" name="change_password">Change Password</button>
-                </form>
-            </div>
+                <div class="settings-section">
+                    <h3>Change Password</h3>
+                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+                        <div class="user-box">
+                            <input type="password" name="old_password" required="">
+                            <label>Current Password</label>
+                        </div>
+                        <div class="user-box">
+                            <input type="password" name="new_password" required="">
+                            <label>New Password</label>
+                        </div>
+                        <div class="user-box">
+                            <input type="password" name="confirm_new_password" required="">
+                            <label>Confirm New Password</label>
+                        </div>
+                        <button type="submit" class="button" name="change_password">Change Password</button>
+                    </form>
+                </div>
 
-            <div class="settings-section">
-                <h3>Change Email</h3>
-                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
-                    <div class="user-box">
-                        <input type="email" name="new_email" value="<?php echo htmlspecialchars(
-                            $current_email
-                        ); ?>" required="">
-                        <label>New Email</label>
-                    </div>
-                    <div class="user-box">
-                        <input type="email" name="confirm_new_email" required="">
-                        <label>Confirm New Email</label>
-                    </div>
-                    <button type="submit" class="button" name="change_email">Change Email</button>
-                </form>
+                <div class="settings-section">
+                    <h3>Change Email</h3>
+                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+                        <div class="user-box">
+                            <input type="email" name="new_email" required="">
+                            <label>New Email</label>
+                        </div>
+                        <div class="user-box">
+                            <input type="email" name="confirm_new_email" required="">
+                            <label>Confirm New Email</label>
+                        </div>
+                        <button type="submit" class="button" name="change_email">Change Email</button>
+                    </form>
+                </div>
             </div>
         </div>
 
         <div class="activity-container">
             <h2>Activity Logs</h2>
             
-            <div class="settings-section">
-                <table class="activity-table">
-                    <thead>
-                        <tr>
-                            <th>Timestamp</th>
-                            <th>Action Type</th>
-                            <th>Details</th>
-                        </tr>
-                    </thead>
-                    <tbody id="activityLogsTableBody">
-                        <!-- JavaScript will populate this -->
-                    </tbody>
-                </table>
+            <div class="settings-section scrollable-table-wrapper">
+                <div class="scrollable-table-inner">
+                    <table class="activity-table">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Action Type</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activityLogsTableBody">
+                            <!-- JavaScript will populate this -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
         <div class="login-container">
-        <?php
-    // Create a connection (adjust the DB name if needed)
-    $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME_ACCOUNTS);
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-    
-    // Get the current user ID from session
-    $user_id = $_SESSION["user_id"];
-    
-    // Prepare the query to fetch login history
-    $stmt = $conn->prepare("SELECT LoginTimestamp, IPAddress, UserAgent FROM login_history WHERE UserId = ? ORDER BY LoginTimestamp DESC");
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    ?>
-    
-    <h2>Login History</h2>
-    <table class="activity-table"> <!-- Matches Activity Logs -->
-        <thead>
-            <tr>
-                <th>Login Timestamp</th>
-                <th>IP Address</th>
-                <th>User Agent</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if ($result->num_rows > 0): ?>
-                <?php while($row = $result->fetch_assoc()): ?>
-                    <tr>
-                        <td>
-                            <?php
-                            $date = new DateTime($row['LoginTimestamp'], new DateTimeZone('UTC'));
-                            $date->setTimezone(new DateTimeZone('America/Los_Angeles'));
-                            echo $date->format('Y-m-d h:i A');
-                            ?>
-                        </td>
-                        <td><?php echo htmlspecialchars($row['IPAddress']); ?></td>
-                        <td><?php echo htmlspecialchars($row['UserAgent']); ?></td>
-                    </tr>
-                <?php endwhile; ?>
-            <?php else: ?>
-                <tr>
-                    <td colspan="3" style="text-align: center; font-style: italic; color: #888;">
-                        No login history available.
-                    </td>
-                </tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
-    
-    <?php
-    $stmt->close();
-    $conn->close();
-    ?>
-
-        </div>
+            <?php
+                // Create a connection (adjust the DB name if needed)
+                $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME_ACCOUNTS);
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+                
+                // Get the current user ID from session
+                $user_id = $_SESSION["user_id"];
+                
+                // Prepare the query to fetch login history
+                $stmt = $conn->prepare("SELECT LoginTimestamp, IPAddress, UserAgent FROM login_history WHERE UserId = ? ORDER BY LoginTimestamp DESC");
+                $stmt->bind_param("i", $user_id);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                ?>
+                
+                <h2>Login History</h2>
+                <div class="scrollable-table-wrapper">
+                    <div class="scrollable-table-inner">
+                        <table class="activity-table">
+                            <thead>
+                                <tr>
+                                    <th>Login Timestamp</th>
+                                    <th>IP Address</th>
+                                    <th>User Agent</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if ($result->num_rows > 0): ?>
+                                    <?php while($row = $result->fetch_assoc()): ?>
+                                        <tr>
+                                            <td>
+                                                <?php
+                                                $date = new DateTime($row['LoginTimestamp'], new DateTimeZone('UTC'));
+                                                $date->setTimezone(new DateTimeZone('America/Los_Angeles'));
+                                                echo $date->format('Y-m-d h:i A');
+                                                ?>
+                                            </td>
+                                            <td><?php echo htmlspecialchars($row['IPAddress']); ?></td>
+                                            <td><?php echo htmlspecialchars($row['UserAgent']); ?></td>
+                                        </tr>
+                                    <?php endwhile; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="3" style="text-align: center; font-style: italic; color: #888;">
+                                            No login history available.
+                                        </td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                        
+                        <?php
+                        $stmt->close();
+                        $conn->close();
+                        ?>
+                    </div>
+                </div>
+            </div>
 
         </main>
     </div>
