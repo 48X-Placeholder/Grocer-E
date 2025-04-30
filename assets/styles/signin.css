@@ -1,0 +1,146 @@
+body {
+    font-family: Tahoma, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #18230F; /* Dark grey background */
+    color: white; /* White text color */
+}
+
+.Navigation-Menu {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /*Spaces out the menu navigation items */
+    background-color: #27391C;
+    padding: 5px; /* Slight padding centers the logo and menu links nicely */
+}
+
+.logo img {
+    height: 50px;
+    width: auto;
+    display: block;
+}
+
+.Navigation-Menu-Links {
+    display: flex;
+    gap: 20px;
+}
+
+.Navigation-Menu-Links a {
+    font-size: 25px;
+    color: white;
+    text-decoration: none; /* It gets rid of the underlined text. */
+    padding: 10px 10px; /* Padding makes the hover effect bigger*/
+    border-radius: 10px; /* Makes the logo round*/
+    transition: background-color 0.2s linear;
+}
+
+.Navigation-Menu-Links a:hover {
+    background-color: #255F38; /* Slightly lighter background on hover */
+}
+
+.auth-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+    width: 90%;
+    max-width: 1200px;
+    margin: 50px auto; /* Space between form and NavBar */
+    gap: 50px; /* Space between form and image */
+}
+
+/* Left Side - Login Form */
+.auth-box {
+    flex: 1;
+    max-width: 350px;
+    min-height: 500px;
+    padding: 60px 40px;
+    background: #328E6E;
+    box-shadow: 0 15px 25px rgba(0,0,0,.6);
+    border-radius: 10px;
+}
+
+.auth-box h2 {
+    font-size: 48px; /* Bigger and more prominent */
+    margin-bottom: 40px;
+    color: #fff;
+}
+.auth-box form .button {
+    display: block;
+    width: 60%; /* Ensures all buttons take the full width of the form */
+    margin: 10px auto; /* Centers the buttons with consistent spacing */
+	margin-bottom: 25px;
+    padding: 8px; /* Same padding for all buttons */
+    font-size: 18px;
+    background-color: #18230F;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+	text-decoration: none;
+}
+
+.auth-box form .button:hover {
+    background-color: #255F38;
+}
+
+/* Adjust input fields for better alignment */
+.auth-box .user-box input {
+    width: 100%;
+    padding: 14px;
+    font-size: 18px;
+    color: #fff;
+    border: none;
+    border-bottom: 2px solid #fff;
+    outline: none;
+    background: transparent;
+}
+
+.auth-box .user-box {
+    margin-bottom: 25px; /* Adds spacing between input fields */
+}
+
+/* Right Side - Image */
+.auth-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.auth-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    width: 800px;
+}
+
+/* Adjust for smaller screens */
+@media (max-width: 768px) {
+    .auth-container {
+        flex-direction: column;
+        text-align: center;
+    }
+    .auth-box, .auth-image {
+        max-width: 100%;
+    }
+}
+
+.error-message {
+    color: #721c24; /* Dark red color for error messages */
+    background-color: #f8d7da; /* Light red background for error messages */
+    border: 1px solid #f5c6cb; /* Border for error messages */
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}
+
+.success-message {
+    color: #155724; /* Dark green color for success messages */
+    background-color: #d4edda; /* Light green background for success messages */
+    border: 1px solid #c3e6cb; /* Border for success messages */
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}

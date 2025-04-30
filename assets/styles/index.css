@@ -1,0 +1,92 @@
+body {
+    font-family: Tahoma, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #18230F; /* Dark grey background */
+    color: white; /* White text color */
+}
+
+section {
+    max-width: 1000px; /* Adjust width as needed */
+    width: 90%; /* Ensures it remains responsive */
+    margin: 0 auto; /* Centers the section */
+    text-align: center;
+}
+
+.Navigation-Menu {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Spaces out the menu navigation items */
+    background-color: #27391C;
+    padding: 5px; /* Slight padding centers the logo and menu links nicely */
+}
+
+.logo img {
+    height: 50px;
+    width: auto;
+    display: block;
+}
+
+.Navigation-Menu-Links {
+    display: flex;
+    gap: 20px;
+}
+
+.Navigation-Menu-Links a {
+    font-size: 25px;
+    color: white;
+    text-decoration: none; /* Removes underline */
+    padding: 10px 10px; /* Makes hover effect bigger */
+    border-radius: 10px; /* Rounded corners */
+    transition: background-color 0.2s linear;
+}
+
+.Navigation-Menu-Links a:hover {
+    background-color: #255F38; /* Slightly lighter background on hover */
+}
+
+
+/* New styles for full-width images and text sections */
+.full-width-image {
+    width: 100%;
+    height: auto;
+    margin: 10px auto;
+    border-radius: 10px;
+}
+
+.image-container {
+    /*position: relative;*/
+    display: flex;
+    justify-content: center;
+}
+
+/* Text section between images */
+.text-section {
+    max-width: 800px;
+    width: 90%; /* Makes sure it's responsive */
+    font-size: 22px;
+    text-align: center;
+    margin: 20px auto; /* Centers the section properly */
+    padding: 20px;
+}
+
+/* Footer styles */
+.footer {
+    width: 100%;
+    text-align: center;
+    padding: 15px 0;
+    background-color: #18230F;
+}
+
+.footer a {
+    color: white;
+    padding: 10px 10px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.footer a:hover {
+    background-color: #255F38;
+    transform: scale(1.1);
+}

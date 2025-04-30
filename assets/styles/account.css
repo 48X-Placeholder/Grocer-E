@@ -1,0 +1,184 @@
+/* General Page Styling */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Tahoma, sans-serif;
+    background-color: #18230F;
+    color: white;
+}
+
+/* Navigation Bar */
+.Navigation-Menu {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #27391C;
+    padding: 5px;
+}
+
+.logo img {
+    height: 50px;
+    width: auto;
+}
+
+.Navigation-Menu-Links {
+    display: flex;
+    gap: 20px;
+}
+
+.Navigation-Menu-Links a {
+    font-size: 25px;
+    color: white;
+    text-decoration: none;
+    padding: 10px 10px;
+    border-radius: 10px;
+    transition: background-color 0.2s ease;
+}
+
+.Navigation-Menu-Links a:hover {
+    background-color: #255F38;
+}
+
+/* Dashboard Layout */
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar Navigation */
+.dashboard-sidebar {
+    width: 250px;
+    background-color: #27391C;
+    padding: 20px;
+    height: 100vh;
+}
+
+.dashboard-sidebar nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.dashboard-sidebar nav ul li {
+    margin: 20px 0;
+}
+
+.dashboard-sidebar nav ul li a {
+    text-decoration: none;
+    font-size: 18px;
+    color: white;
+    display: block;
+    padding: 12px;
+    background-color: #18230F;
+    border-radius: 5px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.dashboard-sidebar nav ul li a:hover {
+    background-color: #255F38;
+}
+
+/* Container for Sidebar & Main Content */
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Main Content Area */
+.dashboard-content {
+    flex-grow: 1; /* Ensures it takes up remaining space */
+    padding: 40px;
+    text-align: center;
+}
+
+/* Content Box */
+.content-box {
+    background-color: #328E6E;
+    padding: 20px;
+    text-align: center;
+    width: 60%;
+    margin: 20px auto;
+    border-radius: 10px;
+}
+
+/* account.css */
+
+.account-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 30px;
+}
+
+.user-details {
+    background-color: #27391C;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.user-details p {
+    margin: 10px 0;
+}
+
+.settings-section {
+    background-color: #27391C;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.settings-section h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: white;
+    text-align: center;
+}
+
+.settings-section form {
+    margin-top: 20px;
+}
+
+/* Activity Logs Table Styling */
+.activity-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 30px;
+    background-color: #328E6E;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.activity-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #255F38;
+    color: white;
+    margin-top: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.activity-table th, .activity-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #666;
+}
+
+.activity-table th {
+    background-color: #27391C;
+    font-weight: bold;
+}
+
+.activity-table tr:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Syncing styles for the section headers */
+.account-container h2,
+.activity-container h2,
+.login-container h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: white;
+}
