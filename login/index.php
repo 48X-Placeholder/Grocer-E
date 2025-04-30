@@ -83,6 +83,7 @@ if (is_user_logged_in()) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="<? echo SITE_URL.'assets/styles/signin.css'?>">
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 	<link rel="icon" type="image/png" href="<? echo SITE_URL.'assets/images/grocer-e_favicon.png'?>">
 </head>
 <body>
@@ -111,7 +112,6 @@ if (is_user_logged_in()) {
 				</div>
 				
 				<div class="g-recaptcha" data-sitekey="<?php echo RECAPTCHA_SITE_KEY; ?>"></div>
-				<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 				<button type="submit" class="button">Login</button>
 				<a href="forgot/index.php" class="button">Forgot Password?</a>
