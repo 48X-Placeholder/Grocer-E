@@ -42,8 +42,8 @@ body {
     display: flex;
     align-items: flex-start; /* Align content to the top of the container */
     justify-content: center;
-    padding-top: 50px; /* ✅ Push everything inside down */
-    height: calc(100vh - 50px); /* ✅ Prevent overflow since we added padding */
+    padding-top: 40px; /*  Push everything inside down */
+    height: calc(100vh - 40px); /* Prevent overflow since we added padding */
     width: 90%;
     max-width: 1200px;
     margin: 0 auto;
