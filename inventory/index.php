@@ -110,7 +110,7 @@ if (!is_user_logged_in()) {
                     <button onclick="closeModal()">Cancel</button>
                 </div>
             </div>
-            <button class="delete-btn" onclick="deleteSelectedItems()">Delete Selected Items</button>
+            <button class="delete-btn" onclick="deleteSelectedItems()">Delete Selected Item(s)</button>
         </div>
     </section>
 
