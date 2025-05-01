@@ -45,7 +45,7 @@ body {
     height: 80vh;
     width: 90%;
     max-width: 1200px;
-    margin: 50px auto; /* Space between form and NavBar */
+    margin: 70px auto; /* Space between form and NavBar */
     gap: 50px; /* Space between form and image */
 }
 
