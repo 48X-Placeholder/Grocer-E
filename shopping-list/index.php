@@ -24,14 +24,14 @@ $userId = cached_userid_info();
     <?php site_navigation_menu(); ?>
 
     <section class="list-section">		
-	<div class="page-title">
-		<h2>Shopping List</h2>
+      	<div class="page-title">
+            <h2>Shopping List</h2>
 	</div>
 
         <!-- Toggle Button for Shopping List / Previously Purchased Items -->
         <div class="toggle-section">
+            <button id="switchPage" onclick="location.href='<? echo SITE_URL.'inventory'?>'">Switch to Inventory List</button>
             <button id="togglePurchasedItems" onclick="togglePurchasedView()">View Purchased Items</button>
-            <button id="togglePurchasedItems" onclick="location.href='<? echo SITE_URL.'inventory'?>'">View Inventory List</button>
         </div>
 
         <div class="list-search-bar">
@@ -71,8 +71,8 @@ $userId = cached_userid_info();
                 </div>
             </div>
 
-            <button class="delete-btn" onclick="deleteSelectedItems()">Delete Selected Items</button>
-            <button class="export-btn" onclick="exportSelectedItems()">Export Selected Items to Inventory</button>
+            <button class="delete-btn" onclick="deleteSelectedItems()">Delete Selected Item(s)</button>
+            <button class="export-btn" onclick="exportSelectedItems()">Export Selected Item(s) to Inventory</button>
         </div>
 
         <!-- Add Manually Form Modal -->
