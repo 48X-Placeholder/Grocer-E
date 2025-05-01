@@ -28,7 +28,7 @@ if (!$data) {
 $data = array_change_key_case($data, CASE_LOWER);
 
 // Check for missing fields
-$requiredFields = ['upccode', 'quantity', 'productname', 'brand', 'category'];
+$requiredFields = ['quantity', 'productname', 'brand', 'category'];
 $missingFields = [];
 
 foreach ($requiredFields as $field) {
