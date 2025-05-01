@@ -24,8 +24,8 @@ $userId = cached_userid_info();
     <?php site_navigation_menu(); ?>
 
     <section class="list-section">		
-		<div class="page-title">
-			<h2>Shopping List</h2>
+	<div class="page-title">
+		<h2>Shopping List</h2>
         </div>
 
         <!-- Toggle Button for Shopping List / Previously Purchased Items -->
