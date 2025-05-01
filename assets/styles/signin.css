@@ -40,14 +40,13 @@ body {
 
 .auth-container {
     display: flex;
-    align-items: flex-start; /* Align content to the top of the container */
+    align-items: center;
     justify-content: center;
-    padding-top: 80px; /* ✅ Push everything inside down */
-    height: calc(100vh - 80px); /* ✅ Prevent overflow since we added padding */
+    height: 80vh;
     width: 90%;
     max-width: 1200px;
-    margin: 0 auto;
-    gap: 50px;
+    margin: 80px auto; /* Increased from 50px to 80px to push it down */
+    gap: 50px
 }
 
 /* Left Side - Login Form */
