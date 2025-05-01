@@ -254,7 +254,7 @@ th.desc::after {
     transform: scale(1.05);
 }
 
-#togglePurchasedItems {
+#togglePurchasedItems, #switchPage {
     padding: 12px 20px;
     margin-bottom: 25px;
     background-color: #888888;
@@ -266,7 +266,7 @@ th.desc::after {
     transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
-#togglePurchasedItems:hover {
+#togglePurchasedItems:hover, #switchPage:hover {
     background-color:#777777;
     transform: scale(1.05);
 }
