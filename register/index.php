@@ -18,6 +18,23 @@ if (is_user_logged_in()) {
 
 	// Process form submission only if it's a POST request
 	if ($_SERVER["REQUEST_METHOD"] == "POST") {
+		// CAPTCHa validation
+		$recaptcha = $_POST['g-recaptcha-response'] ?? '';
+		$verify = file_get_contents(
+    		'https://www.google.com/recaptcha/api/siteverify'
+    		. '?secret='   . RECAPTCHA_SECRET_KEY
+    		. '&response=' . $recaptcha
+    		. '&remoteip=' . $_SERVER['REMOTE_ADDR']
+		);
+		$data = json_decode($verify);
+		if (empty($data->success)) {
+    		$_SESSION['error_message'] = 'Please complete the CAPTCHA.';
+    		header('Location: ' . $_SERVER['PHP_SELF']);
+    		exit;
+		}
+
+
+
 		// Sanitize and retrieve inputs from the form
 		$username = sanitize_input($_POST["username"]);
 		$email = sanitize_input($_POST["email"]);
@@ -80,6 +97,7 @@ if (is_user_logged_in()) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     <link rel="stylesheet" href="<? echo SITE_URL.'assets/styles/signin.css'?>">
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 	<link rel="icon" type="image/png" href="<? echo SITE_URL.'assets/images/grocer-e_favicon.png'?>">
 </head>
 <body>
@@ -117,7 +135,10 @@ if (is_user_logged_in()) {
              <input type="password" name="confirm_password" required="">
               <label>Confirm Password</label>
              </div>
-             <button type="submit" class="button">Register</button>
+             
+			 <div class="g-recaptcha"data-sitekey="<?php echo RECAPTCHA_SITE_KEY; ?>"></div>
+
+			 <button type="submit" class="button">Register</button>
          </form>
      </div>
     <div class="auth-image">
