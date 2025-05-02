@@ -66,4 +66,12 @@ if (!defined('EMAIL_APP_PASSWORD')) {
 	define('EMAIL_APP_PASSWORD', 'llzo stkf sazp xlco'); // your Gmail app password
 }
 
+if (!defined('RECAPTCHA_SITE_KEY')) {
+    define('RECAPTCHA_SITE_KEY', '6LcM8ygrAAAAAPcJXn--EtXv7tqXQA4FBATHEYY8');
+}
+if (!defined('RECAPTCHA_SECRET_KEY')) {
+    define('RECAPTCHA_SECRET_KEY', '6LcM8ygrAAAAAMMNpmdP7iHtuE4GbsUwjF13l443');
+}
+
+
 ?>

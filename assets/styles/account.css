@@ -138,8 +138,22 @@ body {
     margin-top: 20px;
 }
 
+.scrollable-account-content {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
 /* Activity Logs Table Styling */
 .activity-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 30px;
+    background-color: #328E6E;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.login-container {
     max-width: 800px;
     margin: 20px auto;
     padding: 30px;
@@ -171,6 +185,18 @@ body {
 
 .activity-table tr:hover {
     background-color: rgba(255, 255, 255, 0.1);
+}
+
+.scrollable-table-wrapper {
+    max-height: 450px; /* adjust height as needed */
+    overflow-y: auto;
+    border: 1px solid #444; /* optional visual frame */
+    border-radius: 6px;
+}
+
+.scrollable-table-inner {
+    width: 100%;
+    overflow-x: auto;
 }
 
 /* Syncing styles for the section headers */

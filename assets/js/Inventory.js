@@ -156,7 +156,7 @@ function addItem() {
     const requestData = { upcCode: upc, productName, brand, category, quantity, expirationDate: formattedExpiration };
 
     // Check that primary text fields have values
-    if (!upc || !productName || !brand || !category) {
+    if (!productName || !brand || !category) {
         alert("Please fill in all required fields.");
         return;
     }
