@@ -16,6 +16,17 @@ if (!is_user_logged_in()) {
         return $data;
     }
 
+    function mask_ip(string $ip): string
+    {
+        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+            $parts = explode('.', $ip);
+            $parts[0] = '***';
+            $parts[1] = '***';
+            return implode('.', $parts);
+    }
+    return $ip;
+}
+
     $user_id = $_SESSION["user_id"]; // Get user ID from session
     $username = $_SESSION["username"]; // Get username from session (for display)
 
@@ -265,7 +276,7 @@ if (!is_user_logged_in()) {
                                                 echo $date->format('Y-m-d h:i A');
                                                 ?>
                                             </td>
-                                            <td><?php echo htmlspecialchars($row['IPAddress']); ?></td>
+                                            <td><?php echo htmlspecialchars(mask_ip($row['IPAddress'])); ?></td>
                                             <td><?php echo htmlspecialchars($row['UserAgent']); ?></td>
                                         </tr>
                                     <?php endwhile; ?>
