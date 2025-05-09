@@ -20,8 +20,8 @@ if (!is_user_logged_in()) {
     {
         if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
             $parts = explode('.', $ip);
-            $parts[0] = 'xxx';
-            $parts[1] = 'xxx';
+            $parts[0] = '***';
+            $parts[1] = '***';
             return implode('.', $parts);
     }
     return $ip;
