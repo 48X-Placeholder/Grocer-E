@@ -17,13 +17,28 @@ if (!is_user_logged_in()) {
     }
 
     function mask_ip(string $ip): string
-    {
-        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-            $parts = explode('.', $ip);
-            $parts[0] = '***';
-            $parts[1] = '***';
-            return implode('.', $parts);
+{
+    // IPv4?
+    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+        $parts = explode('.', $ip);
+        $parts[0] = $parts[1] = '***';
+        return implode('.', $parts);
     }
+
+    // IPv6?
+    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+        // Expand zeros so we have 8 hextets
+        $bin   = inet_pton($ip);
+        $un    = unpack('H*', $bin)[1];
+        $hextets = str_split($un, 4);           // 8 groups of 4 hex digits
+        // Mask the first 4 groups
+        for ($i = 0; $i < 4; $i++) {
+            $hextets[$i] = '****';
+        }
+        return implode(':', $hextets);
+    }
+
+    // Neither IPv4 nor IPv6? Return as-is
     return $ip;
 }
 
